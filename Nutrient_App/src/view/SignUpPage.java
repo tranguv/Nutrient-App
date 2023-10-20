@@ -7,8 +7,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
-public class LoginPage extends JFrame {
-	public LoginPage() {
+public class SignUpPage extends JFrame{
+	public SignUpPage() {
 		userInterface();
 	}
 
@@ -16,14 +16,14 @@ public class LoginPage extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 400);
 		setVisible(true);
-		login();
+		signup();
 	}
 
-	public void login() {
+	public void signup() {
 		JPanel panel = new JPanel();
 
 		// Login prompt
-		JLabel title = new JLabel("Log In");
+		JLabel title = new JLabel("Sign Up");
 
 		// Username label and text field
 		JLabel userNLabel = new JLabel("Username:");
@@ -33,16 +33,24 @@ public class LoginPage extends JFrame {
 		JLabel passwordLB = new JLabel("Password:");
 		JTextField passwordTF = new JTextField(20);
 
+		// Weight label and text field
+		JLabel weightLB = new JLabel("Weight:");
+		JTextField weightTF = new JTextField(5);
+		
+		// Weight label and text field
+		JLabel heightLB = new JLabel("Height:");
+		JTextField heightTF = new JTextField(5);
+
 		// Submit button
 		JButton submitB = new JButton("SUBMIT");
 
 		// sign up
-		JLabel signup = new JLabel("Don't have account? Sign Up");
-		signup.addMouseListener((MouseListener) new MouseAdapter() {
+		JLabel signin = new JLabel("Have an account? Sign In");
+		signin.addMouseListener((MouseListener) new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dispose();
-				SignUpPage signup = new SignUpPage();
-				signup.signup();
+				LoginPage login = new LoginPage();
+				login.login();
 			}
 		});
 
@@ -75,28 +83,40 @@ public class LoginPage extends JFrame {
 
 		gbc.gridx = 1;
 		panel.add(passwordTF, gbc);
-
+		
 		gbc.gridx = 0;
 		gbc.gridy = 3;
+		panel.add(weightLB, gbc);
+
+		gbc.gridx = 1;
+		panel.add(weightTF, gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		panel.add(heightLB, gbc);
+
+		gbc.gridx = 1;
+		panel.add(heightTF, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 5;
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		panel.add(submitB, gbc);
 
 		gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        panel.add(signup, gbc);
+		gbc.gridy = 6;
+		gbc.gridwidth = 2;
+		gbc.anchor = GridBagConstraints.CENTER;
+		panel.add(signin, gbc);
 
 		// Add the panel to the frame
 		add(panel, BorderLayout.CENTER);
+		weightTF.setHorizontalAlignment(JTextField.LEFT);
+		
 
 		// Validate and repaint the frame
 		validate();
 		repaint();
-	}
-
-	public void signup() {
-		
 	}
 }

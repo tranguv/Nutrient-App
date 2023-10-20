@@ -1,40 +1,77 @@
 package view;
 
-import java.awt.GridLayout;
+import java.awt.*;
+import javax.swing.*;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+public class LoginPage extends JFrame {
+    public LoginPage() {
+        userInterface();
+    }
 
-public class LoginPage extends JFrame{
-	public LoginPage() {
-		userInterface();
-	}
-	
-	public void userInterface() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(600, 400);
-		setVisible(true);
-		content();
-	}
-	
-	public void content() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(3,1));
-		
-		//login prompt
-		JLabel label = new JLabel("Log In");
-		label.setHorizontalAlignment(JLabel.CENTER);
-		
-		 // Add the label to the panel
-	    panel.add(label);
-	    
-	    // Add the panel to the frame
-	    add(panel);
-	    
-	    // Make sure to validate and repaint the frame
-	    validate();
-	    repaint();
+    public void userInterface() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(600, 400);
+        setVisible(true);
+        content();
+    }
 
-	}
+    public void content() {
+        JPanel panel = new JPanel();
+
+        // Login prompt
+        JLabel title = new JLabel("Log In");
+
+        // Username label and text field
+        JLabel userNLabel = new JLabel("Username:");
+        JTextField usernameTF = new JTextField(20);
+
+        // Password label and text field
+        JLabel passwordLB = new JLabel("Password:");
+        JTextField passwordTF = new JTextField(20);
+
+        // Submit button
+        JButton submitB = new JButton("SUBMIT");
+
+        // styling
+        title.setHorizontalAlignment(JLabel.CENTER);
+        title.setFont(new Font("Calibri", Font.BOLD, 30));
+
+        // Set up the layout
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Add components to the panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        panel.add(title, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridy = 1;
+        panel.add(userNLabel, gbc);
+
+        gbc.gridx = 1;
+        panel.add(usernameTF, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(passwordLB, gbc);
+
+        gbc.gridx = 1;
+        panel.add(passwordTF, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(submitB, gbc);
+
+        // Add the panel to the frame
+        add(panel, BorderLayout.CENTER);
+
+        // Make sure to validate and repaint the frame
+        validate();
+        repaint();
+    }
 }

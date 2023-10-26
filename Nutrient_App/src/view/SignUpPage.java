@@ -21,9 +21,9 @@ public class SignUpPage extends JFrame{
 
 	public void signup() {
 		JPanel panel = new JPanel();
-
+		
 		// Login prompt
-		JLabel title = new JLabel("Sign Up");
+		JLabel title = new JLabel("Create Your Profile");
 
 		// Username label and text field
 		JLabel userNLabel = new JLabel("Username:");
@@ -33,11 +33,15 @@ public class SignUpPage extends JFrame{
 		JLabel passwordLB = new JLabel("Password:");
 		JTextField passwordTF = new JTextField(20);
 
+		// DOB label and text field
+		JLabel dobLB = new JLabel("Date of Birth:");
+		JTextField dobTF = new JTextField(10);
+
 		// Weight label and text field
 		JLabel weightLB = new JLabel("Weight:");
 		JTextField weightTF = new JTextField(5);
-		
-		// Weight label and text field
+
+		// Height label and text field
 		JLabel heightLB = new JLabel("Height:");
 		JTextField heightTF = new JTextField(5);
 
@@ -86,34 +90,40 @@ public class SignUpPage extends JFrame{
 		
 		gbc.gridx = 0;
 		gbc.gridy = 3;
+		panel.add(dobLB, gbc);
+
+		gbc.gridx = 1;
+		panel.add(dobTF, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 4;
 		panel.add(weightLB, gbc);
 
 		gbc.gridx = 1;
 		panel.add(weightTF, gbc);
-		
+
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		panel.add(heightLB, gbc);
 
 		gbc.gridx = 1;
 		panel.add(heightTF, gbc);
 
 		gbc.gridx = 0;
-		gbc.gridy = 5;
+		gbc.gridy = 7;
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		panel.add(submitB, gbc);
 
 		gbc.gridx = 0;
-		gbc.gridy = 6;
+		gbc.gridy = 8;
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		panel.add(signin, gbc);
 
 		// Add the panel to the frame
-		add(panel, BorderLayout.CENTER);
-		weightTF.setHorizontalAlignment(JTextField.LEFT);
-		
+		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    add(panel, BorderLayout.CENTER);
 
 		// Validate and repaint the frame
 		validate();

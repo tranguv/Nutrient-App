@@ -1,4 +1,4 @@
-package model.authLogic;
+package src.model.authLogic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,9 +10,9 @@ public class SignupLogic {
 
     public static void signUpUser(String username, String password, String dob, double weight, double height) {
         // JDBC URL, username, and password of MySQL server
-        String url = "jdbc:mysql://127.0.0.1:3306/nutritiondb";
+        String url = "jdbc:mysql://127.0.0.1:3306/database_3311";
         String username1 = "root";
-        String password1 = "Baomap123";
+        String password1 = "Trang@2003";
 
         // Try-with-resources statement will auto-close Connection and PreparedStatement
         try (Connection connection = DriverManager.getConnection(url, username1, password1)) {

@@ -1,4 +1,4 @@
-package view.Authentication;
+package src.view.Authentication;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

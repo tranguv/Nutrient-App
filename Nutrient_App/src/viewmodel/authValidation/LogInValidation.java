@@ -1,4 +1,4 @@
-package viewmodel.authValidation;
+package src.viewmodel.authValidation;
 
 public class LogInValidation {
 

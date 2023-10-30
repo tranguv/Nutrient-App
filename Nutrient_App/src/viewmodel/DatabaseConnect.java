@@ -1,4 +1,4 @@
-package viewmodel;
+package src.viewmodel;
 //
 //import java.sql.Connection;
 //import java.sql.DriverManager;

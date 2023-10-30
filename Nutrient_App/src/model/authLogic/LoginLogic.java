@@ -1,4 +1,4 @@
-package model.authLogic;
+package src.model.authLogic;
 
 public class LoginLogic {
 	

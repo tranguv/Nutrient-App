@@ -7,13 +7,15 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 public class SignupLogic {
-
-    public static void signUpUser(String username, String password, String dob, double weight, double height) {
+	boolean except = false;
+	protected SignupLogic() {
+		this.except = false;
+	}
+    public static void signUpUser(String username, String user_password, String dob, double weight, double height) throws SQLIntegrityConstraintViolationException {
         // JDBC URL, username, and password of MySQL server
         String url = "jdbc:mysql://127.0.0.1:3306/database_3311";
         String username1 = "root";
         String password1 = "Trang@2003";
-
         // Try-with-resources statement will auto-close Connection and PreparedStatement
         try (Connection connection = DriverManager.getConnection(url, username1, password1)) {
 
@@ -21,7 +23,7 @@ public class SignupLogic {
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, username); // Use variables, not hard-coded values
-                preparedStatement.setString(2, password); // Same here, and consider hashing before sending to database
+                preparedStatement.setString(2, user_password); // Same here, and consider hashing before sending to database
                 preparedStatement.setString(3, dob);
                 preparedStatement.setDouble(4, weight); 
                 preparedStatement.setDouble(5, height); 
@@ -30,14 +32,13 @@ public class SignupLogic {
 
                 System.out.println("User signed up successfully!");
 
-            } catch (SQLIntegrityConstraintViolationException e) {
-                // This block specifically handles the duplicate entry scenario
-                if (e.getSQLState().equals("23000")) {
-                    // Could also log this to the server logs if appropriate
-                    System.out.println("Error: Username already exists. Please choose a different username.");
-                } else {
-                    throw e; // Re-throw the exception if it's not related to a constraint violation we're checking
-                }
+            } 
+            catch (SQLIntegrityConstraintViolationException e) {
+            	 if (e.getSQLState().equals("23000")) {
+                     // Could also log this to the server logs if appropriate
+                     System.out.println("Error: Username already exists. Please choose a different username.");
+                     throw e;
+                 } 
             }
 
         } catch (SQLException e) {
@@ -45,5 +46,8 @@ public class SignupLogic {
             e.printStackTrace(); // For development time debugging
             throw new RuntimeException("Error accessing the database", e);
         }
+       
+           
+        
     }
 }

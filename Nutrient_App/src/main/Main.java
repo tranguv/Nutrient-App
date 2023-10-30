@@ -1,9 +1,13 @@
 package main;
 
 import model.MainApplication;
+import model.authLogic.SignupLogic;
+import view.Dashboard;
+import view.Authentication.SignUpPage;
 
 public class Main {
 	public static void main(String[] args) {
-		MainApplication app = new MainApplication();
+		SignupLogic a = new SignupLogic();
+		a.signUpUser("Boa","cakcak","120503",123,132);
 	}
 }

@@ -1,4 +1,4 @@
-package view;
+package view.Authentication;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -96,7 +96,7 @@ public class LoginPage extends JFrame {
 		repaint();
 	}
 
-	public void signup() {
+	public void loginValidation(java.awt.event.ActionEvent evt) {
 		
 	}
 }

@@ -77,6 +77,19 @@ import java.util.Date;
 
 public class DatabaseConnect {
 	
+	private static DatabaseConnect DATABASE_CONNECT;
+	
+	private DatabaseConnect() {
+		
+	}
+	
+	public static DatabaseConnect getInstance() {
+		if(DATABASE_CONNECT == null) {
+			DATABASE_CONNECT = new DatabaseConnect();
+		}
+		return DATABASE_CONNECT;
+	}
+	
 	public static void main(String[] args) {
 		 String url = "jdbc:mysql://127.0.0.1:3306/FRISBEE";
 		 String username = "root";

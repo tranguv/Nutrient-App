@@ -95,7 +95,7 @@ public class DatabaseConnect {
 		 String username = "root";
 		 String password = "Trang@2003";
 
-		 System.out.println("Connecting database...");
+		 System.out.println("Connecting Bao's database...");
 
 		 try (Connection connection = DriverManager.getConnection(url, username, password)) {
 		     System.out.println("Database connected!");

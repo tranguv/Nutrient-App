@@ -101,7 +101,7 @@ public class DatabaseConnect {
 		 String password = "Baomap123";
 >>>>>>> Stashed changes
 
-		 System.out.println("Connecting database...");
+		 System.out.println("Connecting Bao's database...");
 
 		 try (Connection connection = DriverManager.getConnection(url, username, password)) {
 		     System.out.println("Database connected!");

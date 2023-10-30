@@ -91,9 +91,9 @@ public class DatabaseConnect {
 	}
 	
 	public static void main(String[] args) {
-		 String url = "jdbc:mysql://127.0.0.1:3306/FRISBEE";
+		 String url = "jdbc:mysql://127.0.0.1:3306/database_3311";
 		 String username = "root";
-		 String password = "Qj329032003!";
+		 String password = "Trang@2003";
 
 		 System.out.println("Connecting database...");
 

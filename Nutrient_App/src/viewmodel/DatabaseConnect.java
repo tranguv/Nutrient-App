@@ -91,9 +91,15 @@ public class DatabaseConnect {
 	}
 	
 	public static void main(String[] args) {
+<<<<<<< Updated upstream
 		 String url = "jdbc:mysql://127.0.0.1:3306/FRISBEE";
 		 String username = "root";
 		 String password = "Qj329032003!";
+=======
+		 String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
+		 String username = "root";
+		 String password = "Baomap123";
+>>>>>>> Stashed changes
 
 		 System.out.println("Connecting database...");
 

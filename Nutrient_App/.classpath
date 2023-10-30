@@ -6,6 +6,10 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< Updated upstream
 	<classpathentry kind="lib" path="C:/Users/death/Documents/GitHub/Nutrient-App/Nutrient_App/lib/mysql-connector-j-8.2.0.jar"/>
+=======
+	<classpathentry kind="lib" path="C:/Users/chiem/OneDrive - York University/Documents/GitHub/Nutrient-App/Nutrient_App/lib/mysql-connector-j-8.2.0.jar"/>
+>>>>>>> Stashed changes
 	<classpathentry kind="output" path="bin"/>
 </classpath>

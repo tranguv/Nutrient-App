@@ -2,7 +2,8 @@ package model;
 
 import javax.swing.SwingUtilities;
 
-import view.LoginPage;
+import view.Dashboard;
+import view.Authentication.LoginPage;
 
 public class MainApplication {
 	
@@ -11,7 +12,8 @@ public class MainApplication {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				LoginPage l = new LoginPage();
+//				LoginPage l = new LoginPage();
+				Dashboard db = new Dashboard();
 			}
 		});
 	}

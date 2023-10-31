@@ -46,6 +46,6 @@ public class SignupLogic {
             // General SQL exception handling
             e.printStackTrace(); // For development time debugging
             throw new RuntimeException("Error accessing the database", e);
-        } 
+        }
     }
 }

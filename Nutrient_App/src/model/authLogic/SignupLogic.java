@@ -1,4 +1,4 @@
-package model.authLogic;
+package src.model.authLogic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -47,8 +47,5 @@ public class SignupLogic {
             e.printStackTrace(); // For development time debugging
             throw new RuntimeException("Error accessing the database", e);
         }
-       
-           
-        
     }
 }

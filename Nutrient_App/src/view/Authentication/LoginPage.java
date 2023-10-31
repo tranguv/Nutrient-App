@@ -1,11 +1,17 @@
 package src.view.Authentication;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.EventListener;
 
 import javax.swing.*;
+
+import src.view.Dashboard;
 
 public class LoginPage extends JFrame {
 	public LoginPage() {
@@ -35,6 +41,33 @@ public class LoginPage extends JFrame {
 
 		// Submit button
 		JButton submitB = new JButton("SUBMIT");
+		submitB.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        String username = usernameTF.getText();
+		        String password = passwordTF.getText(); // Ideally, this should be collected from a JPasswordField
+
+				if (username.isEmpty() || password.isEmpty()) {
+					JOptionPane.showMessageDialog(LoginPage.this, "Username and password cannot be empty!");
+				}
+
+		        try {
+		            // Try to log in the user
+		            boolean isValidUser = src.model.authLogic.LoginLogic.validateUser(username, password);
+
+		            // If successful, show a success message.
+					if (isValidUser) {
+						Dashboard dashboard = new Dashboard();
+					} else {
+						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");
+					}
+
+		        } catch (Exception ex) {
+		            // For other exceptions, show a generic error message.
+		            JOptionPane.showMessageDialog(LoginPage.this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
+		});
 
 		// sign up
 		JLabel signup = new JLabel("Don't have account? Sign Up");

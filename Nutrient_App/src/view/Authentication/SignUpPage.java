@@ -1,15 +1,24 @@
 package src.view.Authentication;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.*;
 
-import model.authLogic.SignupLogic;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class SignUpPage extends JFrame{
 	public SignUpPage() {
@@ -73,7 +82,7 @@ public class SignUpPage extends JFrame{
 		            double height = Double.parseDouble(heightTF.getText());
 
 		            // Try to sign up the user
-		            SignupLogic.signUpUser(username, password, dob, weight, height);
+		            src.model.authLogic.SignupLogic.signUpUser(username, password, dob, weight, height);
 
 		            // If successful, show a success message.
 		            JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");

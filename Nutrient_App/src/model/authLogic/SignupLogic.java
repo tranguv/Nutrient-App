@@ -13,9 +13,10 @@ public class SignupLogic {
 	}
     public static void signUpUser(String username, String user_password, String dob, double weight, double height) throws SQLIntegrityConstraintViolationException {
         // JDBC URL, username, and password of MySQL server
-        String url = "jdbc:mysql://127.0.0.1:3306/database_3311";
+        String url = "jdbc:mysql://127.0.0.1:3306/nutritiondb";
         String username1 = "root";
-        String password1 = "Trang@2003";
+        String password1 = "Baomap123";
+        
         // Try-with-resources statement will auto-close Connection and PreparedStatement
         try (Connection connection = DriverManager.getConnection(url, username1, password1)) {
 
@@ -45,9 +46,6 @@ public class SignupLogic {
             // General SQL exception handling
             e.printStackTrace(); // For development time debugging
             throw new RuntimeException("Error accessing the database", e);
-        }
-       
-           
-        
+        } 
     }
 }

@@ -1,4 +1,4 @@
-package view.Authentication;
+package src.view.Authentication;
 
 public class ChooseProfile {
 

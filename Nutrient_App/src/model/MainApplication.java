@@ -1,9 +1,8 @@
-package model;
+package src.model;
 
 import javax.swing.SwingUtilities;
 
-import view.Dashboard;
-import view.Authentication.LoginPage;
+import src.view.Dashboard;
 
 public class MainApplication {
 	

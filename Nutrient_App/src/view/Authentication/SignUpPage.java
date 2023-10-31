@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
+
+import model.authLogic.SignupLogic;
 
 public class SignUpPage extends JFrame{
 	public SignUpPage() {
@@ -56,6 +60,34 @@ public class SignUpPage extends JFrame{
 				LoginPage login = new LoginPage();
 				login.login();
 			}
+		});
+		submitB.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        String username = usernameTF.getText();
+		        String password = passwordTF.getText(); // Ideally, this should be collected from a JPasswordField
+		        String dob = dobTF.getText();
+
+		        try {
+		            double weight = Double.parseDouble(weightTF.getText());
+		            double height = Double.parseDouble(heightTF.getText());
+
+		            // Try to sign up the user
+		            SignupLogic.signUpUser(username, password, dob, weight, height);
+
+		            // If successful, show a success message.
+		            JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
+
+		        } catch (NumberFormatException ex) {
+		            JOptionPane.showMessageDialog(SignUpPage.this, "Invalid weight or height. Please enter valid numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		        } catch (SQLIntegrityConstraintViolationException ex) {
+		            // If there's an SQL constraint violation (e.g., username uniqueness), show a specific message.
+		            JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
+		        } catch (Exception ex) {
+		            // For other exceptions, show a generic error message.
+		            JOptionPane.showMessageDialog(SignUpPage.this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
 		});
 
 

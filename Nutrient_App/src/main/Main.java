@@ -7,6 +7,7 @@ import src.view.Authentication.SignUpPage;
 
 public class Main {
 	public static void main(String[] args) {
-		LoginPage loginPage = new LoginPage();
+		SignUpPage loginPage = new SignUpPage();
+
 	}
 }

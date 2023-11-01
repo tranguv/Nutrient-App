@@ -1,4 +1,4 @@
-package view.Authentication;
+package src.view.Authentication;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-import model.authLogic.SignupLogic;
+import src.model.authLogic.SignupLogic;
 
 public class SignUpPage extends JFrame{
 	public SignUpPage() {

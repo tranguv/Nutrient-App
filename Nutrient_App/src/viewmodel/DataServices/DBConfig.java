@@ -9,7 +9,6 @@ public class DBConfig {
     private String username;
     private String password;
     private String driver;
-
     public DBConfig() {
         Properties prop = new Properties();
         InputStream input = null;

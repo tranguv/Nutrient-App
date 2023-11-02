@@ -35,7 +35,7 @@ public class SignUpPage extends JFrame{
 
 		// Password label and text field
 		JLabel passwordLB = new JLabel("Password:");
-		JTextField passwordTF = new JTextField(20);
+		JPasswordField passwordPF = new JPasswordField(20);
 
 		// DOB label and text field
 		JLabel dobLB = new JLabel("Date of Birth:");
@@ -65,7 +65,7 @@ public class SignUpPage extends JFrame{
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        String username = usernameTF.getText();
-		        String password = passwordTF.getText(); // Ideally, this should be collected from a JPasswordField
+				char[] password = passwordPF.getPassword(); // Ideally, this should be collected from a JPasswordField
 		        String dob = dobTF.getText();
 
 		        try {
@@ -118,7 +118,7 @@ public class SignUpPage extends JFrame{
 		panel.add(passwordLB, gbc);
 
 		gbc.gridx = 1;
-		panel.add(passwordTF, gbc);
+		panel.add(passwordPF, gbc);
 		
 		gbc.gridx = 0;
 		gbc.gridy = 3;

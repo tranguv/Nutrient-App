@@ -1,31 +1,51 @@
-package model.authLogic;
+package src.model.authLogic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 public class SignupLogic {
+	boolean except = false;
+	protected SignupLogic() {
+		this.except = false;
+	}
+    public static void signUpUser(String username, String user_password, String dob, double weight, double height) throws SQLIntegrityConstraintViolationException {
+        // JDBC URL, username, and password of MySQL server
+        String url = "jdbc:mysql://127.0.0.1:3306/nutritiondb";
+        String username1 = "root";
+        String password1 = "Baomap123";
+        
+        // Try-with-resources statement will auto-close Connection and PreparedStatement
+        try (Connection connection = DriverManager.getConnection(url, username1, password1)) {
 
-    public static void signUpUser(String username, String password, String dob, double weight, double height) {
-        // Establish a connection to your MySQL database
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/your_database", "username", "password")) {
-            String sql = "INSERT INTO users (username, password, dob, weight, height) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO USER (username, user_password, dob, weight, height) VALUES (?, ?, ?, ?, ?)";
 
-            // Create a PreparedStatement to safely insert user data
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-            preparedStatement.setString(3, dob);
-            preparedStatement.setInt(4, weight);
-            preparedStatement.setInt(5, height);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, username); // Use variables, not hard-coded values
+                preparedStatement.setString(2, user_password); // Same here, and consider hashing before sending to database
+                preparedStatement.setString(3, dob);
+                preparedStatement.setDouble(4, weight); 
+                preparedStatement.setDouble(5, height); 
+                
+                preparedStatement.executeUpdate();
 
-            // Execute the query
-            preparedStatement.executeUpdate();
-            System.out.println("User signed up successfully!");
+                System.out.println("User signed up successfully!");
+
+            } 
+            catch (SQLIntegrityConstraintViolationException e) {
+            	 if (e.getSQLState().equals("23000")) {
+                     // Could also log this to the server logs if appropriate
+                     System.out.println("Error: Username already exists. Please choose a different username.");
+                     throw e;
+                 } 
+            }
+
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+            // General SQL exception handling
+            e.printStackTrace(); // For development time debugging
+            throw new RuntimeException("Error accessing the database", e);
         }
     }
 }

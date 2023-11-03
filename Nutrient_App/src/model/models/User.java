@@ -1,4 +1,4 @@
-package model.models;
+package src.model.models;
 
 public class User {
 	
@@ -8,11 +8,12 @@ public class User {
 	private double weight;
 	private String username;
 	private String password;
+	private String units;
 	
 	public User() {}
 	
 	
-	public User(String name, String dateOfBirth, double height, double weight, String username, String password) {
+	public User(String name, String dateOfBirth, double height, double weight, String username, String password, String units) {
 		super();
 		this.name = name;
 		this.dateOfBirth = dateOfBirth;
@@ -20,6 +21,7 @@ public class User {
 		this.weight = weight;
 		this.username = username;
 		this.password = password;
+		this.units = units;
 	}
 	public String getName() {
 		return name;

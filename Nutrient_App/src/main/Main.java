@@ -1,9 +1,13 @@
-package main;
+package src.main;
 
-import model.MainApplication;
+import src.model.authLogic.LoginLogic;
+import src.model.authLogic.SignupLogic;
+import src.view.Authentication.LoginPage;
+import src.view.Authentication.SignUpPage;
 
 public class Main {
 	public static void main(String[] args) {
-		MainApplication app = new MainApplication();
+		SignUpPage loginPage = new SignUpPage();
+
 	}
 }

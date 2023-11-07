@@ -19,13 +19,13 @@ public class ChooseProfile extends JFrame {
     }
 
     private void chooseProfile() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
+        // Panel setup
+        JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
         // Login prompt
-        JLabel title = new JLabel("Log In");
+        JLabel title = new JLabel("User Profile");
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setFont(new Font("Calibri", Font.BOLD, 30));
         gbc.gridx = 0;
@@ -33,38 +33,57 @@ public class ChooseProfile extends JFrame {
         gbc.gridwidth = 2;
         panel.add(title, gbc);
 
-        // Username label and text field
-        JLabel userNLabel = new JLabel("Username:");
-        JTextField usernameTF = new JTextField(20);
+        // Nickname label and text field
+        JLabel nickNameLabel = new JLabel("Nickname:");
+        JTextField nickNameTF = new JTextField(20);
         gbc.gridwidth = 1;
         gbc.gridy = 1;
         gbc.gridx = 0;
-        panel.add(userNLabel, gbc);
+        panel.add(nickNameLabel, gbc);
         gbc.gridx = 1;
-        panel.add(usernameTF, gbc);
+        panel.add(nickNameTF, gbc);
 
-        // Password label and password field
-        JLabel passwordLB = new JLabel("Password:");
-        JPasswordField passwordPF = new JPasswordField(20);
+        // Age label and text field
+        JLabel ageLabel = new JLabel("Age:");
+        JTextField ageTF = new JTextField(5);
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(passwordLB, gbc);
+        panel.add(ageLabel, gbc);
         gbc.gridx = 1;
-        panel.add(passwordPF, gbc);
+        panel.add(ageTF, gbc);
 
-        // Login button with action listener
-        JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(e -> {
-            // TODO: Implement login logic here
-            String username = usernameTF.getText();
-            char[] password = passwordPF.getPassword();
-            // Authenticate user
-            // You should hash the password and compare it with stored hashed passwords
-        });
+        // Gender label and combo box
+        JLabel genderLabel = new JLabel("Gender:");
+        JComboBox<String> genderCB = new JComboBox<>(new String[] {"Male", "Female", "Other"});
         gbc.gridx = 0;
         gbc.gridy = 3;
+        panel.add(genderLabel, gbc);
+        gbc.gridx = 1;
+        panel.add(genderCB, gbc);
+
+        // Weight to Lose label and text field
+        JLabel weightToLoseLabel = new JLabel("Weight to Lose (lbs):");
+        JTextField weightToLoseTF = new JTextField(5);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        panel.add(weightToLoseLabel, gbc);
+        gbc.gridx = 1;
+        panel.add(weightToLoseTF, gbc);
+
+        // Submit button with action listener
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            // Here you should implement the logic to handle the user profile
+            String nickname = nickNameTF.getText();
+            String age = ageTF.getText(); // Validate that this is a number
+            String gender = (String) genderCB.getSelectedItem();
+            String weightToLose = weightToLoseTF.getText(); // Validate that this is a number
+            // Process the user profile information
+        });
+        gbc.gridx = 0;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
-        panel.add(loginButton, gbc);
+        panel.add(submitButton, gbc);
 
         // Add the panel to the frame
         add(panel, BorderLayout.CENTER);

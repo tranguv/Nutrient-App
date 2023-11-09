@@ -14,7 +14,7 @@ public class DatabaseConnect {
 	private static DatabaseConnect DATABASE_CONNECT;
 	private ResourceBundle reader;
 
-	private DatabaseConnect() {
+	public DatabaseConnect() {
 		this.reader = ResourceBundle.getBundle("src/dbconfig");
 	}
 

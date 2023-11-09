@@ -6,8 +6,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Dreamingbutter/Github/Nutrient App/Nutrient_App/lib/mysql-connector-j-8.2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dreamingbutter/Github/Nutrient App/Nutrient_App/lib/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dreamingbutter/Github/Nutrient App/Nutrient_App/lib/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Users/austi/OneDrive/Documents/GitHub/Nutrient-App/Nutrient_App/lib/mysql-connector-j-8.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/austi/OneDrive/Documents/GitHub/Nutrient-App/Nutrient_App/lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Users/austi/OneDrive/Documents/GitHub/Nutrient-App/Nutrient_App/lib/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

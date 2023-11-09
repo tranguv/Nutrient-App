@@ -1,8 +1,10 @@
 /bin/
+lib/*
+!lib/*.jar
 .classpath
 .project
 .settings/
-Nutrient_App\src\viewmodel\DatabaseConnect.java
-Nutrient_App\src\dbconfig.properties
+./src/viewmodel/DatabaseConnect.java
+/src/dbconfig.properties
 
 

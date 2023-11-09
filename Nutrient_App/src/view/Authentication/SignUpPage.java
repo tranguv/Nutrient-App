@@ -1,4 +1,7 @@
-package view.Authentication;
+package src.view.Authentication;
+
+import src.model.authLogic.SignupLogic;
+import src.viewmodel.DatabaseInsert;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-import model.authLogic.SignupLogic;
+//import model.authLogic.SignupLogic;
 
 public class SignUpPage extends JFrame{
 	public SignUpPage() {
@@ -73,7 +76,7 @@ public class SignUpPage extends JFrame{
 		            double height = Double.parseDouble(heightTF.getText());
 
 		            // Try to sign up the user
-		            SignupLogic.signUpUser(username, password, dob, weight, height);
+		            DatabaseInsert.signUpUser(username, password, dob, weight, height);
 
 		            // If successful, show a success message.
 		            JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");

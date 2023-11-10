@@ -7,7 +7,8 @@ import src.view.Authentication.SignUpPage;
 
 public class Main {
 	public static void main(String[] args) {
-		SignUpPage loginPage = new SignUpPage();
-
+		// SignUpPage loginPage = new SignUpPage();
+		LoginPage loginPage = new LoginPage();
+		// LoginLogic.validateUser("trangcute", "Elizabeth@2003");
 	}
 }

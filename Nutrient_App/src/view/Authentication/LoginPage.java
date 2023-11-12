@@ -53,7 +53,7 @@ public class LoginPage extends JFrame {
 
 		        try {
 		            // Try to log in the user
-		            boolean isValidUser = src.model.authLogic.LoginLogic.validateUser(username, password);
+		            boolean isValidUser = src.viewmodel.DataServices.DBQueries.validateUser(username, password);
 
 		            // If successful, show a success message.
 					if (isValidUser) {

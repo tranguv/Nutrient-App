@@ -1,7 +1,9 @@
 {
     "java.project.referencedLibraries": {
         "include": [
-            "lib/**/*.jar"
+            "lib/**/*.jar",
+            "Nutrient_App/lib/mysql-connector-j-8.2.0.jar",
+            "Nutrient_App/lib/jfreechart-1.0.19.jar"
         ],
         "exclude": [
             "Nutrient_App/lib/jcommon-1.0.23.jar"

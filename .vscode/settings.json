@@ -1,0 +1,10 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar"
+        ],
+        "exclude": [
+            "Nutrient_App/lib/jcommon-1.0.23.jar"
+        ]
+    }
+}

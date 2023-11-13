@@ -1,4 +1,4 @@
-package src.view.Authentication;
+package src.client.Authentication;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +11,7 @@ import java.util.EventListener;
 
 import javax.swing.*;
 
-import src.view.Dashboard;
+import src.client.Dashboard;
 
 public class LoginPage extends JFrame {
 	public LoginPage() {
@@ -53,7 +53,7 @@ public class LoginPage extends JFrame {
 
 		        try {
 		            // Try to log in the user
-		            boolean isValidUser = src.model.authLogic.LoginLogic.validateUser(username, password);
+		            boolean isValidUser = src.server.DataServices.DBQueries.validateUser(username, password);
 
 		            // If successful, show a success message.
 					if (isValidUser) {

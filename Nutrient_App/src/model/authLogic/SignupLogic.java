@@ -11,7 +11,7 @@ public class SignupLogic {
 	protected SignupLogic() {
 		this.except = false;
 	}
-    public static void signUpUser(String username, String user_password, String dob, double weight, double height) throws SQLIntegrityConstraintViolationException {
+    public static void signUpUser(String username, char[] user_password, String dob, double weight, double height) throws SQLIntegrityConstraintViolationException {
         // JDBC URL, username, and password of MySQL server
         String url = "jdbc:mysql://127.0.0.1:3306/nutritiondb";
         String username1 = "root";
@@ -24,7 +24,7 @@ public class SignupLogic {
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, username); // Use variables, not hard-coded values
-                preparedStatement.setString(2, user_password); // Same here, and consider hashing before sending to database
+                preparedStatement.setString(2, String.valueOf(user_password)); // Same here, and consider hashing before sending to database
                 preparedStatement.setString(3, dob);
                 preparedStatement.setDouble(4, weight); 
                 preparedStatement.setDouble(5, height); 

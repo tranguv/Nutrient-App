@@ -18,7 +18,7 @@ public class SignUpPage extends JFrame{
 
 	public void userInterface() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(600, 400);
+		setSize(1000, 600);
 		setVisible(true);
 		signup();
 	}

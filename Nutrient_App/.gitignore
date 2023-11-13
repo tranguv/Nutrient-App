@@ -5,3 +5,4 @@
 .settings/
 ./src/viewmodel/DatabaseConnect.java
 /src/dbconfig.properties
+.idea/

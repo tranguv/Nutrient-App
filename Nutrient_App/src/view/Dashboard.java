@@ -12,7 +12,7 @@ public class Dashboard extends JFrame{
 
     private JTextField mealTypeField, ingredientNameField, quantityField, unitField,
             exerciseTypeField, durationField, intensityField ;
-    private JComboBox<String> mealTypeComboBox;
+    private JComboBox<String> mealTypeComboBox, ingredientCombo;
     private JTextArea mealsTextArea, exercisesTextArea;
     private JButton addMealButton, addExerciseButton, saveLogButton;
     private JTextArea historyTextArea;
@@ -41,13 +41,40 @@ public class Dashboard extends JFrame{
         inputPanel.add(mealTypeComboBox, gbc);
 
 
+
         gbc.gridx = 0;
         gbc.gridy++;
         inputPanel.add(new JLabel("Ingredient Name:"), gbc);
+        String[] ingredients = {
+                "Dairy and Egg Products",
+                "Spices and Herbs",
+                "Babyfoods",
+                "Fats and Oils",
+                "Poultry Products",
+                "Soups, Sauces and Gravies",
+                "Sausages and Luncheon Meats",
+                "Breakfast Cereals",
+                "Fruits and Fruit Juices",
+                "Pork Products",
+                "Vegetables and Vegetable Products",
+                "Nuts and Seeds",
+                "Beef Products",
+                "Beverages",
+                "Finfish and Shellfish Products",
+                "Legumes and Legume Products",
+                "Lamb, Veal, and Game",
+                "Baked Products",
+                "Sweets",
+                "Cereals, Grains, and Pasta",
+                "Fast Foods",
+                "Mixed Dishes",
+                "Snacks"
+        };
+        ingredientCombo = new JComboBox<>(ingredients);
         gbc.gridx = 1;
-        ingredientNameField = new JTextField();
-        ingredientNameField.setPreferredSize(new Dimension(200, 30)); // Set preferred size
-        inputPanel.add(ingredientNameField, gbc);
+
+        ingredientCombo.setPreferredSize(new Dimension(200, 30)); // Set preferred size
+        inputPanel.add(ingredientCombo, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
@@ -148,8 +175,9 @@ public class Dashboard extends JFrame{
 
     private void addMeal() {
         String selectedMealType = (String) mealTypeComboBox.getSelectedItem();
+        String selectedIngredient = (String) ingredientCombo.getSelectedItem();
         String mealInfo = String.format("Meal Type: %s, Ingredients: %s, Quantity: %s, Unit: %s",
-                selectedMealType, ingredientNameField.getText(),
+                selectedMealType, selectedIngredient,
                 quantityField.getText(), unitField.getText());
         mealsTextArea.append(mealInfo + "\n");
         updateHistory("Added Meal: " + mealInfo);

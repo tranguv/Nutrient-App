@@ -1,7 +1,7 @@
 package src.main;
+import src.client.Authentication.LoginPage;
+import src.client.Authentication.SignUpPage;
 import src.model.authLogic.SignupLogic;
-import src.view.Authentication.LoginPage;
-import src.view.Authentication.SignUpPage;
 
 public class Main {
 	public static void main(String[] args) {

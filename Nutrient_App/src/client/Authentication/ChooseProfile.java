@@ -1,4 +1,4 @@
-package src.view.Authentication;
+package src.client.Authentication;
 
 import javax.swing.*;
 import java.awt.*;

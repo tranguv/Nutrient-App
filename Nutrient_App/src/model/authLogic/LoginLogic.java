@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
-import src.viewmodel.DataServices.DBConfig;
+import src.server.DataServices.DBConfig;
 
 public class LoginLogic {
     public static boolean validateUser(String username, String password) {

@@ -2,7 +2,7 @@ package src.model;
 
 import javax.swing.SwingUtilities;
 
-import src.view.Dashboard;
+import src.client.Dashboard;
 
 public class MainApplication {
 	

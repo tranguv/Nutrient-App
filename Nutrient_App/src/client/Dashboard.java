@@ -16,7 +16,7 @@ public class Dashboard extends JFrame{
     private JButton addMealButton, addExerciseButton, saveLogButton;
 
     public Dashboard() {
-        setTitle("Nutrifit App");
+        setTitle("Nutrition App");
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));

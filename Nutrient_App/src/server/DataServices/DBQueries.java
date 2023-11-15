@@ -103,15 +103,17 @@ public class DBQueries {
 	}
 
 	//GET FOOD GROUP
-	public static void getFoodGroup(){
+	public static String[] getFoodGroup(){
+		String[] foodGroup = new String[25];
 		try (Connection connection = getConnection()) {
 			String sql = "SELECT FoodGroupName FROM `FOOD GROUP`";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = preparedStatement.executeQuery()) {
 					while (resultSet.next()) {
-						System.out.println(resultSet.getString("food_group_name"));
+						foodGroup[resultSet.getRow()] = resultSet.getString("FoodGroupName");
 					}
 				}
+				return foodGroup;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

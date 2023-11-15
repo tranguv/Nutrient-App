@@ -4,16 +4,18 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 
-public class Dashboard extends JFrame{
+public class Dashboard extends JFrame {
 
     private JComboBox<String> mealTypeComboBox, ingredientCombo;
     private JTextField quantityField, unitField, exerciseTypeField, durationField, intensityField;
     private JTextArea mealsTextArea, exercisesTextArea, historyTextArea;
     private JButton addMealButton, addExerciseButton, saveLogButton;
+    private JPanel mealPanel;
 
     public Dashboard() {
         setTitle("Nutrition App");
@@ -22,7 +24,7 @@ public class Dashboard extends JFrame{
         setLayout(new BorderLayout(10, 10));
 
         // Create the panel for meal inputs
-        JPanel mealPanel = new JPanel(new GridBagLayout());
+        mealPanel = new JPanel(new GridBagLayout());
         mealPanel.setBorder(BorderFactory.createTitledBorder("Meal Details"));
         addMealFields(mealPanel);
 
@@ -76,9 +78,9 @@ public class Dashboard extends JFrame{
         add(historyPanel, BorderLayout.AFTER_LAST_LINE);
 
         // Add action listeners
-//        addMealButton.addActionListener(e -> addMeal());
+        addMealButton.addActionListener(e -> addMeal());
 //        addExerciseButton.addActionListener(e -> addExercise());
-//        saveLogButton.addActionListener(e -> saveLog());
+        saveLogButton.addActionListener(e -> saveLog());
 
         setVisible(true);
     }
@@ -101,14 +103,13 @@ public class Dashboard extends JFrame{
         panel.add(mealTypeComboBox, gbc);
 
 
-
         // Ingredient Name Label
         gbc.gridx++;
         panel.add(new JLabel("Ingredient Name:"), gbc);
 
         // Ingredient ComboBox
         gbc.gridx++;
-        ingredientCombo = new JComboBox<>(new String[]{  "Dairy and Egg Products",
+        ingredientCombo = new JComboBox<>(new String[]{"Dairy and Egg Products",
                 "Spices and Herbs",
                 "Babyfoods",
                 "Fats and Oils",
@@ -153,6 +154,10 @@ public class Dashboard extends JFrame{
         unitField = new JTextField();
         unitField.setPreferredSize(new Dimension(100, 30)); // Adjusted size to provide space
         panel.add(unitField, gbc);
+        mealTypeComboBox.setName("mealtype");
+        ingredientCombo.setName("ingredient");
+        quantityField.setName("quantity");
+        unitField.setName("unit");
 
         // Add Ingredient Button
         JButton addIngredientButton = new JButton("+");
@@ -183,7 +188,7 @@ public class Dashboard extends JFrame{
 
         // Ingredient ComboBox
         gbc.gridx++;
-        JComboBox<String> newIngredientCombo = new JComboBox<>(new String[]{  "Dairy and Egg Products",
+        JComboBox<String> newIngredientCombo = new JComboBox<>(new String[]{"Dairy and Egg Products",
                 "Spices and Herbs",
                 "Babyfoods",
                 "Fats and Oils",
@@ -207,6 +212,7 @@ public class Dashboard extends JFrame{
                 "Mixed Dishes",
                 "Snacks"});
         newIngredientCombo.setPreferredSize(new Dimension(200, 30));
+
         panel.add(newIngredientCombo, gbc);
 
         // Quantity Label
@@ -217,6 +223,7 @@ public class Dashboard extends JFrame{
         gbc.gridx++;
         JTextField newQuantityField = new JTextField();
         newQuantityField.setPreferredSize(new Dimension(100, 30));
+
         panel.add(newQuantityField, gbc);
 
         // Unit Label
@@ -228,6 +235,10 @@ public class Dashboard extends JFrame{
         JTextField newUnitField = new JTextField();
         newUnitField.setPreferredSize(new Dimension(100, 30));
         panel.add(newUnitField, gbc);
+
+        newIngredientCombo.setName("ingredient");
+        newQuantityField.setName("quantity");
+        newUnitField.setName("unit");
     }
 
     private void addExerciseFields(JPanel panel) {
@@ -241,7 +252,7 @@ public class Dashboard extends JFrame{
         exerciseTypeField = new JTextField();
         gbc.gridx = 1;
         panel.add(exerciseTypeField, gbc);
-        exerciseTypeField.setPreferredSize(new Dimension(200,30));
+        exerciseTypeField.setPreferredSize(new Dimension(200, 30));
         // Duration
         gbc.gridx = 0;
         gbc.gridy++;
@@ -249,7 +260,7 @@ public class Dashboard extends JFrame{
         durationField = new JTextField();
         gbc.gridx = 1;
         panel.add(durationField, gbc);
-        durationField.setPreferredSize(new Dimension(200,30));
+        durationField.setPreferredSize(new Dimension(200, 30));
 
         // Intensity
         gbc.gridx = 0;
@@ -258,37 +269,58 @@ public class Dashboard extends JFrame{
         intensityField = new JTextField();
         gbc.gridx = 1;
         panel.add(intensityField, gbc);
-        intensityField.setPreferredSize(new Dimension(200,30));
+        intensityField.setPreferredSize(new Dimension(200, 30));
     }
-//    private void updateHistory(String newEntry) {
-//        // Format the current date
-//        LocalDate currentDate = LocalDate.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        String formattedDate = currentDate.format(formatter);
-//
-//        // Append the date and new entry followed by a newline to the history text area
-//        historyTextArea.append(formattedDate + " : " + newEntry + "\n");
-//
-//        // Scroll the history text area to the bottom
-//        historyTextArea.setCaretPosition(historyTextArea.getDocument().getLength());
-//    }
-//
-//    private void addMeal() {
-//        String selectedMealType = (String) mealTypeComboBox.getSelectedItem();
-//        String selectedIngredient = (String) ingredientCombo.getSelectedItem();
-//        String mealInfo = String.format("Meal Type: %s, Ingredients: %s, Quantity: %s, Unit: %s",
-//                selectedMealType, selectedIngredient,
-//                quantityField.getText(), unitField.getText());
-//        mealsTextArea.append(mealInfo + "\n");
-//        updateHistory("Added Meal: " + mealInfo);
-//        clearMealFields();
-//    }
-//    private void clearMealFields() {
-//        // Removed the mealTypeField line as it's no longer in use
-//        ingredientNameField.setText("");
-//        quantityField.setText("");
-//        unitField.setText("");
-//    }
+
+    private void updateHistory(String newEntry) {
+        // Format the current date
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = currentDate.format(formatter);
+
+        // Append the date and new entry followed by a newline to the history text area
+        historyTextArea.append(formattedDate + " : " + newEntry + "\n");
+
+        // Scroll the history text area to the bottom
+        historyTextArea.setCaretPosition(historyTextArea.getDocument().getLength());
+    }
+
+    private void addMeal() {
+        // Get the selected meal type and meal name
+        String mealType = mealTypeComboBox.getSelectedItem().toString();
+
+        // Print meal type and name
+        System.out.println("Meal Type: " + mealType);
+
+
+        // Iterate over the components in the mealPanel
+        for (Component component : mealPanel.getComponents()) {
+            if (component instanceof JTextField) {
+                JTextField textField = (JTextField) component;
+                String text = textField.getText();
+                if (!text.isEmpty()) {
+                    System.out.println("Text Field: " + text);
+                }
+            } else if (component instanceof JComboBox) {
+                JComboBox<?> comboBox = (JComboBox<?>) component;
+                Object selectedItem = comboBox.getSelectedItem();
+                if ((selectedItem != null) && (component.getName() !="mealtype")) {
+                    System.out.println("Combo Box: " + selectedItem.toString());
+                }
+            }
+        }
+
+        // Update history with the added meal
+        updateHistory("Added meal: " + mealType + " - " );
+    }
+
+
+    private void clearMealFields() {
+        // Removed the mealTypeField line as it's no longer in use
+
+        quantityField.setText("");
+        unitField.setText("");
+    }
 //    private void addExercise() {
 //        String exerciseInfo = String.format("Exercise Type : %s, Duration: %s minutes, Intensity: %s",
 //                exerciseTypeField.getText(), durationField.getText(), intensityField.getText());
@@ -296,12 +328,12 @@ public class Dashboard extends JFrame{
 //        updateHistory("Added Exercise : " + exerciseInfo);
 //        clearExerciseFields();
 //    }
-//
-//
-//    private void saveLog() {
-//        System.out.println("Meals Log:\n" + mealsTextArea.getText());
-//        System.out.println("Exercises Log:\n" + exercisesTextArea.getText());
-//    }
+
+
+    private void saveLog() {
+        System.out.println("Meals Log:\n" + mealsTextArea.getText());
+        System.out.println("Exercises Log:\n" + exercisesTextArea.getText());
+    }
 
 
 

@@ -4,7 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.ArrayList;  // Make sure to import this at the beginning of your file
+import java.util.List;
+
 
 import javax.swing.*;
 
@@ -16,6 +18,7 @@ public class Dashboard extends JFrame {
     private JTextArea mealsTextArea, exercisesTextArea, historyTextArea;
     private JButton addMealButton, addExerciseButton, saveLogButton;
     private JPanel mealPanel;
+    private int ingredientRowCount = 1;
 
     public Dashboard() {
         setTitle("Nutrition App");
@@ -179,11 +182,12 @@ public class Dashboard extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        gbc.gridy = ingredientRowCount;    // Use the ingredientRowCount to determine the next row
         int nextRow = panel.getComponentCount() / 8; // Assuming 8 components per ingredient row
 
         // Ingredient Name Label
         gbc.gridx = 2;
-        gbc.gridy = nextRow;
+
         panel.add(new JLabel("Ingredient Name:"), gbc);
 
         // Ingredient ComboBox
@@ -239,6 +243,8 @@ public class Dashboard extends JFrame {
         newIngredientCombo.setName("ingredient");
         newQuantityField.setName("quantity");
         newUnitField.setName("unit");
+        ingredientRowCount++;
+
     }
 
     private void addExerciseFields(JPanel panel) {
@@ -286,12 +292,13 @@ public class Dashboard extends JFrame {
     }
 
     private void addMeal() {
-        // Get the selected meal type and meal name
+        // Get the selected meal type
         String mealType = mealTypeComboBox.getSelectedItem().toString();
 
-        // Print meal type and name
-        System.out.println("Meal Type: " + mealType);
-
+        // Arrays to store ingredients, quantities, and units
+        List<String> ingredients = new ArrayList<>();
+        List<String> quantities = new ArrayList<>();
+        List<String> units = new ArrayList<>();
 
         // Iterate over the components in the mealPanel
         for (Component component : mealPanel.getComponents()) {
@@ -299,21 +306,39 @@ public class Dashboard extends JFrame {
                 JTextField textField = (JTextField) component;
                 String text = textField.getText();
                 if (!text.isEmpty()) {
-                    System.out.println("Text Field: " + text);
+                    if (textField.getName().equals("ingredient")) {
+                        ingredients.add(text);
+                    } else if (textField.getName().equals("quantity")) {
+                        quantities.add(text);
+                    } else if (textField.getName().equals("unit")) {
+                        units.add(text);
+                    }
                 }
-            } else if (component instanceof JComboBox) {
+            } else if (component instanceof JComboBox ) {
                 JComboBox<?> comboBox = (JComboBox<?>) component;
                 Object selectedItem = comboBox.getSelectedItem();
-                if ((selectedItem != null) && (component.getName() !="mealtype")) {
-                    System.out.println("Combo Box: " + selectedItem.toString());
+                if (selectedItem != null) {
+                    ingredients.add(selectedItem.toString());
                 }
             }
         }
 
-        // Update history with the added meal
-        updateHistory("Added meal: " + mealType + " - " );
-    }
+        // Concatenate ingredients, quantities, and units for history
+        StringBuilder historyEntry = new StringBuilder("Added meal: " + mealType + " - ");
+//        for (int i = 0; i < ingredients.size(); i++) {
+//            historyEntry.append(ingredients.get(i)).append(": ").append(quantities.get(i)).append(" ").append(units.get(i)).append(", ");
+//        }
 
+        // Remove the last comma and space
+        if (historyEntry.length() > 0) {
+            historyEntry.setLength(historyEntry.length() - 2);
+        }
+        System.out.println(ingredients.toString());
+        System.out.println(ingredients.size());
+        System.out.println(units.toString());
+        // Update history
+        updateHistory(historyEntry.toString());
+    }
 
     private void clearMealFields() {
         // Removed the mealTypeField line as it's no longer in use

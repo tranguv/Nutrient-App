@@ -10,8 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import src.model.MainApplication;
-// import src.model.authLogic.SignupLogic;
-import src.model.models.User;
+import src.model.User;
 import src.server.DataServices.DBQueries;
 
 public class SignUpPage extends JFrame{

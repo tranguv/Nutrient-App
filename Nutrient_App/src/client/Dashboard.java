@@ -40,8 +40,6 @@ public class Dashboard extends JFrame{
         gbc.gridx = 1;
         inputPanel.add(mealTypeComboBox, gbc);
 
-
-
         gbc.gridx = 0;
         gbc.gridy++;
         inputPanel.add(new JLabel("Ingredient Name:"), gbc);
@@ -183,12 +181,14 @@ public class Dashboard extends JFrame{
         updateHistory("Added Meal: " + mealInfo);
         clearMealFields();
     }
+
     private void clearMealFields() {
         // Removed the mealTypeField line as it's no longer in use
         ingredientNameField.setText("");
         quantityField.setText("");
         unitField.setText("");
     }
+
     private void addExercise() {
         String exerciseInfo = String.format("Exercise Type : %s, Duration: %s minutes, Intensity: %s",
                 exerciseTypeField.getText(), durationField.getText(), intensityField.getText());
@@ -202,8 +202,6 @@ public class Dashboard extends JFrame{
         System.out.println("Meals Log:\n" + mealsTextArea.getText());
         System.out.println("Exercises Log:\n" + exercisesTextArea.getText());
     }
-
-
 
     private void clearExerciseFields() {
         mealTypeField.setText("");

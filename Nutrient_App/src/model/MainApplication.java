@@ -5,7 +5,6 @@ import java.util.List;
 
 import src.client.Dashboard;
 import src.client.Authentication.SignUpPage;
-import src.model.models.User;
 
 public class MainApplication {
 	private List<User> users;

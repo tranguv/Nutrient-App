@@ -1,8 +1,6 @@
-package src.model.models;
+package src.model;
 
 public class User {
-	private static int userID = 0;
-	private int id;
 	private String fName;
 	private String lName;
 	private String sex;
@@ -14,13 +12,11 @@ public class User {
 	private String units;
 	
 	public User() {
-		this.id = userID++;
 	}
 	
 	
 	public User(String username, String password, String fName, String lName, String sex, String dateOfBirth, double weight, double height, String units) {
 		super();
-		// this.id = userID++;
 		this.dateOfBirth = dateOfBirth;
 		this.fName = fName;
 		this.lName = lName;
@@ -31,14 +27,6 @@ public class User {
 		this.password = password;
 		this.units = units;
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	// public void setId(int id) {
-	// 	this.id = id;
-	// }
 
 	public String getFirstName() {
 		return fName;

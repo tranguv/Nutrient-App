@@ -181,4 +181,27 @@ public class DBQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
+	//GET FOOD GROUP NAME BY FOOD DESCRIPTION
+	//USER WILL SEARCH FOR FOOD DESCRIPTION AND THE FOOD GROUP NAME WILL BE RETURNED
+	//FOOD DESCRIPTION IS IN ENGLISH
+	public static String getFoodGroupName(String foodDescription){
+		String foodGroupName = "";
+		try (Connection connection = getConnection()) {
+			String sql = "SELECT FoodGroupName FROM `FOOD_GROUP` fg JOIN `FOOD_NAME` fn ON fg.FoodGroupID = fn.FoodGroupID WHERE fn.FoodDescription = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setString(1, foodDescription);
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						foodGroupName = resultSet.getString("FoodGroupName");
+					}
+				}
+				return foodGroupName;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
 }

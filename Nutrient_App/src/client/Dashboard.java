@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;  // Make sure to import this at the beginning of your file
 import java.util.List;
-
+import  src.client.S12FocusLost;
 
 import javax.swing.*;
 
@@ -18,6 +18,7 @@ public class Dashboard extends JFrame {
     private JTextArea mealsTextArea, exercisesTextArea, historyTextArea;
     private JButton addMealButton, addExerciseButton, saveLogButton;
     private JPanel mealPanel;
+    private S12FocusLost autoSuggest;
     private int ingredientRowCount = 1;
 
     public Dashboard() {
@@ -112,29 +113,16 @@ public class Dashboard extends JFrame {
 
         // Ingredient ComboBox
         gbc.gridx++;
-        ingredientCombo = new JComboBox<>(new String[]{"Dairy and Egg Products",
-                "Spices and Herbs",
-                "Babyfoods",
-                "Fats and Oils",
-                "Poultry Products",
-                "Soups, Sauces and Gravies",
-                "Sausages and Luncheon Meats",
-                "Breakfast Cereals",
-                "Fruits and Fruit Juices",
-                "Pork Products",
-                "Vegetables and Vegetable Products",
-                "Nuts and Seeds",
-                "Beef Products",
-                "Beverages",
-                "Finfish and Shellfish Products",
-                "Legumes and Legume Products",
-                "Lamb, Veal, and Game",
-                "Baked Products",
-                "Sweets",
-                "Cereals, Grains, and Pasta",
-                "Fast Foods",
-                "Mixed Dishes",
-                "Snacks"});
+
+        JComboBox comboBox = new JComboBox(new Object[] {"Cheese souffle","Chop suey, with meat, canned","Chinese dish, chow mein, chicken","Corn fritter","Beef pot roast, with browned potatoes, peas and corn","Fried chicken, mashed potatoes and vegetables","Meat loaf with tomato sauce, mashed potatoes and peas","Sliced turkey with mashed potatoes and peas","Vinegar, cider","Vinegar, distilled (white)","Butter, whipped","Butter oil, anhydrous","Cheese, blue","Cheese, brick","Cheese, brie","Cheese, camembert","Cheese, caraway","Cheese, cheshire","Cheese, colby","Cheese, cottage, creamed (4.5% M.F.)","Cheese, cottage, creamed with fruit","Cheese, cottage, uncreamed, dry curd (0.4% M.F.)","Cheese, cream","Cheese, edam","Cheese, fontina","Cheese, gjetost","Cheese, gruyere"
+                ,"Cheese, limburger","Cheese, monterey","Cheese, mozzarella, (48% water, 25% M.F.)","Cheese, muenster","Cheese, neufchatel","Cheese, parmesan, dry grated","Cheese, parmesan, hard","Cheese, port-salut","Cheese, provolone","Cheese, ricotta, with whole milk","Cheese, ricotta, with partly skimmed milk","Cheese, romano","Cheese, roquefort (blue)","Cheese, swiss (emmental)","Cheese, tilsit, with whole milk","Cheese, processed, cheddar, cold pack","Cheese, processed food, swiss, loaf","Cream, whipped, cream topping, pressurized","Eggnog, 7% M.F., Canadian product, 4% to 8% M.F.","Coffee whitener (non dairy), liquid","Dessert topping (non dairy), powdered","Dessert topping (non dairy), powdered, prepared with whole milk","Dessert topping (non dairy), pressurized","Dessert topping (non dairy), frozen, semisolid","Milk, fluid, partly skimmed, 2% M.F.","Milk, fluid, partly skimmed, 1% M.F.","Milk, dry whole","Milk, dry, buttermilk, sweet cream","Milk, condensed, sweetened, canned","Milk, fluid, chocolate, whole","Milk, fluid, chocolate, partly skimmed, 2% M.F.","Hot chocolate, cocoa, homemade, prepared with 2% milk","Milk, fluid, goat, enriched, whole","Milk, fluid, human (breast milk), mature"
+                ,"Milk, fluid, sheep, whole","Milk shake, chocolate, thick","Milk shake, vanilla, thick","Whey, acid, fluid","Whey, acid, dry","Whey, sweet, fluid","Whey, sweet, dry","Egg, chicken, dried, whole","Egg, chicken, dried, whole, stabilized","Egg, chicken, white, pan dried, flakes","Egg, chicken, white, dried, powder, glucose reduced","Egg, chicken, yolk, dried","Egg, duck, whole, fresh, raw","Egg, goose, whole, fresh, raw","Egg, quail, whole, fresh, raw","Egg, turkey, whole, fresh, raw","Butter, unsalted","Cheese, parmesan, shredded","Cheese, goat, hard, (less than 35% water, 36% M.F.)","Cheese, goat, semi-soft, (35% to 55% water, 30% M.F.)","Cheese, goat, soft, (more than 55% water, 21% M.F.)","Cheese fondue","Cheese sauce, homemade","Cheese, Mexican, queso anejo","Cheese, Mexican, queso asadero","Cheese, Mexican, queso chihuahua","Cheese, cheddar or colby type, low fat (7% M.F.)","Cheese, cheddar or colby type, low sodium","Cheese, cottage, (1% M.F.)","Cheese, feta","Cheese, gouda","Cheese, mozzarella, (52% water, 22.5% M.F.)","Cheese, mozzarella, partially skim, (52% water, 16.5% M.F.)","Milk, evaporated, skim, canned, undiluted, 0.2% M.F.","Milk, fluid, whole, pasteurized, homogenized, 3.25% M.F.","Milk, fluid, skim","Milk, dry, skim, powder, instant","Hot chocolate, cocoa, homemade, prepared with whole milk","Egg substitute, frozen (yolk replaced)"
+                ,"Butter, regular","Cheese, cheddar","Cheese, cottage, (2% M.F.)","Coffee whitener (non dairy), powdered","Milk, fluid, whole, producer, 3.7% M.F.","Milk, fluid, buttermilk, cultured, 1% M.F.","Egg, chicken, whole, fresh or frozen, raw","Egg, chicken, white, fresh or frozen, raw","Egg, chicken, yolk, fresh or frozen, raw","Egg, chicken, whole, cooked, fried","Egg, chicken, whole, cooked, boiled in shell, hard-cooked"
+                ,"Egg, chicken, whole, cooked, poached","Egg, chicken, whole, cooked, scrambled or omelet","Milk, dry, skim, powder, regular","Cream, table (coffee), 18% M.F.","Cream, whipping, 32% M.F.","Cream, whipping, 35% M.F.","Cream, sour, cultured, 14% M.F","Milk, evaporated, whole, canned, undiluted, 7.8% M.F.","Cheese, cottage, uncreamed, dry, large or small curd, nonfat","Cream, cereal (half and half), 10% M.F.","Cream, table (coffee), 15% M.F.","Cream, sour, cultured, 18% M.F.","Milk, evaporated, partly skimmed, canned, undiluted, 2% M.F.","Cheese, calorie-reduced (6% M.F.)","Cream, table (coffee), 20% M.F.","Dessert, frozen yogourt","Spices, allspice, ground","Spices, anise seeds","Spices, basil, dried","Spices, bay leaf","Spices, caraway seed","Spices, cardamom, ground","Spices, celery seed","Spices, chervil, dried","Spices, chili powder","Spices, cinnamon, ground","Spices, cloves, ground","Spices, coriander leaf (cilantro), dried","Spices, coriander seed (cilantro)","Spices, cumin seed","Spices, curry powder","Spices, dill seed","Spices, dill weed, dried","Spices, fennel seed","Spices, fenugreek seed","Spices, garlic powder","Spices, ginger, ground","Spices, mace, ground","Spices, marjoram, dried","Spices, mustard seed, yellow","Spices, nutmeg, ground","Spices, onion powder","Spices, oregano, ground","Spices, paprika",
+        });
+
+        autoSuggest = new S12FocusLost(comboBox);
+        ingredientCombo = comboBox;
         ingredientCombo.setPreferredSize(new Dimension(200, 30));
         panel.add(ingredientCombo, gbc);
 
@@ -189,32 +177,15 @@ public class Dashboard extends JFrame {
         gbc.gridx = 2;
 
         panel.add(new JLabel("Ingredient Name:"), gbc);
-
+        JComboBox newIngredientCombo = new JComboBox(new Object[] {"Cheese souffle","Chop suey, with meat, canned","Chinese dish, chow mein, chicken","Corn fritter","Beef pot roast, with browned potatoes, peas and corn","Fried chicken, mashed potatoes and vegetables","Meat loaf with tomato sauce, mashed potatoes and peas","Sliced turkey with mashed potatoes and peas","Vinegar, cider","Vinegar, distilled (white)","Butter, whipped","Butter oil, anhydrous","Cheese, blue","Cheese, brick","Cheese, brie","Cheese, camembert","Cheese, caraway","Cheese, cheshire","Cheese, colby","Cheese, cottage, creamed (4.5% M.F.)","Cheese, cottage, creamed with fruit","Cheese, cottage, uncreamed, dry curd (0.4% M.F.)","Cheese, cream","Cheese, edam","Cheese, fontina","Cheese, gjetost","Cheese, gruyere"
+                ,"Cheese, limburger","Cheese, monterey","Cheese, mozzarella, (48% water, 25% M.F.)","Cheese, muenster","Cheese, neufchatel","Cheese, parmesan, dry grated","Cheese, parmesan, hard","Cheese, port-salut","Cheese, provolone","Cheese, ricotta, with whole milk","Cheese, ricotta, with partly skimmed milk","Cheese, romano","Cheese, roquefort (blue)","Cheese, swiss (emmental)","Cheese, tilsit, with whole milk","Cheese, processed, cheddar, cold pack","Cheese, processed food, swiss, loaf","Cream, whipped, cream topping, pressurized","Eggnog, 7% M.F., Canadian product, 4% to 8% M.F.","Coffee whitener (non dairy), liquid","Dessert topping (non dairy), powdered","Dessert topping (non dairy), powdered, prepared with whole milk","Dessert topping (non dairy), pressurized","Dessert topping (non dairy), frozen, semisolid","Milk, fluid, partly skimmed, 2% M.F.","Milk, fluid, partly skimmed, 1% M.F.","Milk, dry whole","Milk, dry, buttermilk, sweet cream","Milk, condensed, sweetened, canned","Milk, fluid, chocolate, whole","Milk, fluid, chocolate, partly skimmed, 2% M.F.","Hot chocolate, cocoa, homemade, prepared with 2% milk","Milk, fluid, goat, enriched, whole","Milk, fluid, human (breast milk), mature"
+                ,"Milk, fluid, sheep, whole","Milk shake, chocolate, thick","Milk shake, vanilla, thick","Whey, acid, fluid","Whey, acid, dry","Whey, sweet, fluid","Whey, sweet, dry","Egg, chicken, dried, whole","Egg, chicken, dried, whole, stabilized","Egg, chicken, white, pan dried, flakes","Egg, chicken, white, dried, powder, glucose reduced","Egg, chicken, yolk, dried","Egg, duck, whole, fresh, raw","Egg, goose, whole, fresh, raw","Egg, quail, whole, fresh, raw","Egg, turkey, whole, fresh, raw","Butter, unsalted","Cheese, parmesan, shredded","Cheese, goat, hard, (less than 35% water, 36% M.F.)","Cheese, goat, semi-soft, (35% to 55% water, 30% M.F.)","Cheese, goat, soft, (more than 55% water, 21% M.F.)","Cheese fondue","Cheese sauce, homemade","Cheese, Mexican, queso anejo","Cheese, Mexican, queso asadero","Cheese, Mexican, queso chihuahua","Cheese, cheddar or colby type, low fat (7% M.F.)","Cheese, cheddar or colby type, low sodium","Cheese, cottage, (1% M.F.)","Cheese, feta","Cheese, gouda","Cheese, mozzarella, (52% water, 22.5% M.F.)","Cheese, mozzarella, partially skim, (52% water, 16.5% M.F.)","Milk, evaporated, skim, canned, undiluted, 0.2% M.F.","Milk, fluid, whole, pasteurized, homogenized, 3.25% M.F.","Milk, fluid, skim","Milk, dry, skim, powder, instant","Hot chocolate, cocoa, homemade, prepared with whole milk","Egg substitute, frozen (yolk replaced)"
+                ,"Butter, regular","Cheese, cheddar","Cheese, cottage, (2% M.F.)","Coffee whitener (non dairy), powdered","Milk, fluid, whole, producer, 3.7% M.F.","Milk, fluid, buttermilk, cultured, 1% M.F.","Egg, chicken, whole, fresh or frozen, raw","Egg, chicken, white, fresh or frozen, raw","Egg, chicken, yolk, fresh or frozen, raw","Egg, chicken, whole, cooked, fried","Egg, chicken, whole, cooked, boiled in shell, hard-cooked"
+                ,"Egg, chicken, whole, cooked, poached","Egg, chicken, whole, cooked, scrambled or omelet","Milk, dry, skim, powder, regular","Cream, table (coffee), 18% M.F.","Cream, whipping, 32% M.F.","Cream, whipping, 35% M.F.","Cream, sour, cultured, 14% M.F","Milk, evaporated, whole, canned, undiluted, 7.8% M.F.","Cheese, cottage, uncreamed, dry, large or small curd, nonfat","Cream, cereal (half and half), 10% M.F.","Cream, table (coffee), 15% M.F.","Cream, sour, cultured, 18% M.F.","Milk, evaporated, partly skimmed, canned, undiluted, 2% M.F.","Cheese, calorie-reduced (6% M.F.)","Cream, table (coffee), 20% M.F.","Dessert, frozen yogourt","Spices, allspice, ground","Spices, anise seeds","Spices, basil, dried","Spices, bay leaf","Spices, caraway seed","Spices, cardamom, ground","Spices, celery seed","Spices, chervil, dried","Spices, chili powder","Spices, cinnamon, ground","Spices, cloves, ground","Spices, coriander leaf (cilantro), dried","Spices, coriander seed (cilantro)","Spices, cumin seed","Spices, curry powder","Spices, dill seed","Spices, dill weed, dried","Spices, fennel seed","Spices, fenugreek seed","Spices, garlic powder","Spices, ginger, ground","Spices, mace, ground","Spices, marjoram, dried","Spices, mustard seed, yellow","Spices, nutmeg, ground","Spices, onion powder","Spices, oregano, ground","Spices, paprika",
+        });
         // Ingredient ComboBox
         gbc.gridx++;
-        JComboBox<String> newIngredientCombo = new JComboBox<>(new String[]{"Dairy and Egg Products",
-                "Spices and Herbs",
-                "Babyfoods",
-                "Fats and Oils",
-                "Poultry Products",
-                "Soups, Sauces and Gravies",
-                "Sausages and Luncheon Meats",
-                "Breakfast Cereals",
-                "Fruits and Fruit Juices",
-                "Pork Products",
-                "Vegetables and Vegetable Products",
-                "Nuts and Seeds",
-                "Beef Products",
-                "Beverages",
-                "Finfish and Shellfish Products",
-                "Legumes and Legume Products",
-                "Lamb, Veal, and Game",
-                "Baked Products",
-                "Sweets",
-                "Cereals, Grains, and Pasta",
-                "Fast Foods",
-                "Mixed Dishes",
-                "Snacks"});
+        new S12FocusLost(newIngredientCombo);
         newIngredientCombo.setPreferredSize(new Dimension(200, 30));
 
         panel.add(newIngredientCombo, gbc);

@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
+import src.model.FoodItem;
 import src.model.User;
 
 public class DBQueries {
@@ -83,7 +86,22 @@ public class DBQueries {
 
 	//for deleting user profile
 
-	//for getting user profile
+	//for getting user profile by username
+	// public static User getUser(String username){
+	// 	try (Connection connection = getConnection()) {
+	// 		String sql = "SELECT * FROM USER WHERE username = ?";
+	// 		try (PreparedStatement pState = connection.prepareStatement(sql)) {
+	// 			pState.setString(1, username);
+	// 			pState.executeQuery();
+
+	// 			try (ResultSet)
+	// 		}
+	// 	} catch (SQLException e) {
+	// 		e.printStackTrace();
+	// 		throw new RuntimeException("Error accessing the database", e);
+	// 	}
+
+	// }
 
 	//for getting user log
 
@@ -126,4 +144,41 @@ public class DBQueries {
 		}
 	}
 
+	//GET FOOD ITEM JOIN FOOD GROUP, FOOD NAME AND FOOD SOURCE TABLES
+	public static List<FoodItem> getFoodItem(){
+		List<FoodItem> foodItem = new ArrayList<FoodItem>();
+		try (Connection connection = getConnection()) {
+			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = pState.executeQuery()) {
+					// int index = 0;
+					while (resultSet.next()) {
+						//FOOD NAME TABLE
+						int foodID = resultSet.getInt("FoodID");
+						String foodDescription = resultSet.getString("FoodDescriptionF");
+						String foodDescriptionF = resultSet.getString("FoodDescription");
+						
+
+						//FOOD GROUP TABLE
+						int foodGroupID = resultSet.getInt("FoodGroupID");
+						String foodGroupName = resultSet.getString("FoodGroupName");
+						String foodGroupNameF = resultSet.getString("FoodGroupNameF");
+
+						//FOOD SOURCE TABLE
+						int foodSourceID = resultSet.getInt("FoodSourceID");
+						String foodSourceDescription = resultSet.getString("FoodSourceDescription");
+						String foodSourceDescriptionF = resultSet.getString("FoodSourceDescriptionF");
+						
+						FoodItem fi = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
+						foodItem.add(fi);
+						// foodItem[index++] = fi;
+					}
+				}
+				return foodItem;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 }

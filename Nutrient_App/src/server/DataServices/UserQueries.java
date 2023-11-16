@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 
 import src.model.User;
 
@@ -49,8 +50,7 @@ public class UserQueries {
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
 
-			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-				// pState.setInt(1, user.getId());
+			try (PreparedStatement pState = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				pState.setString(1, user.getUsername());
 				pState.setString(2, String.valueOf(user.getPassword()));
 				pState.setString(3, user.getFirstName());
@@ -63,6 +63,13 @@ public class UserQueries {
 	
 				int rowsAffected = pState.executeUpdate();
 				if (rowsAffected > 0) {
+					try (ResultSet generatedKeys = pState.getGeneratedKeys()) {
+						if (generatedKeys.next()) {
+							user.setId(generatedKeys.getInt(1));
+						} else {
+							throw new SQLException("Failed to retrieve user ID.");
+						}
+					}
 					System.out.println("User signed up successfully!");
 					return true;
 				} else {
@@ -87,6 +94,26 @@ public class UserQueries {
 				try (ResultSet resultSet = pState.executeQuery()) {
 					while (resultSet.next()) {
 						userID = resultSet.getInt("current_user_id");
+					}
+				}
+				return userID;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+	//GET USER ID BY USERNAME
+	public static int getUserIDbyUsername(String username){
+		int userID = 0;
+		try (Connection connection = getConnection()) {
+			String sql = "SELECT userID FROM USER WHERE username = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setString(1, username);
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						userID = resultSet.getInt("userID");
 					}
 				}
 				return userID;

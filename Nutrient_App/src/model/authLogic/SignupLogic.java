@@ -48,4 +48,5 @@ public class SignupLogic {
             throw new RuntimeException("Error accessing the database", e);
         }
     }
+
 }

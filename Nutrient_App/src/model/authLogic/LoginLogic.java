@@ -32,4 +32,6 @@ public class LoginLogic {
 			throw new RuntimeException("Error accessing the database", e);
 		}
     }
+
+
 }

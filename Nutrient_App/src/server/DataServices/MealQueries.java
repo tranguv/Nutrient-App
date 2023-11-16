@@ -5,17 +5,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 import src.model.FoodItem;
 import src.model.User;
 
-public class DBQueries {
-	private static DBConfig dbConfig = new DBConfig();
+public class MealQueries {
+    private static DBConfig dbConfig = new DBConfig();
 
 	private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
@@ -127,5 +126,4 @@ public class DBQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
-
 }

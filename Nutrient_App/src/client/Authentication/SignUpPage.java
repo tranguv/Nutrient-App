@@ -12,6 +12,7 @@ import javax.swing.*;
 import src.model.MainApplication;
 import src.model.User;
 import src.server.DataServices.DBQueries;
+import src.server.DataServices.UserQueries;
 
 public class SignUpPage extends JFrame{
 	public SignUpPage() {
@@ -76,7 +77,7 @@ public class SignUpPage extends JFrame{
 		
 					// Try to sign up the user
 					// SignupLogic.signUpUser(username, password, dob, weight, height);
-					if (DBQueries.validateUser(username,  String.valueOf(password))) {
+					if (UserQueries.validateUser(username, String.valueOf(password))) {
 						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -84,7 +85,8 @@ public class SignUpPage extends JFrame{
 					User newUser = new User(username, String.valueOf(password), "Dang", "Peos", "M", dob, weight, height, "metric");
 					
 					// Move the createUser method call into the try block
-					if (DBQueries.createUser(newUser)) {
+					if (UserQueries.createUser(newUser)) {
+						newUser.setId(UserQueries.getUserID());
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
 						dispose();
 					} else {

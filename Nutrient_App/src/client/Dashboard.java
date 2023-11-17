@@ -13,8 +13,8 @@ import javax.swing.*;
 
 public class Dashboard extends JFrame {
 
-    private JComboBox<String> mealTypeComboBox, ingredientCombo;
-    private JTextField quantityField, unitField, exerciseTypeField, durationField, intensityField;
+    private JComboBox<String> mealTypeComboBox, ingredientCombo, intensityCombo, unitCombo;
+    private JTextField quantityField, exerciseTypeField, durationField;
     private JTextArea mealsTextArea, exercisesTextArea, historyTextArea;
     private JButton addMealButton, addExerciseButton, saveLogButton;
     private JPanel mealPanel;
@@ -142,13 +142,13 @@ public class Dashboard extends JFrame {
 
         // Unit Field
         gbc.gridx++;
-        unitField = new JTextField();
-        unitField.setPreferredSize(new Dimension(100, 30)); // Adjusted size to provide space
-        panel.add(unitField, gbc);
+        unitCombo = new JComboBox<>(new String[] {"kg", "lb"});
+        unitCombo.setPreferredSize(new Dimension(100, 30)); // Adjusted size to provide space
+        panel.add(unitCombo, gbc);
         mealTypeComboBox.setName("mealtype");
         ingredientCombo.setName("ingredient");
         quantityField.setName("quantity");
-        unitField.setName("unit");
+        unitCombo.setName("unit");
 
         // Add Ingredient Button
         JButton addIngredientButton = new JButton("+");
@@ -204,16 +204,15 @@ public class Dashboard extends JFrame {
         // Unit Label
         gbc.gridx++;
         panel.add(new JLabel("Unit:"), gbc);
+        gbc.gridx++;
+        unitCombo = new JComboBox(new  String[] {"kg", "lb"});
+        unitCombo.setPreferredSize(new Dimension(100, 30)); // Adjusted size to provide space
+        panel.add(unitCombo, gbc);
 
         // Unit Field
-        gbc.gridx++;
-        JTextField newUnitField = new JTextField();
-        newUnitField.setPreferredSize(new Dimension(100, 30));
-        panel.add(newUnitField, gbc);
 
         newIngredientCombo.setName("ingredient");
         newQuantityField.setName("quantity");
-        newUnitField.setName("unit");
         ingredientRowCount++;
 
     }
@@ -243,10 +242,10 @@ public class Dashboard extends JFrame {
         gbc.gridx = 0;
         gbc.gridy++;
         panel.add(new JLabel("Intensity:"), gbc);
-        intensityField = new JTextField();
+        intensityCombo = new JComboBox(new Object[] {"Low", "Medium", "High"});
         gbc.gridx = 1;
-        panel.add(intensityField, gbc);
-        intensityField.setPreferredSize(new Dimension(200, 30));
+        panel.add(intensityCombo, gbc);
+        intensityCombo.setPreferredSize(new Dimension(100, 30));
     }
 
     private void updateHistory(String newEntry) {
@@ -315,7 +314,6 @@ public class Dashboard extends JFrame {
         // Removed the mealTypeField line as it's no longer in use
 
         quantityField.setText("");
-        unitField.setText("");
     }
 //    private void addExercise() {
 //        String exerciseInfo = String.format("Exercise Type : %s, Duration: %s minutes, Intensity: %s",
@@ -338,5 +336,4 @@ public class Dashboard extends JFrame {
     public static void main(String[] args) {
         Dashboard d = new Dashboard();
     }
-
 }

@@ -12,6 +12,7 @@ import java.util.List;
 
 import src.model.FoodItem;
 import src.model.User;
+import src.model.DateLog;
 
 public class MealQueries {
     private static DBConfig dbConfig = new DBConfig();
@@ -19,6 +20,22 @@ public class MealQueries {
 	private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
     }
+
+	//INSERT NEW DATE LOG
+	public static void addDateLog(DateLog dateLog) {
+		try (Connection connection = getConnection()) {
+			String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES (?, ?)";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setInt(1, UserQueries.getUserIDbyUsername(dateLog.getUsername()));
+				// System.out.println("User ID trong mealqueirues: " + UserQueries.getUserIDbyUsername(user.getUsername()));
+				pState.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+				pState.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 
 	//for inserting new meal log
 	public static void addMeal(User user, String mealType) {

@@ -19,8 +19,6 @@ public class UserQueries {
 
     //for log in validation
     public static boolean validateUser(String username, String password) {
-        // DBConfig dbConfig = new DBConfig();
-
         try (Connection connection = getConnection()) {
 			String sql = "SELECT * FROM USER WHERE username = ? AND user_password = ?";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
@@ -42,9 +40,7 @@ public class UserQueries {
     }
 
 	//for sign up validation
-	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
-		// DBConfig dbConfig = new DBConfig();
-	
+	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {	
         try (Connection connection = getConnection()) {
 			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement

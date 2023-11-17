@@ -4,3 +4,6 @@
 .settings/
 Nutrient_App\src\viewmodel\DatabaseConnect.java
 Nutrient_App\src\dbconfig.properties
+Nutrient_App/.idea/
+Nutrient_App/*.iml/
+.idea/

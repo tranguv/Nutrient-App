@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-import src.model.authLogic.SignupLogic;
+import src.model.MainApplication;
+import src.model.User;
+import src.server.DataServices.DBQueries;
 
 public class SignUpPage extends JFrame{
 	public SignUpPage() {
@@ -18,7 +20,7 @@ public class SignUpPage extends JFrame{
 
 	public void userInterface() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(600, 400);
+		setSize(1000, 600);
 		setVisible(true);
 		signup();
 	}
@@ -62,33 +64,44 @@ public class SignUpPage extends JFrame{
 			}
 		});
 		submitB.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        String username = usernameTF.getText();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String username = usernameTF.getText();
 				char[] password = passwordPF.getPassword(); // Ideally, this should be collected from a JPasswordField
-		        String dob = dobTF.getText();
-
-		        try {
-		            double weight = Double.parseDouble(weightTF.getText());
-		            double height = Double.parseDouble(heightTF.getText());
-
-		            // Try to sign up the user
-		            SignupLogic.signUpUser(username, password, dob, weight, height);
-
-		            // If successful, show a success message.
-		            JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
-
-		        } catch (NumberFormatException ex) {
-		            JOptionPane.showMessageDialog(SignUpPage.this, "Invalid weight or height. Please enter valid numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
-		        } catch (SQLIntegrityConstraintViolationException ex) {
-		            // If there's an SQL constraint violation (e.g., username uniqueness), show a specific message.
-		            JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
-		        } catch (Exception ex) {
-		            // For other exceptions, show a generic error message.
-		            JOptionPane.showMessageDialog(SignUpPage.this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		        }
-		    }
+				String dob = dobTF.getText();
+		
+				try {
+					double weight = Double.parseDouble(weightTF.getText());
+					double height = Double.parseDouble(heightTF.getText());
+		
+					// Try to sign up the user
+					// SignupLogic.signUpUser(username, password, dob, weight, height);
+					if (DBQueries.validateUser(username,  String.valueOf(password))) {
+						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+		
+					User newUser = new User(username, String.valueOf(password), "Dang", "Peos", "M", dob, weight, height, "metric");
+					
+					// Move the createUser method call into the try block
+					if (DBQueries.createUser(newUser)) {
+						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
+						dispose();
+					} else {
+						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
+						System.out.println("User signed up unsuccessfully!");
+					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(SignUpPage.this, "Invalid weight or height. Please enter valid numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
+				} catch (SQLIntegrityConstraintViolationException ex) {
+					JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception ex) {
+					// For other exceptions, show a generic error message.
+					JOptionPane.showMessageDialog(SignUpPage.this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		});
+		
 
 
 		// styling

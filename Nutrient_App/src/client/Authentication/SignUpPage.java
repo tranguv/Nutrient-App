@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-import src.model.MainApplication;
 import src.model.User;
 import src.server.DataServices.UserQueries;
 

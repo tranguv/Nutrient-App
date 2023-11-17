@@ -1,5 +1,8 @@
 package src.model;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 public class User {
 	private String fName;
 	private String lName;
@@ -102,5 +105,12 @@ public class User {
 		} else {
 			this.units = "metric";
 		}
+	}
+
+	public int getAge(String dateOfBirth) {
+		LocalDate dob = LocalDate.parse(dateOfBirth);
+		LocalDate todayDate = LocalDate.now();
+		Period p = Period.between(dob, todayDate);
+		return p.getYears();
 	}
 }

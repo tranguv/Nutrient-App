@@ -1,26 +1,25 @@
 package src.server.DataServices;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.*;
+import java.time.LocalDate;
 
+import src.model.DateLog;
+import src.model.Exercise;
+import src.model.Meal;
 import src.model.User;
 
 public class DBQueries {
 	private static DBConfig dbConfig = new DBConfig();
 
 	private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
-    }
+		return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
+	}
 
-    //for log in validation
-    public static boolean validateUser(String username, String password) {
-        // DBConfig dbConfig = new DBConfig();
+	//for log in validation
+	public static boolean validateUser(String username, String password) {
+		// DBConfig dbConfig = new DBConfig();
 
-        try (Connection connection = getConnection()) {
+		try (Connection connection = getConnection()) {
 			String sql = "SELECT * FROM USER WHERE username = ? AND user_password = ?";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				preparedStatement.setString(1, username);
@@ -38,13 +37,13 @@ public class DBQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
-    }
+	}
 
 	//for sign up validation
 	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
 		// DBConfig dbConfig = new DBConfig();
-	
-        try (Connection connection = getConnection()) {
+
+		try (Connection connection = getConnection()) {
 			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
@@ -60,7 +59,7 @@ public class DBQueries {
 				preparedStatement.setDouble(7, user.getWeight());
 				preparedStatement.setDouble(8, user.getHeight());
 				preparedStatement.setString(9, user.getUnits());
-	
+
 				int rowsAffected = preparedStatement.executeUpdate();
 				if (rowsAffected > 0) {
 					System.out.println("User signed up successfully!");
@@ -76,7 +75,7 @@ public class DBQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
-	}	
+	}
 
 	//for updating user profile
 
@@ -87,13 +86,14 @@ public class DBQueries {
 	//for getting user log
 
 	//for inserting meal log
-	public static void addMeal(User user){
+	public static void addMeal(User user) {
+		Meal meal = new Meal();
 		try (Connection connection = getConnection()) {
-			String sql = "INSERT INTO MEAL_DETAILS (mealID, meal_type, date_log_id) VALUES(?, ?, ?)";
+			String sql = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES(?, ?, ?)" +
+					"SELECT LAST_INSERT_ID();";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-				preparedStatement.setInt(0, 0);
-				preparedStatement.setString(1, "Breakfast");
-				preparedStatement.setInt(2, 0);
+				preparedStatement.setString(0, meal.getMealTypeName());
+				preparedStatement.setInt(1, 0);
 				preparedStatement.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -102,11 +102,54 @@ public class DBQueries {
 		}
 	}
 
-	//GET FOOD GROUP
-	public static String[] getFoodGroup(){
+	//	LOG DATE
+	public static int addDate(User user) {
+		Date curr_date = java.sql.Date.valueOf(LocalDate.now());
+		try (Connection connection = getConnection()) {
+			String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES(?, ?, ?)" +
+					"SELECT LAST_INSERT_ID() AS date_log_id;";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(0, 0);
+				preparedStatement.setDate(1, curr_date);
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt("date_log_id");
+					}
+				}
+				throw new RuntimeException("Cannot find last inserted date_log_id");
+//				return -1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+	//	LOG EXERCISE
+	public static void addExercise(User user, Exercise exe, int dateLogId) {
+		DateLog dateLog = new DateLog();
+		try (Connection connection = getConnection()) {
+			String sql = "INSERT INTO EXERCISE_LOG (date_log_id, exercise_type, duration, intensity) VALUES(?, ?, ?);" +
+					"SELECT LAST_INSERT_ID();";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(0, dateLogId);
+				preparedStatement.setString(1, exe.getName());
+				preparedStatement.setInt(2, exe.getDuration());
+				preparedStatement.setString(3, exe.getIntensityName());
+				preparedStatement.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+
+	//	GET FOOD GROUP
+	public static String[] getFoodGroup() {
 		String[] foodGroup = new String[25];
 		try (Connection connection = getConnection()) {
-			String sql = "SELECT FoodGroupName FROM `FOOD GROUP`";
+			String sql = "SELECT FoodGroupName FROM `FOOD_GROUP`";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = preparedStatement.executeQuery()) {
 					while (resultSet.next()) {
@@ -121,4 +164,189 @@ public class DBQueries {
 		}
 	}
 
+	//	GET Exercise List
+	public static String[] getExerciseList() {
+		String[] exercisetypes = new String[35];
+		try (Connection connection = getConnection()) {
+			String sql = "SELECT CATEGORIES FROM `METvalues`";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = preparedStatement.executeQuery()) {
+					while (resultSet.next()) {
+						exercisetypes[resultSet.getRow()] = resultSet.getString("CATEGORIES");
+					}
+				}
+				return exercisetypes;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+
+	//	GET MET VALUES BASED ON EXERCISE INTENSITY
+	public static double getMETLow(String exercisetype) throws SQLException {
+		double metLow = 0;
+		Connection connection = getConnection();
+		String sql = String.format("SELECT LOW FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+			metLow = resultSet.getDouble("LOW");
+		}
+		preparedStatement.close();
+		resultSet.close();
+		return metLow;
+	}
+
+	public static double getMETMed(String exercisetype) throws SQLException {
+		double metMed = 0;
+		Connection connection = getConnection();
+		String sql = String.format("SELECT MEDIUM FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+			metMed = resultSet.getDouble("MEDIUM");
+		}
+		preparedStatement.close();
+		resultSet.close();
+		return metMed;
+	}
+
+	public static double getMETHigh(String exercisetype) throws SQLException {
+		double metHigh = 0;
+		Connection connection = getConnection();
+		String sql = String.format("SELECT HIGH FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+			metHigh = resultSet.getDouble("HIGH");
+		}
+		preparedStatement.close();
+		resultSet.close();
+		return metHigh;
+	}
+
+
+	//GET MET VALUES BASED ON INTENSITY
+//	public static double getMETvalue(String intensity, String exercisetype) {
+//		System.out.println("Intensity: " + intensity + ", Exercise Type: " + exercisetype);
+//
+//		try (Connection connection = getConnection()) {
+////			Exercise e = new Exercise();
+////			exercisetype = e.getName();
+//
+//			if (intensity.equals(Exercise.Intensity.low)) {
+//
+//				double metLow = 0;
+////				String sql = String.format("SELECT 'LOW' FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+//				String sql = String.format("SELECT `LOW` FROM METvalues WHERE CATEGORIES='Climbing'");
+//				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//					try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//						while (resultSet.next()) {
+//							metLow = resultSet.getDouble("LOW");
+//							System.out.println(metLow);
+//						}
+//					}
+//
+//					return metLow;
+//				}
+//			} else if (intensity.equals(Exercise.Intensity.medium)) {
+//				double metMed = 0;
+//				String sql = String.format("SELECT 'MEDIUM' FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+//				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//					try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//						while (resultSet.next()) {
+//							metMed = resultSet.getDouble("MEDIUM");
+//						}
+//					}
+//					return metMed;
+//				}
+//			} else if (intensity.equals(Exercise.Intensity.high)) {
+//				double metHigh = 0;
+//				String sql = String.format("SELECT 'HIGH' FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+//				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//					try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//						while (resultSet.next()) {
+//							metHigh = resultSet.getDouble("HIGH");
+//						}
+//					}
+//					return metHigh;
+//				}
+//			}
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			throw new RuntimeException("Error accessing the database", e);
+//		}
+//		return 2;
+//	}
+
+
 }
+
+//		if (intensity.equals(Exercise.Intensity.low)) {
+//			double metLow = 0;
+//			try (Connection connection = getConnection()) {
+//				Exercise e = new Exercise();
+//				exercisetype = e.getName();
+//				String sql = String.format("SELECT LOW FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+//				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//					try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//						while (resultSet.next()) {
+//							metLow = resultSet.getDouble("LOW");
+//						}
+//					}
+//					System.out.println(metLow);
+//					return metLow;
+//				}
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//				throw new RuntimeException("Error accessing the database", e);
+//			}
+//
+//		}
+//
+//		else if (intensity.equals(Exercise.Intensity.medium)) {
+//			double metMed = 0;
+//			try (Connection connection = getConnection()) {
+//				Exercise e = new Exercise();
+//				exercisetype = e.getName();
+//				String sql = String.format("SELECT MEDIUM FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+//				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//					try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//						while (resultSet.next()) {
+//							metMed = resultSet.getDouble("MEDIUM");
+//						}
+//					}
+//					return metMed;
+//				}
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//				throw new RuntimeException("Error accessing the database", e);
+//			}
+//		}
+//
+//		else if (intensity.equals(Exercise.Intensity.high)) {
+//			double metHigh = 0;
+//			try (Connection connection = getConnection()) {
+//				Exercise e = new Exercise();
+//				exercisetype = e.getName();
+//				String sql = String.format("SELECT HIGH FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
+//				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//					try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//						while (resultSet.next()) {
+//							metHigh = resultSet.getDouble("HIGH");
+//						}
+//					}
+//					return metHigh;
+//				}
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//				throw new RuntimeException("Error accessing the database", e);
+//			}
+//		}
+//		return 1;
+//	}
+
+

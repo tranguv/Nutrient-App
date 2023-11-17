@@ -10,6 +10,7 @@ public class DateLog {
     private ArrayList<Meal> meals;
     private ArrayList<Exercise> exercises;
 
+    public DateLog() {}
     public DateLog(String username, int dateLogId, Date date, ArrayList<Meal> meals, ArrayList<Exercise> exercises) {
         this.username = username;
         this.dateLogId = dateLogId;

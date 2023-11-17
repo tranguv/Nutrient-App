@@ -22,4 +22,9 @@ public class Ingredient {
     public String getUnit() {
         return unit;
     }
+
+    public void setName(String name) {this.name = name;}
+
+
+
 }

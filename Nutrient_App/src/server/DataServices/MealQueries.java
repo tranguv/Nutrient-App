@@ -9,10 +9,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.sql.Date;
 
 import src.model.FoodItem;
 import src.model.User;
 import src.model.DateLog;
+import src.model.Meal;
 
 public class MealQueries {
     private static DBConfig dbConfig = new DBConfig();
@@ -21,55 +23,53 @@ public class MealQueries {
         return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
     }
 
-	//INSERT NEW DATE LOG
-	public static void addDateLog(DateLog dateLog) {
+	//CHECK IF MEAL EXISTS, IF YES RETURN MEAL ID
+	
+
+	//for inserting new meal log
+	public static void addMeal(DateLog date, Meal meal) {
 		try (Connection connection = getConnection()) {
-			String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES (?, ?)";
-			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-				pState.setInt(1, UserQueries.getUserIDbyUsername(dateLog.getUsername()));
-				// System.out.println("User ID trong mealqueirues: " + UserQueries.getUserIDbyUsername(user.getUsername()));
-				pState.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-				pState.executeUpdate();
+			String insertMealQuery = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES (?, ?)";
+			String insertIngredientQuery = "INSERT INTO INGREDIENT (meal_id, quantity, unit) VALUES (?, ?, ?)";
+			int dateLogId = date.getDateLogId();
+			try (PreparedStatement insertMealStatement = connection.prepareStatement(insertMealQuery)) {
+				insertMealStatement.setString(1, meal.getType().toString());
+				insertMealStatement.setInt(2, dateLogId);
+				insertMealStatement.executeUpdate();
+			}
+
+			int mealId = meal.getMealId();
+			for (int i = 0; i < meal.getIngredients().size(); i++) {
+				try (PreparedStatement insertIngredientStatement = connection.prepareStatement(insertIngredientQuery)) {
+					insertIngredientStatement.setInt(1, mealId);
+					insertIngredientStatement.setDouble(2, meal.getIngredients().get(i).getQuantity());
+					insertIngredientStatement.setString(3, meal.getIngredients().get(i).getUnit());
+					insertIngredientStatement.executeUpdate();
+				}
+			}
+		} catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error accessing the database", e);
+        }
+	}
+
+	//ADD INGREDIENTS TO MEAL
+	public static void addIngredient(Meal meal, FoodItem foodItem, double quantity) {
+		try (Connection connection = getConnection()) {
+			String insertIngredientQuery = "INSERT INTO INGREDIENT (food_id, meal_id, quantity) VALUES (?, ?, ?)";
+			int foodId = foodItem.getFoodID();
+			int mealId = meal.getMealId();
+			try (PreparedStatement insertIngredientStatement = connection.prepareStatement(insertIngredientQuery)) {
+				insertIngredientStatement.setInt(1, foodId);
+				insertIngredientStatement.setInt(2, mealId);
+				insertIngredientStatement.setDouble(3, quantity);
+				insertIngredientStatement.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
-
-	//for inserting new meal log
-	public static void addMeal(User user, String mealType) {
-        try (Connection connection = getConnection()) {
-            // Insert date log
-            String logDateQuery = "INSERT INTO DATE_LOG (userID, date_log) VALUES (?, ?)";
-            try (PreparedStatement logDateStatement = connection.prepareStatement(logDateQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                logDateStatement.setInt(1, UserQueries.getUserIDbyUsername(user.getUsername()));
-				System.out.println("User ID trong mealqueirues: " + UserQueries.getUserIDbyUsername(user.getUsername()));
-				logDateStatement.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-                logDateStatement.executeUpdate();
-
-                // Retrieve the generated date_log_id
-                ResultSet generatedKeys = logDateStatement.getGeneratedKeys();
-                int dateLogId = -1;
-                if (generatedKeys.next()) {
-                    dateLogId = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("Failed to retrieve date_log_id.");
-                }
-
-                // Insert meal details
-                String insertMealQuery = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES (?, ?)";
-                try (PreparedStatement insertMealStatement = connection.prepareStatement(insertMealQuery)) {
-                    insertMealStatement.setString(1, mealType);
-                    insertMealStatement.setInt(2, dateLogId);
-                    insertMealStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error accessing the database", e);
-        }
-    }
 
 	//GET FOOD GROUP
 	public static String[] getFoodGroup(){

@@ -1,11 +1,21 @@
 package src.test;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JOptionPane;
 
 import src.client.Authentication.SignUpPage;
+import src.model.DateLog;
+import src.model.FoodItem;
+import src.model.Meal;
+import src.model.MealType;
 import src.model.User;
+import src.model.Ingredient;
 import src.server.DataServices.MealQueries;
 import src.server.DataServices.UserQueries;
 
@@ -20,7 +30,26 @@ public class MealTest {
                 newUser.setId(UserQueries.getUserID());
                 System.out.println("id trong test: " + newUser.getId()); // Debugging statement
                 System.out.println("User signed up successfully!");
-                MealQueries.addMeal(newUser, "breakfast");
+
+                FoodItem item1 = MealQueries.getFoodItem().get(0);
+                FoodItem item2 = MealQueries.getFoodItem().get(0);
+                FoodItem item3 = MealQueries.getFoodItem().get(0);
+                
+                Ingredient ingredient = new Ingredient(item1, 1, "g");
+                Ingredient ingredient1 = new Ingredient(item2, 3, "g");
+                Ingredient ingredient2 = new Ingredient(item3, 6, "g");
+                
+                List<Ingredient> ingredients = new ArrayList<>(Arrays.asList(ingredient, ingredient1, ingredient2));
+                
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.YEAR, 2023);
+                cal.set(Calendar.MONTH, Calendar.MAY);
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                DateLog dateLog = new DateLog(newUser.getId(), 0, cal.getTime(), null, null);
+                
+                Meal meal =  new Meal(1, MealType.BREAKFAST, ingredients);
+                MealQueries.addMeal(dateLog, meal);
+
                 System.out.println("Meal added successfully!");
             } else {
                 System.out.println("User signed up unsuccessfully!");

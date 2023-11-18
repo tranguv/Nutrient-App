@@ -14,7 +14,7 @@ public class DBConfig {
         InputStream input = null;
 
         try {
-            input = new FileInputStream("Nutrient_App\\src\\dbconfig.properties");
+            input = new FileInputStream("src\\dbconfig.properties");
             prop.load(input);
 
             this.url = prop.getProperty("db.url");

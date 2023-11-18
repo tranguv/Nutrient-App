@@ -35,7 +35,8 @@ public class Main {
 
 		User userTest = new User("an1","pham1","An", "Pham", "M","2003-09-13",60,175,"metric");
 		Exercise exe = new Exercise(userTest, "Frisbee", 50, Exercise.Intensity.medium);
-		System.out.println(Exercise.caloriesBurntExercise(userTest, exe,"medium"));
-
+//		System.out.println(Exercise.caloriesBurntExercise(userTest, exe,"medium"));
+		double bmr = Exercise.BMRcalc(userTest);
+		System.out.println(Exercise.TDEEcalc(bmr, "medium"));
 	}
 }

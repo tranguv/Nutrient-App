@@ -76,5 +76,11 @@ public class Exercise {
         return bmrIndex;
     }
 
-
+    public static double TDEEcalc(double bmr, String inten) {
+        double tdee = 0;
+        if (inten.equals(Intensity.low.toString())) {tdee = bmr * 1.375;}
+        else if (inten.equals(Intensity.medium.toString())) {tdee = bmr * 1.55;}
+        else if (inten.equals(Intensity.high.toString())) {tdee = bmr * 1.725;}
+        return tdee;
+    }
 }

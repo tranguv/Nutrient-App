@@ -3,23 +3,14 @@ package src.server.DataServices;
 import java.sql.*;
 import java.time.LocalDate;
 
-import src.model.DateLog;
-import src.model.Exercise;
-import src.model.Meal;
-import src.model.User;
+import src.model.*;
 
 public class DBQueries {
-	private static DBConfig dbConfig = new DBConfig();
-
-	private static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
-	}
-
 	//for log in validation
 	public static boolean validateUser(String username, String password) {
 		// DBConfig dbConfig = new DBConfig();
 
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM USER WHERE username = ? AND user_password = ?";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				preparedStatement.setString(1, username);
@@ -43,7 +34,7 @@ public class DBQueries {
 	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
 		// DBConfig dbConfig = new DBConfig();
 
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
@@ -85,10 +76,14 @@ public class DBQueries {
 
 	//for getting user log
 
-	//for inserting meal log
-	public static void addMeal(User user) {
+	//	GETTING NUTRIENT INFO
+
+
+
+	// for inserting meal log
+	public static void addMeal() {
 		Meal meal = new Meal();
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES(?, ?, ?)" +
 					"SELECT LAST_INSERT_ID();";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -103,9 +98,9 @@ public class DBQueries {
 	}
 
 	//	LOG DATE
-	public static int addDate(User user) {
+	public static int addDate() {
 		Date curr_date = java.sql.Date.valueOf(LocalDate.now());
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES(?, ?, ?)" +
 					"SELECT LAST_INSERT_ID() AS date_log_id;";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -126,9 +121,8 @@ public class DBQueries {
 	}
 
 	//	LOG EXERCISE
-	public static void addExercise(User user, Exercise exe, int dateLogId) {
-		DateLog dateLog = new DateLog();
-		try (Connection connection = getConnection()) {
+	public static void addExercise(Exercise exe, int dateLogId) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO EXERCISE_LOG (date_log_id, exercise_type, duration, intensity) VALUES(?, ?, ?);" +
 					"SELECT LAST_INSERT_ID();";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -144,11 +138,33 @@ public class DBQueries {
 		}
 	}
 
+	//	LOG INGREDIENTS
+	public static void addIngredients(int mealID, Ingredient ingre) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "INSERT INTO EXERCISE_LOG (meal_id, name, quantity, unit) VALUES(?, ?, ?);" +
+					"SELECT LAST_INSERT_ID();";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(0, mealID);
+				preparedStatement.setString(1, ingre.getName());
+				preparedStatement.setInt(2, ingre.getQuantity());
+				preparedStatement.setString(3, ingre.getUnit());
+				preparedStatement.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+
+	//	GET INGREDIENTS NUTRIENT INFO
+//	public static
+
 
 	//	GET FOOD GROUP
 	public static String[] getFoodGroup() {
 		String[] foodGroup = new String[25];
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT FoodGroupName FROM `FOOD_GROUP`";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -164,10 +180,17 @@ public class DBQueries {
 		}
 	}
 
+//	public static double getNutrientInfo() {
+//		try (Connection connection = getConnection()) {
+//			String sql = ""
+//		}
+//	}
+
+
 	//	GET Exercise List
 	public static String[] getExerciseList() {
 		String[] exercisetypes = new String[35];
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT CATEGORIES FROM `METvalues`";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -187,7 +210,7 @@ public class DBQueries {
 	//	GET MET VALUES BASED ON EXERCISE INTENSITY
 	public static double getMETLow(String exercisetype) throws SQLException {
 		double metLow = 0;
-		Connection connection = getConnection();
+		Connection connection = DBConfig.getConnection();
 		String sql = String.format("SELECT LOW FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		ResultSet resultSet = preparedStatement.executeQuery();
@@ -201,7 +224,7 @@ public class DBQueries {
 
 	public static double getMETMed(String exercisetype) throws SQLException {
 		double metMed = 0;
-		Connection connection = getConnection();
+		Connection connection = DBConfig.getConnection();
 		String sql = String.format("SELECT MEDIUM FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		ResultSet resultSet = preparedStatement.executeQuery();
@@ -215,7 +238,7 @@ public class DBQueries {
 
 	public static double getMETHigh(String exercisetype) throws SQLException {
 		double metHigh = 0;
-		Connection connection = getConnection();
+		Connection connection = DBConfig.getConnection();
 		String sql = String.format("SELECT HIGH FROM `METvalues` WHERE CATEGORIES = '%s'", exercisetype);
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		ResultSet resultSet = preparedStatement.executeQuery();

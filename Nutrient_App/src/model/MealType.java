@@ -1,6 +1,6 @@
 package src.model;
 
-enum MealType {
+public enum MealType {
     BREAKFAST,
     LUNCH,
     DINNER,

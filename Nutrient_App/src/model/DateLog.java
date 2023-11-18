@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class DateLog {
-    private String username;
+    private int userID;
     private int dateLogId;
     private Date date;
     private ArrayList<Meal> meals;
     private ArrayList<Exercise> exercises;
 
-    public DateLog(String username, int dateLogId, Date date, ArrayList<Meal> meals, ArrayList<Exercise> exercises) {
-        this.username = username;
+    public DateLog(int userID, int dateLogId, Date date, ArrayList<Meal> meals, ArrayList<Exercise> exercises) {
+        this.userID = userID;
         this.dateLogId = dateLogId;
         this.date = date;
         this.meals = meals;
         this.exercises = exercises;
     }
 
-    public String getUsername() {
-        return username;
+    public int getUserID() {
+        return userID;
     }
 
     public int getDateLogId() {
@@ -38,8 +38,8 @@ public class DateLog {
         return exercises;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public void setDateLogId(int dateLogId) {

@@ -17,17 +17,13 @@ import src.model.DateLog;
 import src.model.Meal;
 
 public class MealQueries {
-    private static DBConfig dbConfig = new DBConfig();
 
-	private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
-    }
 
 	//CHECK IF MEAL EXISTS, IF YES RETURN MEAL ID
 
 	// GET THE LAST INSERTED MEAL ID
 	public static int getMealID() {
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT meal_id FROM MEAL_DETAILS ORDER BY meal_id DESC LIMIT 1";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -46,7 +42,7 @@ public class MealQueries {
 
 	//for inserting new meal log
 	public static void addMeal(DateLog date, Meal meal) {
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String insertMealQuery = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES (?, ?)";
 			String insertIngredientQuery = "INSERT INTO INGREDIENT (meal_id, quantity, unit) VALUES (?, ?, ?)";
 			int dateLogId = date.getDateLogId();
@@ -73,7 +69,7 @@ public class MealQueries {
 
 	//ADD INGREDIENTS TO MEAL
 	public static void addIngredient(Meal meal, FoodItem foodItem, double quantity) {
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String insertIngredientQuery = "INSERT INTO INGREDIENT (food_id, meal_id, quantity) VALUES (?, ?, ?)";
 			int foodId = foodItem.getFoodID();
 			int mealId = meal.getMealId();
@@ -92,7 +88,7 @@ public class MealQueries {
 	//GET FOOD GROUP
 	public static String[] getFoodGroup(){
 		String[] foodGroup = new String[23];
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT FoodGroupName FROM `FOOD GROUP`";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = pState.executeQuery()) {
@@ -114,7 +110,7 @@ public class MealQueries {
 	//GET FOOD ITEM JOIN FOOD GROUP, FOOD NAME AND FOOD SOURCE TABLES
 	public static List<FoodItem> getFoodItem(){
 		List<FoodItem> foodItem = new ArrayList<FoodItem>();
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = pState.executeQuery()) {
@@ -152,7 +148,7 @@ public class MealQueries {
 	//GET FOOD DESCRIPTION JOIN FOOD GROUP, FOOD NAME AND FOOD SOURCE TABLES
 	public static List<String> getFoodDescription(){
 		List<String> foodItem = new ArrayList<>();
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = pState.executeQuery()) {
@@ -176,7 +172,7 @@ public class MealQueries {
 	//FOOD DESCRIPTION IS IN ENGLISH
 	public static String getFoodGroupName(String foodDescription){
 		String foodGroupName = "";
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT FoodGroupName FROM `FOOD_GROUP` fg JOIN `FOOD_NAME` fn ON fg.FoodGroupID = fn.FoodGroupID WHERE fn.FoodDescription = ?";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, foodDescription);

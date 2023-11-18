@@ -11,15 +11,11 @@ import java.sql.Statement;
 import src.model.User;
 
 public class UserQueries {
-    private static DBConfig dbConfig = new DBConfig();
 
-	private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
-    }
 
     //for log in validation
     public static boolean validateUser(String username, String password) {
-        try (Connection connection = getConnection()) {
+        try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM USER WHERE username = ? AND user_password = ?";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, username);
@@ -41,7 +37,7 @@ public class UserQueries {
 
 	//for sign up validation
 	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {	
-        try (Connection connection = getConnection()) {
+        try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
@@ -84,7 +80,7 @@ public class UserQueries {
 	//GET CURRENT USER ID
 	public static int getUserID(){
 		int userID = 0;
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT LAST_INSERT_ID() AS current_user_id";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = pState.executeQuery()) {
@@ -103,7 +99,7 @@ public class UserQueries {
 	//GET USER ID BY USERNAME
 	public static int getUserIDbyUsername(String username){
 		int userID = 0;
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT userID FROM USER WHERE username = ?";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, username);

@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6359aeec-498a-4a6d-88fb-be6937d50f9b" name="Changes" comment="">
+
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/LoginLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/LoginLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/SignupLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/SignupLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/server/DataServices/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/server/DataServices/DBConfig.java" afterDir="false" />
+
       <change beforePath="$PROJECT_DIR$/Nutrient_App/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Nutrient_App/src/client/Dashboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/client/Dashboard.java" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,9 +21,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Nutrient_App/src/viewmodel/DataServices/DBConfig.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Nutrient_App/src/main/Main.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Nutrient_App/src/model/AuthValidation.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />

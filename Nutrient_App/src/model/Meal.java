@@ -8,7 +8,12 @@ public class Meal {
     private MealType type; // MealType is enum
     private List<Ingredient> ingredients;
 
+
+    public Meal() {}
+
+
     public Meal(int mealId, MealType type, List<Ingredient> ingredients) {
+
         this.mealId = mealId;
         this.type = type;
         this.ingredients = ingredients;
@@ -22,7 +27,18 @@ public class Meal {
         return type;
     }
 
+
+    public String getMealTypeName() {
+        if (this.type == MealType.DINNER) return MealType.DINNER.toString();
+        else if (this.type == MealType.BREAKFAST) return MealType.BREAKFAST.toString();
+        else if (this.type == MealType.LUNCH) return MealType.LUNCH.toString();
+        else return MealType.SNACK.toString();
+        }
+
+
+
     public List<Ingredient> getIngredients() {
+
         return ingredients;
     }
 
@@ -33,6 +49,7 @@ public class Meal {
     public void setType(MealType type) {
         this.type = type;
     }
+
 
     public void setIngredients(ArrayList<Ingredient> ingredients) {
         this.ingredients = ingredients;

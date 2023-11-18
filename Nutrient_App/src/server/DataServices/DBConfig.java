@@ -2,28 +2,35 @@ package src.server.DataServices;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBConfig {
-    private String url;
-    private String username;
-    private String password;
-    private String driver;
-    public DBConfig() {
+
+    private static Connection dbConnection;
+
+    public static Connection getConnection() {
         Properties prop = new Properties();
         InputStream input = null;
 
         try {
-            input = new FileInputStream("Nutrient_App\\src\\dbconfig.properties");
+            input = new FileInputStream("C:\\Users\\austi\\OneDrive\\Documents\\GitHub\\Nutrient-App\\Nutrient_App\\src\\dbconfig.properties");
             prop.load(input);
 
-            this.url = prop.getProperty("db.url");
-            this.username = prop.getProperty("db.username");
-            this.password = prop.getProperty("db.password");
-            this.driver = prop.getProperty("db.driver");
+            String url = prop.getProperty("db.url");
+            String username = prop.getProperty("db.username");
+            String password = prop.getProperty("db.password");
+            if (dbConnection == null) {
+                return DriverManager.getConnection(url, username, password);
+            }
+            return dbConnection;
         } catch (IOException ex) {
             ex.printStackTrace();
             // Handle the exception (e.g., log the error, throw a specific exception, etc.)
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
             if (input != null) {
                 try {
@@ -32,22 +39,10 @@ public class DBConfig {
                     e.printStackTrace();
                 }
             }
+            return null;
         }
+
     }
 
-    public String getUrl() {
-        return url;
-    }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getDriver() {
-        return driver;
-    }
 }

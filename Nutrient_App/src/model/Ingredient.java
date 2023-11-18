@@ -5,6 +5,7 @@ public class Ingredient {
     private String name;
     private int quantity;
     private String unit;
+    private User user;
 
     public Ingredient(FoodItem item, int quantity, String unit) {
         this.foodItem = item;
@@ -15,7 +16,7 @@ public class Ingredient {
     public Ingredient(String name, int quantity, String unit) {
         this.name = name;
         this.quantity = quantity;
-        this.unit = unit;
+        this.unit = user.getUnits();
     }
 
     public FoodItem getFoodItem() {
@@ -33,4 +34,9 @@ public class Ingredient {
     public String getUnit() {
         return unit;
     }
+
+    public void setName(String name) {this.name = name;}
+
+    public void setQuantity(int quantity) {this.quantity = quantity;}
+
 }

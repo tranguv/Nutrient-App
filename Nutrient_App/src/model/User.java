@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 public class User {
+	private int id;
 	private String fName;
 	private String lName;
 	private String sex;
@@ -29,6 +30,14 @@ public class User {
 		this.username = username;
 		this.password = password;
 		this.units = units;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getFirstName() {

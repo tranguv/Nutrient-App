@@ -53,9 +53,9 @@ public class LoginPage extends JFrame {
 
 		        try {
 		            // Try to log in the user
-		            boolean isValidUser = src.server.DataServices.DBQueries.validateUser(username, password);
-
-		            // If successful, show a success message.
+					boolean isValidUser = src.server.DataServices.UserQueries.validateUser(username, password);
+		            
+					// If successful, show a success message.
 					if (isValidUser) {
 						Dashboard dashboard = new Dashboard();
 					} else {
@@ -127,9 +127,5 @@ public class LoginPage extends JFrame {
 		// Validate and repaint the frame
 		validate();
 		repaint();
-	}
-
-	public void loginValidation(java.awt.event.ActionEvent evt) {
-		
 	}
 }

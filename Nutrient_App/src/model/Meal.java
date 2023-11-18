@@ -1,14 +1,19 @@
 package src.model;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class Meal {
     private int mealId;
     private MealType type; // MealType is enum
-    private ArrayList<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
+
 
     public Meal() {}
-    public Meal(int mealId, MealType type, ArrayList<Ingredient> ingredients) {
+
+
+    public Meal(int mealId, MealType type, List<Ingredient> ingredients) {
+
         this.mealId = mealId;
         this.type = type;
         this.ingredients = ingredients;
@@ -22,6 +27,7 @@ public class Meal {
         return type;
     }
 
+
     public String getMealTypeName() {
         if (this.type == MealType.DINNER) return MealType.DINNER.toString();
         else if (this.type == MealType.BREAKFAST) return MealType.BREAKFAST.toString();
@@ -29,7 +35,10 @@ public class Meal {
         else return MealType.SNACK.toString();
         }
 
-    public ArrayList<Ingredient> getIngredients() {
+
+
+    public List<Ingredient> getIngredients() {
+
         return ingredients;
     }
 

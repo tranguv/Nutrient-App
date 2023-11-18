@@ -11,7 +11,9 @@ import java.util.EventListener;
 
 import javax.swing.*;
 
-import src.client.Dashboard;
+import src.client.LogData.Dashboard;
+import src.client.LogData.DashboardController;
+import src.client.LogData.DashboardGUI;
 
 public class LoginPage extends JFrame {
 	public LoginPage() {
@@ -57,7 +59,8 @@ public class LoginPage extends JFrame {
 		            
 					// If successful, show a success message.
 					if (isValidUser) {
-						Dashboard dashboard = new Dashboard();
+						DashboardGUI dashboardGUI = new DashboardGUI();
+						new DashboardController(dashboardGUI);
 					} else {
 						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");
 					}

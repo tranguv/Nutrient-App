@@ -1,13 +1,8 @@
 package src.model;
 
-import src.server.DataServices.DBQueries;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+
+import src.server.DataServices.ExerciseQueries;
 
 //import static src.server.DataServices.DBQueries.getConnection;
 
@@ -53,9 +48,9 @@ public class Exercise {
 
     public static double caloriesBurntExercise(User user, Exercise exe, String intensity) throws SQLException {
         double kcal_burnt = 0;
-        if (intensity.equals("low")) kcal_burnt = ((DBQueries.getMETLow(exe.getName()) * 3.5 * user.getWeight() * exe.getDuration())) / 200 ;
-        else if (intensity.equals("medium")) kcal_burnt = ((DBQueries.getMETMed(exe.getName()) * 3.5 * user.getWeight()) * exe.getDuration()) / 200 ;
-        else if (intensity.equals("high")) kcal_burnt = ((DBQueries.getMETHigh(exe.getName()) * 3.5 * user.getWeight())* exe.getDuration()) / 200 ;
+        if (intensity.equals("low")) kcal_burnt = ((ExerciseQueries.getMETLow(exe.getName()) * 3.5 * user.getWeight() * exe.getDuration())) / 200 ;
+        else if (intensity.equals("medium")) kcal_burnt = ((ExerciseQueries.getMETMed(exe.getName()) * 3.5 * user.getWeight()) * exe.getDuration()) / 200 ;
+        else if (intensity.equals("high")) kcal_burnt = ((ExerciseQueries.getMETHigh(exe.getName()) * 3.5 * user.getWeight())* exe.getDuration()) / 200 ;
         return kcal_burnt;
     }
 

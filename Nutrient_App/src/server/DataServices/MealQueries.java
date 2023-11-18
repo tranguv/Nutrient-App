@@ -12,6 +12,7 @@ import java.util.List;
 import java.sql.Date;
 
 import src.model.FoodItem;
+import src.model.Ingredient;
 import src.model.User;
 import src.model.DateLog;
 import src.model.Meal;
@@ -67,23 +68,41 @@ public class MealQueries {
         }
 	}
 
-	//ADD INGREDIENTS TO MEAL
-	public static void addIngredient(Meal meal, FoodItem foodItem, double quantity) {
+	// for inserting meal log
+	// public static void addMeal() {
+	// 	Meal meal = new Meal();
+	// 	try (Connection connection = DBConfig.getConnection()) {
+	// 		String sql = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES(?, ?, ?)" +
+	// 				"SELECT LAST_INSERT_ID();";
+	// 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	// 			preparedStatement.setString(0, meal.getMealTypeName());
+	// 			preparedStatement.setInt(1, 0);
+	// 			preparedStatement.executeUpdate();
+	// 		}
+	// 	} catch (SQLException e) {
+	// 		e.printStackTrace();
+	// 		throw new RuntimeException("Error accessing the database", e);
+	// 	}
+	// }
+
+	//	LOG INGREDIENTS
+	public static void addIngredients(int mealID, Ingredient ingre) {
 		try (Connection connection = DBConfig.getConnection()) {
-			String insertIngredientQuery = "INSERT INTO INGREDIENT (food_id, meal_id, quantity) VALUES (?, ?, ?)";
-			int foodId = foodItem.getFoodID();
-			int mealId = meal.getMealId();
-			try (PreparedStatement insertIngredientStatement = connection.prepareStatement(insertIngredientQuery)) {
-				insertIngredientStatement.setInt(1, foodId);
-				insertIngredientStatement.setInt(2, mealId);
-				insertIngredientStatement.setDouble(3, quantity);
-				insertIngredientStatement.executeUpdate();
+			String sql = "INSERT INTO EXERCISE_LOG (meal_id, name, quantity, unit) VALUES(?, ?, ?);" +
+					"SELECT LAST_INSERT_ID();";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(0, mealID);
+				preparedStatement.setString(1, ingre.getName());
+				preparedStatement.setInt(2, ingre.getQuantity());
+				preparedStatement.setString(3, ingre.getUnit());
+				preparedStatement.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
 
 	//GET FOOD GROUP
 	public static String[] getFoodGroup(){

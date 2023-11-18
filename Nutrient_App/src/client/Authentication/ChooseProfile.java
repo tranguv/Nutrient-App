@@ -54,7 +54,7 @@ public class ChooseProfile extends JFrame {
 
         // Gender label and combo box
         JLabel genderLabel = new JLabel("Gender:");
-        String[] genders = {"Male", "Female", "Other"};
+        String[] genders = {"M", "F"};
         JComboBox<String> genderCB = new JComboBox<>(genders);
         gbc.gridx = 0;
         gbc.gridy = 3;

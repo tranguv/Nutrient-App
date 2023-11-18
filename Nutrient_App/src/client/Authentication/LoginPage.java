@@ -128,8 +128,4 @@ public class LoginPage extends JFrame {
 		validate();
 		repaint();
 	}
-
-	public void loginValidation(java.awt.event.ActionEvent evt) {
-		
-	}
 }

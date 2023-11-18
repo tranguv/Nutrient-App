@@ -23,7 +23,7 @@ public class MealTest {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         try {
-            User newUser = new User("test3", "test1", "ok", "nha", "F", "2003-11-11", 60, 170, "metric");
+            User newUser = new User("tester1", "test1", "ok", "nha", "F", "2003-11-11", 60, 170, "metric");
 					
             // Move the createUser method call into the try block
             if (UserQueries.createUser(newUser)) {
@@ -32,8 +32,8 @@ public class MealTest {
                 System.out.println("User signed up successfully!");
 
                 FoodItem item1 = MealQueries.getFoodItem().get(0);
-                FoodItem item2 = MealQueries.getFoodItem().get(0);
-                FoodItem item3 = MealQueries.getFoodItem().get(0);
+                FoodItem item2 = MealQueries.getFoodItem().get(1);
+                FoodItem item3 = MealQueries.getFoodItem().get(2);
                 
                 Ingredient ingredient = new Ingredient(item1, 1, "g");
                 Ingredient ingredient1 = new Ingredient(item2, 3, "g");

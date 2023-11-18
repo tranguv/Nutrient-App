@@ -24,6 +24,24 @@ public class MealQueries {
     }
 
 	//CHECK IF MEAL EXISTS, IF YES RETURN MEAL ID
+
+	// GET THE LAST INSERTED MEAL ID
+	public static int getMealID() {
+		try (Connection connection = getConnection()) {
+			String sql = "SELECT meal_id FROM MEAL_DETAILS ORDER BY meal_id DESC LIMIT 1";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt("meal_id");
+					}
+				}
+				throw new RuntimeException("Cannot find last inserted meal_id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 	
 
 	//for inserting new meal log
@@ -121,6 +139,28 @@ public class MealQueries {
 						FoodItem fi = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
 						foodItem.add(fi);
 						// foodItem[index++] = fi;
+					}
+				}
+				return foodItem;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+	//GET FOOD DESCRIPTION JOIN FOOD GROUP, FOOD NAME AND FOOD SOURCE TABLES
+	public static List<String> getFoodDescription(){
+		List<String> foodItem = new ArrayList<>();
+		try (Connection connection = getConnection()) {
+			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = pState.executeQuery()) {
+					// int index = 0;
+					while (resultSet.next()) {
+						String foodDescription = resultSet.getString("FoodDescription");
+						String foodDescriptionF = resultSet.getString("FoodDescriptionF");
+						foodItem.add(foodDescription);
 					}
 				}
 				return foodItem;

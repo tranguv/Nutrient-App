@@ -1,7 +1,9 @@
-package src.model.models;
+package src.model;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 public class User {
-	private static int userID = 0;
 	private int id;
 	private String fName;
 	private String lName;
@@ -14,13 +16,11 @@ public class User {
 	private String units;
 	
 	public User() {
-		this.id = userID++;
 	}
 	
 	
 	public User(String username, String password, String fName, String lName, String sex, String dateOfBirth, double weight, double height, String units) {
 		super();
-		// this.id = userID++;
 		this.dateOfBirth = dateOfBirth;
 		this.fName = fName;
 		this.lName = lName;
@@ -36,9 +36,9 @@ public class User {
 		return id;
 	}
 
-	// public void setId(int id) {
-	// 	this.id = id;
-	// }
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getFirstName() {
 		return fName;
@@ -114,5 +114,12 @@ public class User {
 		} else {
 			this.units = "metric";
 		}
+	}
+
+	public int getAge(String dateOfBirth) {
+		LocalDate dob = LocalDate.parse(dateOfBirth);
+		LocalDate todayDate = LocalDate.now();
+		Period p = Period.between(dob, todayDate);
+		return p.getYears();
 	}
 }

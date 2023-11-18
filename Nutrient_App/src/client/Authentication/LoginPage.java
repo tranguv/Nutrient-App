@@ -11,7 +11,9 @@ import java.util.EventListener;
 
 import javax.swing.*;
 
-import src.client.Dashboard;
+import src.client.LogData.Dashboard;
+import src.client.LogData.DashboardController;
+import src.client.LogData.DashboardGUI;
 
 public class LoginPage extends JFrame {
 	public LoginPage() {
@@ -53,11 +55,12 @@ public class LoginPage extends JFrame {
 
 		        try {
 		            // Try to log in the user
-		            boolean isValidUser = src.server.DataServices.DBQueries.validateUser(username, password);
-
-		            // If successful, show a success message.
+					boolean isValidUser = src.server.DataServices.UserQueries.validateUser(username, password);
+		            
+					// If successful, show a success message.
 					if (isValidUser) {
-						Dashboard dashboard = new Dashboard();
+						DashboardGUI dashboardGUI = new DashboardGUI();
+						new DashboardController(dashboardGUI);
 					} else {
 						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");
 					}
@@ -127,9 +130,5 @@ public class LoginPage extends JFrame {
 		// Validate and repaint the frame
 		validate();
 		repaint();
-	}
-
-	public void loginValidation(java.awt.event.ActionEvent evt) {
-		
 	}
 }

@@ -3,9 +3,9 @@ package src.model;
 import javax.swing.SwingUtilities;
 import java.util.List;
 
-import src.client.Dashboard;
+import src.client.LogData.Dashboard;
+import src.client.Authentication.LoginPage;
 import src.client.Authentication.SignUpPage;
-import src.model.models.User;
 
 public class MainApplication {
 	private List<User> users;
@@ -20,7 +20,8 @@ public class MainApplication {
 			public void run() {
 				// TODO Auto-generated method stub
 				// Dashboard db = new Dashboard();
-				SignUpPage signup = new SignUpPage();
+				// SignUpPage signup = new SignUpPage();
+				LoginPage login = new LoginPage();
 			}
 		});
 	}

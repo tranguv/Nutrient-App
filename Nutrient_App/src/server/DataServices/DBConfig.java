@@ -16,7 +16,7 @@ public class DBConfig {
         InputStream input = null;
 
         try {
-            input = new FileInputStream("C:\\Users\\austi\\OneDrive\\Documents\\GitHub\\Nutrient-App\\Nutrient_App\\src\\dbconfig.properties");
+            input = new FileInputStream("Nutrient_App\\src\\dbconfig.properties");
             prop.load(input);
 
             String url = prop.getProperty("db.url");
@@ -39,10 +39,7 @@ public class DBConfig {
                     e.printStackTrace();
                 }
             }
-            return null;
         }
-
+        return null;
     }
-
-
 }

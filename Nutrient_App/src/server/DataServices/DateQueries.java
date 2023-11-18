@@ -33,21 +33,22 @@ public class DateQueries {
 		}
 	}
 
-    //INSERT NEW DATE LOG IF NOT EXISTS
-	public static int addDate(User user, Date date) {
-		// Date curr_date = java.sql.Date.valueOf(LocalDate.now());
+    //	LOG DATE
+	public static int addDate() {
+		Date curr_date = java.sql.Date.valueOf(LocalDate.now());
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES(?, ?, ?)" +
 					"SELECT LAST_INSERT_ID() AS date_log_id;";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				preparedStatement.setInt(0, 0);
-				preparedStatement.setDate(1, date);
+				preparedStatement.setDate(1, curr_date);
 				try (ResultSet rs = preparedStatement.executeQuery()) {
 					if (rs.next()) {
 						return rs.getInt("date_log_id");
 					}
 				}
 				throw new RuntimeException("Cannot find last inserted date_log_id");
+//				return -1;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

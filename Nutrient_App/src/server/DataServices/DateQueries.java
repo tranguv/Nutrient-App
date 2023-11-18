@@ -11,15 +11,11 @@ import java.time.LocalDate;
 import src.model.User;
 
 public class DateQueries {
-    private static DBConfig dbConfig = new DBConfig();
 
-	private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
-    }
 
 	//RETRIEVE DATE LOG ID BY USER ID AND DATE IF EXISTS
 	public static int getDateLogId(User user, Date date) {
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT date_log_id FROM DATE_LOG WHERE userID = ? AND date_log = ?";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				preparedStatement.setInt(1, UserQueries.getUserIDbyUsername(user.getUsername()));
@@ -40,7 +36,7 @@ public class DateQueries {
     //INSERT NEW DATE LOG IF NOT EXISTS
 	public static int addDate(User user, Date date) {
 		// Date curr_date = java.sql.Date.valueOf(LocalDate.now());
-		try (Connection connection = getConnection()) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES(?, ?, ?)" +
 					"SELECT LAST_INSERT_ID() AS date_log_id;";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

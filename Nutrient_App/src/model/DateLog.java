@@ -3,6 +3,8 @@ package src.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import src.server.DataServices.MealQueries;
+
 public class DateLog {
     private int userID;
     private int dateLogId;
@@ -13,13 +15,9 @@ public class DateLog {
 
     public DateLog() {}
 
-    public DateLog(int userID, int dateLogId, Date date, ArrayList<Meal> meals, ArrayList<Exercise> exercises) {
+    public DateLog(int userID, Date date) {
         this.userID = userID;
-
-        this.dateLogId = dateLogId;
         this.date = date;
-        this.meals = meals;
-        this.exercises = exercises;
     }
 
     public int getUserID() {
@@ -38,9 +36,14 @@ public class DateLog {
         return meals;
     }
 
+    public void addMeals(ArrayList<Meal> meals) {
+        this.meals.addAll(meals);
+    }
+
     public ArrayList<Exercise> getExercises() {
         return exercises;
     }
+
 
     public void setUserID(int userID) {
         this.userID = userID;

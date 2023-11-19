@@ -9,6 +9,7 @@ public class ExercisePanel extends JPanel {
 
     public ExercisePanel() {
         setLayout(new GridBagLayout());
+        setBorder(BorderFactory.createTitledBorder("Log Exercise"));
         addExerciseFields();
     }
 

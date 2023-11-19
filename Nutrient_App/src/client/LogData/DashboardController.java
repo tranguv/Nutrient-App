@@ -1,11 +1,20 @@
 package src.client.LogData;
 
+import javax.swing.*;
+
+import src.model.DateLog;
+import src.model.FoodItem;
+import src.model.Ingredient;
+import src.model.Meal;
+import src.model.MealType;
+import src.server.DataServices.DateQueries;
 import src.server.DataServices.MealQueries;
 
-import javax.swing.*;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DashboardController {
@@ -17,100 +26,140 @@ public class DashboardController {
     }
 
     private void initializeListeners() {
-        dashboardGUI.getAddMealButton().addActionListener(this::addMeal);
-        dashboardGUI.getAddExerciseButton().addActionListener(e -> addExercise());
-        dashboardGUI.getSaveLogButton().addActionListener(e -> saveLog());
+        dashboardGUI.getAddMealButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addMeal();
+            }
+        });
+
+        dashboardGUI.getAddExerciseButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add exercise logic if needed
+            }
+        });
+
+        // dashboardGUI.getSaveLogButton().addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         saveLog();
+        //     }
+        // });
     }
 
-    private void addMeal(ActionEvent e) {
+    private DateLog addDate(){
+        String date = dashboardGUI.getDatePanel().getSelectedDate();
+
+        // Split the date string
+        String[] parts = date.split("-");
+
+        // Extract month, day, and year
+        String year = parts[0];
+        String month = parts[1];
+        String day = parts[2];
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, Integer.parseInt(year));
+        cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+
+        DateLog selectedDate = new DateLog(2, cal.getTime());
+        int dateID = DateQueries.addDate(selectedDate);
+        System.out.println("Date ID: " + dateID);
+        selectedDate.setDateLogId(dateID);
+        return selectedDate;
+    }
+
+    private void addMeal() {
+        List<Ingredient> ingredientList = new ArrayList<>();
         String mealType = dashboardGUI.getMealPanel().getMealTypeComboBox().getSelectedItem().toString();
+        MealType mealTypeEnum = MealType.valueOf(mealType.toUpperCase());
+
         List<String> ingredients = new ArrayList<>();
         List<String> quantities = new ArrayList<>();
         List<String> units = new ArrayList<>();
 
-        processComponents(dashboardGUI.getMealPanel(), ingredients, quantities, units);
-
-//        StringBuilder historyEntry = new StringBuilder("Added meal: " + mealType + " - ");
-//        for (int i = 0; i < ingredients.size(); i++) {
-//            if (i < quantities.size() && i < units.size()) {
-//                historyEntry.append(ingredients.get(i)).append(": ")
-//                        .append(quantities.get(i)).append(" ").append(units.get(i)).append(", ");
-//            } else {
-//                // Handle the case where the lists are not of equal length
-//                // For example, log an error or append a default value
-//            }
-//        }
-//
-//
-//        if (historyEntry.lastIndexOf(", ") > -1) {
-//            historyEntry.setLength(historyEntry.length() - 2); // Remove the last comma and space
-//        }
-//        System.out.println(historyEntry.toString());
-//        updateHistory(historyEntry.toString());
-    }
-
-    private void processComponents(JPanel panel, List<String> ingredients, List<String> quantities, List<String> units) {
-        String mealtypevalue = null;
-        for (Component component : panel.getComponents()) {
-            if (component instanceof JPanel) {
-                // Recursive call for nested JPanel components
-                processComponents((JPanel) component, ingredients, quantities, units);
-            } else if (component instanceof JTextField) {
-                // Process JTextField components
+        for (Component component : dashboardGUI.getMealPanel().getComponents()) {
+            System.out.println("compo:" + component.getName());
+            if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
                 String text = textField.getText();
+                System.out.println("text:" + text);
                 if (!text.isEmpty()) {
-                    String fieldName = textField.getName();
-                    if ("quantity".equals(fieldName)) {
+                    System.out.println("inside JTextField");
+                    if (textField.getName().equals("quantity")) {
                         quantities.add(text);
-                    } else if ("ingredient".equals(fieldName)) {
-                        ingredients.add(text);
+                    } else if (textField.getName().equals("unit")) {
+                        units.add("g");
+                    } else if (textField.getName().equals("foodgroup")) {
+                        continue;
                     }
-                    // Units are not handled here since they are JComboBox
                 }
             } else if (component instanceof JComboBox) {
-                // Process JComboBox components
+                System.out.println("inside JComboBox");
                 JComboBox<?> comboBox = (JComboBox<?>) component;
                 Object selectedItem = comboBox.getSelectedItem();
                 if (selectedItem != null) {
-                    String fieldName = comboBox.getName();
-                    if ("unit".equals(fieldName)) {
+                    System.out.println("selectedItem:" + selectedItem.toString());
+                    if (comboBox.getName().equals("unit")) {
                         units.add(selectedItem.toString());
-                    } else if ("mealtype".equals(fieldName)) {
-                        mealtypevalue = selectedItem.toString();
                     } else {
-                        // Default case, assuming other combo boxes are for ingredients
+                        System.out.println("ingredient add nha");
                         ingredients.add(selectedItem.toString());
                     }
                 }
             }
-            MealQueries a = new MealQueries();
-            System.out.println(a.getMealID());;
         }
-        // Print out the lists for debugging purposes
-        System.out.println("Meal Type: " + mealtypevalue);
-        System.out.println("Ingredients: " + listToString(ingredients));
-        System.out.println("Quantities: " + listToString(quantities));
-        System.out.println("Units: " + listToString(units));
+
+        ingredients.remove(0);
+        System.out.println("ingre:" + ingredients.toString());
+        System.out.println("quantities:" + quantities.toString());
+        System.out.println("units:" + units.toString());
+
+        for (int i = 0; i < ingredients.size(); i++) {
+            FoodItem foodItem = MealQueries.getFoodItem(ingredients.get(i));
+            Ingredient ingredient = new Ingredient(foodItem, Integer.parseInt(quantities.get(i)), units.get(i));
+            ingredientList.add(ingredient);
+        }
+
+        System.out.println("ingreList " + ingredientList.toString());
+        DateLog dateLog = addDate();
+
+        Meal meal = new Meal(mealTypeEnum);
+        meal.addIngredients(ingredientList);
+        int mealID = MealQueries.addMeal(dateLog, meal);
+        System.out.println("Meal added successfully!");
+        for (Ingredient ingredient : ingredientList) {
+            System.out.println("ingredient: " + ingredient.toString());
+            MealQueries.addIngredients(mealID, ingredient);
+        }
+        System.out.println("Ingredient added successfully!");
+        // Update meals log
+        StringBuilder historyEntry = new StringBuilder("Added meal: " + mealType + " - ");
+
+        // if (!ingredients.isEmpty()) {
+        //     for (int i = 0; i < ingredients.size(); i++) {
+        //         historyEntry.append(ingredients.get(i)).append(": ")
+        //                 .append(quantities.get(i)).append(" ").append(units.get(i)).append(", ");
+        //     }
+        //     historyEntry.setLength(historyEntry.length() - 2); // Remove the last comma and space
+        // } else {
+        //     historyEntry.append("No ingredients added");
+        // }
+
+        // Update history
+        // updateHistory(historyEntry.toString());
     }
 
-    private String listToString(List<String> list) {
-        return String.join(", ", list);
-    }
-
-
-
-
-    private void addExercise() {
-        // Implement exercise adding logic here
-    }
-
-    private void updateHistory(String newEntry) {
-        dashboardGUI.getHistoryTextArea().append(newEntry + "\n");
-        dashboardGUI.getHistoryTextArea().setCaretPosition(dashboardGUI.getHistoryTextArea().getDocument().getLength());
-    }
+    // private void updateHistory(String newEntry) {
+    //     // Your history update logic goes here
+    //     dashboardGUI.getHistoryTextArea().append(newEntry + "\n");
+    //     dashboardGUI.getHistoryTextArea().setCaretPosition(dashboardGUI.getHistoryTextArea().getDocument().getLength());
+    // }
 
     private void saveLog() {
+        // Your save log logic goes here
         System.out.println("Meals Log:\n" + dashboardGUI.getMealsTextArea().getText());
         System.out.println("Exercises Log:\n" + dashboardGUI.getExercisesTextArea().getText());
     }

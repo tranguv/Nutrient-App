@@ -17,9 +17,9 @@ public class DashboardGUI extends JFrame {
         setLayout(new BorderLayout(10, 10));
 
         // Initialize panels
-        datePanel = new DatePanel();
-        mealPanel = new MealPanel();
-        exercisePanel = new ExercisePanel();
+        this.datePanel = new DatePanel();
+        this.mealPanel = new MealPanel();
+        this.exercisePanel = new ExercisePanel();
 
         // Create the combined input panel
         JPanel combinedInputPanel = new JPanel();
@@ -43,27 +43,29 @@ public class DashboardGUI extends JFrame {
         logPanel.add(new JScrollPane(mealsTextArea));
         logPanel.add(new JScrollPane(exercisesTextArea));
 
-        // Save button panel
-        JPanel savePanel = new JPanel(new FlowLayout());
-        saveLogButton = new JButton("Save Log");
-        savePanel.add(saveLogButton);
+        // // History text area
+        // historyTextArea = new JTextArea();
+        // historyTextArea.setEditable(false);
+        // JScrollPane historyScrollPane = new JScrollPane(historyTextArea);
+        // historyScrollPane.setPreferredSize(new Dimension(980, 100));
 
-        // History text area
-        historyTextArea = new JTextArea();
-        historyTextArea.setEditable(false);
-        JScrollPane historyScrollPane = new JScrollPane(historyTextArea);
-        historyScrollPane.setPreferredSize(new Dimension(980, 100));
+        // // History panel
+        // JPanel historyPanel = new JPanel(new BorderLayout());
+        // historyPanel.add(historyScrollPane, BorderLayout.CENTER);
+        // historyPanel.setBorder(BorderFactory.createTitledBorder("History"));
 
-        // History panel
-        JPanel historyPanel = new JPanel(new BorderLayout());
-        historyPanel.add(historyScrollPane, BorderLayout.CENTER);
-        historyPanel.setBorder(BorderFactory.createTitledBorder("History"));
+        // Inside the DashboardGUI constructor
+        HistoryPanel historyPanel = new HistoryPanel();
+        add(historyPanel, BorderLayout.AFTER_LAST_LINE);
+
+        // Inside the DashboardController where you want to update the history
+        historyPanel.appendToHistory("New history entry");
+
 
         // Add panels to the frame
         add(combinedInputPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
         add(logPanel, BorderLayout.SOUTH);
-        add(savePanel, BorderLayout.AFTER_LAST_LINE);
         add(historyPanel, BorderLayout.AFTER_LAST_LINE);
 
         // Set default close operation and make the frame visible

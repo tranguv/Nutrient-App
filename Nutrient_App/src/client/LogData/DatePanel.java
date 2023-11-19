@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -12,6 +14,7 @@ public class DatePanel extends JPanel {
 
     public DatePanel() {
         setLayout(new GridBagLayout());
+        setBorder(BorderFactory.createTitledBorder("Date"));
         addDateFields();
     }
 
@@ -36,14 +39,21 @@ public class DatePanel extends JPanel {
                 char c = e.getKeyChar();
                 if (!((c >= '0') && (c <= '9') ||
                         (c == KeyEvent.VK_BACK_SPACE) ||
-                        (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_SLASH))) {
-                    JOptionPane.showMessageDialog(null, "Please Enter Valid");
+                        (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_MINUS))) {
+                    JOptionPane.showMessageDialog(null, "Please Enter YYYY-MM-DD Format");
                     e.consume();
                 }
             }
         });
 
-        this.selectedDate = dateField.getText();
+        dateField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                selectedDate = dateField.getText();
+                System.out.println(selectedDate);
+            }
+        });
+
         // Set size for date field
         dateField.setPreferredSize(new Dimension(200, 30));
         add(dateField, gbc);
@@ -53,5 +63,3 @@ public class DatePanel extends JPanel {
         return selectedDate;
     }
 }
-
-

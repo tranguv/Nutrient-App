@@ -17,6 +17,7 @@ public class MealPanel extends JPanel {
 
     public MealPanel() {
         setLayout(new GridBagLayout());
+        setBorder(BorderFactory.createTitledBorder("Log Meal"));
         addMealFields();
     }
 
@@ -88,6 +89,7 @@ public class MealPanel extends JPanel {
         ingredientCombo.setName("ingredient");
         quantityField.setName("quantity");
         unitCombo.setName("unit");
+        foodGroup.setName("foodgroup");
 
         // Add Ingredient Button
         JButton addIngredientButton = new JButton("+");
@@ -133,7 +135,7 @@ public class MealPanel extends JPanel {
         foodGroup.setPreferredSize(new Dimension(200, 30));
         foodGroup.setEditable(false);
         newIngredientCombo.addActionListener(e -> {
-            String selectedIngredient = ingredientCombo.getSelectedItem().toString();
+            String selectedIngredient = newIngredientCombo.getSelectedItem().toString();
             String foodGroupName = MealQueries.getFoodGroupName(selectedIngredient);
             foodGroup.setText(foodGroupName);
         });
@@ -153,12 +155,14 @@ public class MealPanel extends JPanel {
         gbc.gridx++;
         add(new JLabel("Unit:"), gbc);
         gbc.gridx++;
-        unitCombo = new JComboBox(new String[]{"kg", "lb"});
+        unitCombo = new JComboBox(new String[]{"g", "lb"});
         unitCombo.setPreferredSize(new Dimension(100, 30));
         add(unitCombo, gbc);
 
         newIngredientCombo.setName("ingredient");
+        foodGroup.setName("foodgroup");
         newQuantityField.setName("quantity");
+        unitCombo.setName("unit");
         ingredientRowCount++;
     }
 

@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class DashboardController {
@@ -129,6 +130,7 @@ public class DashboardController {
         Meal meal = new Meal(mealTypeEnum);
         meal.addIngredients(ingredientList);
         int mealID = MealQueries.addMeal(dateLog, meal);
+        meal.setMealId(mealID);
         System.out.println("Meal added successfully!");
         for (Ingredient ingredient : ingredientList) {
             System.out.println("ingredient: " + ingredient.toString());
@@ -150,6 +152,15 @@ public class DashboardController {
 
         // Update history
         // updateHistory(historyEntry.toString());
+    }
+
+    private void addExercise() {
+        // Your add exercise logic goes here
+        //{exerciseName, [duration, intensity]}
+        
+        for (Component component : dashboardGUI.getMealPanel().getComponents()) {
+
+        }
     }
 
     // private void updateHistory(String newEntry) {

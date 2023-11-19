@@ -125,7 +125,7 @@ public class DashboardController {
 
         System.out.println("ingreList " + ingredientList.toString());
         DateLog dateLog = addDate();
-        
+
         Meal meal = new Meal(mealTypeEnum);
         meal.addIngredients(ingredientList);
         int mealID = MealQueries.addMeal(dateLog, meal);
@@ -164,4 +164,3 @@ public class DashboardController {
         System.out.println("Exercises Log:\n" + dashboardGUI.getExercisesTextArea().getText());
     }
 }
-

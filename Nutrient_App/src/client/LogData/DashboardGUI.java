@@ -12,7 +12,7 @@ public class DashboardGUI extends JFrame {
 
     public DashboardGUI() {
         setTitle("Nutrition App");
-        setSize(1000, 600);
+        setSize(1200, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
@@ -69,7 +69,8 @@ public class DashboardGUI extends JFrame {
         add(historyPanel, BorderLayout.AFTER_LAST_LINE);
 
         // Set default close operation and make the frame visible
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         setVisible(true);
     }
 

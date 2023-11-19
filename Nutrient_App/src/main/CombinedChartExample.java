@@ -23,7 +23,7 @@ public class CombinedChartExample {
     private static DefaultCategoryDataset fullDataset = new DefaultCategoryDataset();
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static void main(String[] args) {
+    public void executeChart() {
         saveData();
 
         String startDateStr = JOptionPane.showInputDialog("Enter start date (yyyy-MM-dd):");

@@ -1,4 +1,6 @@
 package src.client.LogData;
+import src.client.LogData.DashboardGUI;
+import src.client.LogData.DashboardController;
 
 import javax.swing.SwingUtilities;
 

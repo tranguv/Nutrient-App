@@ -6,10 +6,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
+import src.client.LogData.Dashboard;
 import src.client.LogData.DatePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CombinedChartsPanel extends ApplicationFrame {
 
@@ -40,15 +43,23 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
         // Add DatePanel for start and end dates
         DatePanel datePanelStart = new DatePanel();
-        datePanelStart.setDate("Start Day: ");
+        datePanelStart.setDate("Start Day (yyyy-mm-dd): ");
         dateSelectionPanel.add(datePanelStart);
         DatePanel datePanelEnd = new DatePanel();
-        datePanelEnd.setDate("End Day: ");
+        datePanelEnd.setDate("End Day (yyyy-mm-dd): ");
         dateSelectionPanel.add(datePanelEnd);
 
         // Add date selection panel to main panel
         mainPanel.add(dateSelectionPanel);
-
+        JButton submit = new JButton("Submit");
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Start Date: " + datePanelStart.getSelectedDate());
+                System.out.println("End Date: " + datePanelEnd.getSelectedDate());
+            }
+        });
+        dateSelectionPanel.add(submit);
         // Panel for charts
         JPanel chartPanel = new JPanel(new GridLayout(1, 2)); // Horizontal layout
 
@@ -74,6 +85,27 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
         // Add button panel to main panel
         mainPanel.add(buttonPanel);
+
+        recalculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        profileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        logDietButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Dashboard().callDashBoard();
+            }
+        });
 
         return mainPanel;
     }
@@ -106,7 +138,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         );
     }
 
-    public static void main(String[] args) {
+    public  void execute() {
         CombinedChartsPanel demo = new CombinedChartsPanel("Combined Charts Example");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);

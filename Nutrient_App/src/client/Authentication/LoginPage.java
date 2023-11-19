@@ -14,6 +14,7 @@ import javax.swing.*;
 import src.client.LogData.Dashboard;
 import src.client.LogData.DashboardController;
 import src.client.LogData.DashboardGUI;
+import src.main.CombinedChartsPanel;
 
 public class LoginPage extends JFrame {
 	public LoginPage() {
@@ -59,8 +60,9 @@ public class LoginPage extends JFrame {
 		            
 					// If successful, show a success message.
 					if (isValidUser) {
-						DashboardGUI dashboardGUI = new DashboardGUI();
-						new DashboardController(dashboardGUI);
+						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
+						dashboardGUI.execute();
+
 					} else {
 						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");
 					}

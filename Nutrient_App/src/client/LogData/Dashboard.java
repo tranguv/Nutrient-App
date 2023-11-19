@@ -9,5 +9,11 @@ public class Dashboard {
             new DashboardController(dashboardGUI);
         });
     }
+    public void callDashBoard(){
+        SwingUtilities.invokeLater(() -> {
+            DashboardGUI dashboardGUI = new DashboardGUI();
+            new DashboardController(dashboardGUI);
+        });
+    }
 }
 

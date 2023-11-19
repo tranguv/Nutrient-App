@@ -81,7 +81,7 @@ public class MealPanel extends JPanel {
 
         // Unit Field
         gbc.gridx++;
-        unitCombo = new JComboBox<>(new String[]{"kg", "lb"});
+        unitCombo = new JComboBox<>(new String[]{"g", "lb"});
         unitCombo.setPreferredSize(new Dimension(100, 30));
         add(unitCombo, gbc);
 

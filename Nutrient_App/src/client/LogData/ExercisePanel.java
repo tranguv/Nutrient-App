@@ -26,6 +26,8 @@ public class ExercisePanel extends JPanel {
     private void addExerciseFields() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
         gbc.gridx = 0;
         gbc.gridy = 0;
 
@@ -102,6 +104,10 @@ public class ExercisePanel extends JPanel {
 
     public JComboBox<String> getExerciseTypeField() {
         return exerciseField;
+    }
+
+    public JTextField getOtherExerciseField() {
+        return otherExerciseField;
     }
 
     public JTextField getDurationField() {

@@ -32,33 +32,33 @@ public class ExerciseQueries {
 	}
 
 	// LOG EXERCISE
-	// public static int logExercise(DateLog date, Exercise exercise) {
-	// 	String sqlInsert = "INSERT INTO `EXERCISE_LOG` (`date_log_id`, `exercise_type`, `duration`, `intensity`) VALUES (?, ?, ?, ?)";
-	// 	String sqlSelect = "SELECT LAST_INSERT_ID()";
+	public static int logExercise(DateLog date, Exercise exercise) {
+		String sqlInsert = "INSERT INTO `EXERCISE_LOG` (`date_log_id`, `exercise_type`, `duration`, `intensity`) VALUES (?, ?, ?, ?)";
+		String sqlSelect = "SELECT LAST_INSERT_ID()";
 
-	// 	try (Connection connection = DBConfig.getConnection()) {
-	// 		try (PreparedStatement insertStatement = connection.prepareStatement(sqlInsert)) {
-	// 			insertStatement.setInt(1, date.getDateLogId());
-	// 			insertStatement.setString(2, exercise.getExerciseType());
-	// 			insertStatement.setInt(3, exercise.getDuration());
-	// 			insertStatement.setString(4, exercise.getIntensity());
-	// 			insertStatement.executeUpdate();
-	// 		}
+		try (Connection connection = DBConfig.getConnection()) {
+			try (PreparedStatement insertStatement = connection.prepareStatement(sqlInsert)) {
+				insertStatement.setInt(1, date.getDateLogId());
+				insertStatement.setString(2, exercise.getName());
+				insertStatement.setInt(3, exercise.getDuration());
+				insertStatement.setString(4, exercise.getIntensity().toString());
+				insertStatement.executeUpdate();
+			}
 
-	// 		try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect)) {
-	// 			try (ResultSet rs = selectStatement.executeQuery()) {
-	// 				if (rs.next()) {
-	// 					return rs.getInt(1); // Use the appropriate column index
-	// 				} else {
-	// 					throw new RuntimeException("Cannot find last inserted meal_id");
-	// 				}
-	// 			}
-	// 		}
-	// 	} catch (SQLException e) {
-	// 		e.printStackTrace();
-	// 		throw new RuntimeException("Error accessing the database", e);
-	// 	}
-	// }
+			try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect)) {
+				try (ResultSet rs = selectStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt(1); // Use the appropriate column index
+					} else {
+						throw new RuntimeException("Cannot find last inserted meal_id");
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 
 
 	//	GET MET VALUES BASED ON EXERCISE INTENSITY

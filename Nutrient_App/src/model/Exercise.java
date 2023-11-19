@@ -7,7 +7,7 @@ import src.server.DataServices.ExerciseQueries;
 public class Exercise {
     private String exerciseType;
     private int duration;
-
+    private int id;
     private Intensity intensity;
 
     public Exercise() {}
@@ -16,6 +16,8 @@ public class Exercise {
         this.duration = duration;
         this.intensity = intensity;
     }
+
+    public int getID() {return id;}
 
     public String getName() {
         return exerciseType;
@@ -32,6 +34,9 @@ public class Exercise {
         else if (this.intensity == Intensity.medium) return Intensity.medium.toString();
         else return Intensity.high.toString();
     }
+
+    public void setID(int id) {this.id = id;}
+    
     public void setName(String exerciseType) {this.exerciseType = exerciseType;}
 
     public void setDuration(int duration) {this.duration = duration;}

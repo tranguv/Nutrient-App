@@ -3,12 +3,14 @@ package src.client.LogData;
 import javax.swing.*;
 import java.awt.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class DatePanel extends JPanel {
     private String selectedDate;
+    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     public DatePanel() {
         setLayout(new GridBagLayout());
@@ -23,29 +25,26 @@ public class DatePanel extends JPanel {
         // Date Label
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(new JLabel("Date:"), gbc);
+        add(new JLabel("Date (yyyy-MM-dd):"), gbc);
 
         // Date Field
         gbc.gridx++;
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         JFormattedTextField dateField = new JFormattedTextField(df);
+        dateField.setPreferredSize(new Dimension(200, 30));
 
-        // Validate date input format
-        dateField.addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if (!((c >= '0') && (c <= '9') ||
-                        (c == KeyEvent.VK_BACK_SPACE) ||
-                        (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_SLASH))) {
-                    JOptionPane.showMessageDialog(null, "Please Enter Valid");
-                    e.consume();
+        // Update selectedDate when user changes input
+        dateField.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                try {
+                    df.setLenient(false);
+                    df.parse(dateField.getText());
+                    selectedDate = dateField.getText();
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(DatePanel.this, "Please enter a valid date in the format yyyy-MM-dd.");
                 }
             }
         });
 
-        this.selectedDate = dateField.getText();
-        // Set size for date field
-        dateField.setPreferredSize(new Dimension(200, 30));
         add(dateField, gbc);
     }
 
@@ -53,5 +52,3 @@ public class DatePanel extends JPanel {
         return selectedDate;
     }
 }
-
-

@@ -159,6 +159,7 @@ public class MealPanel extends JPanel {
 
         newIngredientCombo.setName("ingredient");
         newQuantityField.setName("quantity");
+        unitCombo.setName("unit");
         ingredientRowCount++;
     }
 

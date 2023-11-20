@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+import src.main.CombinedChartsPanel;
 import src.model.User;
 import src.server.DataServices.UserQueries;
 
@@ -52,7 +53,7 @@ public class SignUpPage extends JFrame{
 		}
 
 		JComboBox<String> yearComboBox = new JComboBox<>();
-		for (int year = 2020; year <= 2030; year++) {
+		for (int year = 1950; year <= 2030; year++) {
 			yearComboBox.addItem(String.valueOf(year));
 		}
 
@@ -99,13 +100,15 @@ public class SignUpPage extends JFrame{
 						return;
 					}
 		
-					User newUser = new User(username, String.valueOf(password), "Dang", "Peos", "M", dob, weight, height, "metric");
+					User newUser = new User(username, String.valueOf(password), "", "", "", dob, weight, height, "metric");
 					
 					// Move the createUser method call into the try block
 					if (UserQueries.createUser(newUser)) {
 						newUser.setId(UserQueries.getUserID());
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
+						new CombinedChartsPanel("blabla",newUser).execute();
 						dispose();
+
 					} else {
 						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
 						System.out.println("User signed up unsuccessfully!");

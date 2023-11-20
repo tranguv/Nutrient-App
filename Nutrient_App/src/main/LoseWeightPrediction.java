@@ -35,7 +35,7 @@ public class LoseWeightPrediction extends ApplicationFrame {
         setVisible(true);
     }
 
-    private JPanel createMainPanel() {
+    public JPanel createMainPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 

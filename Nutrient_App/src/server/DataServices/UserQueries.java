@@ -136,4 +136,93 @@ public class UserQueries {
 	// 	}
 
 	// }
+	public static User getUserByID(int id){
+		User user = null;
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT * FROM USER WHERE userID = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setInt(1, id);
+
+				try (ResultSet resultSet = pState.executeQuery()) {
+					if (resultSet.next()) {
+						String user_username = resultSet.getString("username");
+						String user_userPassword = resultSet.getString("user_password");
+						String firstName = resultSet.getString("fname");
+						String lastname = resultSet.getString("lname");
+						String sex = resultSet.getString("sex");
+						String dob = resultSet.getString("dob");
+						double weight = Double.parseDouble(resultSet.getString("weight"));
+						double height = Double.parseDouble(resultSet.getString("height"));
+						String unit = resultSet.getString("units");
+						user = new User(user_username,user_userPassword,firstName,lastname,sex,dob,weight,height,unit);
+
+						return user;
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+		return user;
+	}
+	public static String getUserFirstNamesById(int userId) {
+		String firstName = null;
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT fname FROM USER WHERE userID = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setInt(1, userId);
+
+				try (ResultSet resultSet = pState.executeQuery()) {
+					if (resultSet.next()) {
+						firstName = resultSet.getString("fname");
+						return firstName;
+
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+		return firstName;
+	}
+	public static String getUserLastNamesById(int userId) {
+		String firstName = null;
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT lname FROM USER WHERE userID = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setInt(1, userId);
+
+				try (ResultSet resultSet = pState.executeQuery()) {
+					if (resultSet.next()) {
+						firstName = resultSet.getString("lname");
+						return firstName;
+
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+		return firstName;
+	}
+	public static boolean updateUserDetails(String username, String fname, String lname, String sex) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ? WHERE username = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setString(1, fname);
+				pState.setString(2, lname);
+				pState.setString(3, sex);
+				pState.setString(4, username);
+
+				int rowsAffected = pState.executeUpdate();
+				return rowsAffected > 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 }

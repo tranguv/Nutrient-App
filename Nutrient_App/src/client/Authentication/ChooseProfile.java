@@ -1,16 +1,22 @@
 package src.client.Authentication;
 
+import src.model.User;
+import src.server.DataServices.UserQueries;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class ChooseProfile extends JFrame {
-
-    public ChooseProfile() {
+    User user;
+    public ChooseProfile(User newUser) {
+        this.user = newUser;
         userInterface();
+
     }
 
-    private void userInterface() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public void userInterface() {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         setTitle("Login");
         setSize(1000, 600);
         setLocationRelativeTo(null); // Center the window
@@ -69,6 +75,9 @@ public class ChooseProfile extends JFrame {
             String firstName = firstNameTF.getText();
             String lastName = lastNameTF.getText();
             String gender = (String) genderCB.getSelectedItem();
+            UserQueries find = new UserQueries();
+            find.updateUserDetails(user.getUsername(),firstName,lastName,gender);
+            dispose();
             // Handle profile creation
         });
         gbc.gridx = 0;
@@ -87,7 +96,7 @@ public class ChooseProfile extends JFrame {
     // Main method to run the application
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new ChooseProfile();
+
         });
     }
 }

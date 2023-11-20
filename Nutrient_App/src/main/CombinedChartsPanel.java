@@ -24,14 +24,11 @@ public class CombinedChartsPanel extends ApplicationFrame {
     User user ;
     public CombinedChartsPanel(String title, User user) {
         super(title);
+        this.user = user;
         JPanel combinedPanel = createCombinedPanel();
         setContentPane(combinedPanel);
-        this.user = user;
         // Create and add button panel here
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
-
-        // Add button panel to the frame
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -66,12 +63,20 @@ public class CombinedChartsPanel extends ApplicationFrame {
         // Panel for charts
         JPanel chartPanel = new JPanel(new GridLayout(1, 2)); // Horizontal layout
 
-        // Add the bar/line chart and pie chart
+        Dimension chartSize = new Dimension(300, 300); // Example size
+
         JFreeChart barLineChart = createBarLineChart();
         ChartPanel barLineChartPanel = new ChartPanel(barLineChart);
+        barLineChartPanel.setPreferredSize(chartSize);
+        barLineChartPanel.setMinimumSize(chartSize);
+        barLineChartPanel.setMaximumSize(chartSize);
         chartPanel.add(barLineChartPanel);
+
         JFreeChart pieChart = createPieChart();
         ChartPanel pieChartPanel = new ChartPanel(pieChart);
+        pieChartPanel.setPreferredSize(chartSize);
+        pieChartPanel.setMinimumSize(chartSize);
+        pieChartPanel.setMaximumSize(chartSize);
         chartPanel.add(pieChartPanel);
 
         // Add chart panel to main panel
@@ -164,7 +169,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         System.out.println(this.user.getLastName());
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        demo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         demo.setVisible(true);
     }
 }

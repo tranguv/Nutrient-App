@@ -104,4 +104,72 @@ public class ExerciseQueries {
 		return metHigh;
 	}
 
+	// GET CALORIES EXPENDED FOR 1 EXERCISE
+	public static double getCaloriesExpended(String exercisetype, int duration, String intensity) throws SQLException {
+		double caloriesExpended = 0;
+		double met = 0;
+		if (intensity.equals("LOW")) {
+			met = getMETLow(exercisetype);
+		} else if (intensity.equals("MEDIUM")) {
+			met = getMETMed(exercisetype);
+		} else if (intensity.equals("HIGH")) {
+			met = getMETHigh(exercisetype);
+		}
+		caloriesExpended = met * duration;
+		return caloriesExpended;
+	}
+
+	// GET CALORIES EXPENDED FOR ALL EXERCISES LAST 30 DAYS
+	public static double getCaloriesExpended(int userId){
+		double caloriesExpended = 0;
+		String sql = String.format("SELECT SUM(CASE WHEN UPPER(E.intensity) = 'MEDIUM' THEN M.MEDIUM\n" +
+						"                WHEN UPPER(E.intensity) = 'HIGH' THEN M.HIGH\n" +
+						"                WHEN UPPER(E.intensity) = 'LOW' THEN M.LOW\n" +
+						"                ELSE 0 END * E.duration) AS total_met_values\n" +
+						"FROM EXERCISE_LOG E\n" +
+						"JOIN METvalues M ON M.CATEGORIES = E.exercise_type\n" +
+						"WHERE date_log_id IN (\n" +
+						"    SELECT date_log_id\n" +
+						"    FROM DATE_LOG\n" +
+						"    WHERE userID = %d AND date_log BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()\n" +
+						");\n", userId);
+		try(Connection connection = DBConfig.getConnection()){
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				caloriesExpended = resultSet.getDouble("total_met_values");
+			}
+			preparedStatement.close();
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return caloriesExpended;
+	}
+
+	//GET ALL CALORIES INTAKE FOR LAST 30 DAYS
+	public static double getCaloriesIntake(int userId){
+		double caloriesIntake = 0;
+		String sql = "SELECT SUM(C.calories) AS total_calories\n" +
+						"FROM MEAL_LOG M\n" +
+						"JOIN MEAL M2 ON M.meal_id = M2.meal_id\n" +
+						"JOIN CALORIES C ON M2.meal_type = C.meal_type\n" +
+						"WHERE date_log_id IN (\n" +
+						"    SELECT date_log_id\n" +
+						"    FROM DATE_LOG\n" +
+						"    WHERE userID = 2 AND date_log BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()\n" +
+						");\n";
+		try(Connection connection = DBConfig.getConnection()){
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				caloriesIntake = resultSet.getDouble("total_calories");
+			}
+			preparedStatement.close();
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return caloriesIntake;
+	}
 }

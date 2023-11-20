@@ -1,4 +1,4 @@
-package src.client;
+package src.client.LogData;
 
 import javax.swing.*;
 import javax.swing.text.*;

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+import src.main.CombinedChartsPanel;
 import src.model.User;
 import src.server.DataServices.UserQueries;
 
@@ -39,8 +40,24 @@ public class SignUpPage extends JFrame{
 		JPasswordField passwordPF = new JPasswordField(20);
 
 		// DOB label and text field
-		JLabel dobLB = new JLabel("Date of Birth:");
-		JTextField dobTF = new JTextField(10);
+		JLabel dobLB = new JLabel("Date of Birth (dd/mm/yy):");
+
+		JComboBox<String> dayComboBox = new JComboBox<>();
+		for (int day = 1; day <= 31; day++) {
+			dayComboBox.addItem(String.valueOf(day));
+		}
+
+		JComboBox<String> monthComboBox = new JComboBox<>();
+		for (int month = 1; month <= 12; month++) {
+			monthComboBox.addItem(String.valueOf(month));
+		}
+
+		JComboBox<String> yearComboBox = new JComboBox<>();
+		for (int year = 1950; year <= 2030; year++) {
+			yearComboBox.addItem(String.valueOf(year));
+		}
+
+
 
 		// Weight label and text field
 		JLabel weightLB = new JLabel("Weight:");
@@ -67,7 +84,10 @@ public class SignUpPage extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				String username = usernameTF.getText();
 				char[] password = passwordPF.getPassword(); // Ideally, this should be collected from a JPasswordField
-				String dob = dobTF.getText();
+				String day = (String) dayComboBox.getSelectedItem();
+				String month = (String) monthComboBox.getSelectedItem();
+				String year = (String) yearComboBox.getSelectedItem();
+				String dob = year + "-" + month + "-" + day;
 		
 				try {
 					double weight = Double.parseDouble(weightTF.getText());
@@ -80,13 +100,15 @@ public class SignUpPage extends JFrame{
 						return;
 					}
 		
-					User newUser = new User(username, String.valueOf(password), "Dang", "Peos", "M", dob, weight, height, "metric");
+					User newUser = new User(username, String.valueOf(password), "", "", "", dob, weight, height, "metric");
 					
 					// Move the createUser method call into the try block
 					if (UserQueries.createUser(newUser)) {
 						newUser.setId(UserQueries.getUserID());
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
+						new CombinedChartsPanel("blabla",newUser).execute();
 						dispose();
+
 					} else {
 						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
 						System.out.println("User signed up unsuccessfully!");
@@ -137,8 +159,22 @@ public class SignUpPage extends JFrame{
 		gbc.gridy = 3;
 		panel.add(dobLB, gbc);
 
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		panel.add(dobLB, gbc);
+
 		gbc.gridx = 1;
-		panel.add(dobTF, gbc);
+		gbc.gridwidth = 1; // Reset gridwidth to 1 for individual components
+		panel.add(dayComboBox, gbc);
+
+		gbc.gridx = 2; // Adjust gridx for monthComboBox
+		panel.add(monthComboBox, gbc);
+
+		gbc.gridx = 3; // Adjust gridx for yearComboBox
+		panel.add(yearComboBox, gbc);
+
+// Reset gridwidth for subsequent components
+		gbc.gridwidth = 1;
 
 		gbc.gridx = 0;
 		gbc.gridy = 4;

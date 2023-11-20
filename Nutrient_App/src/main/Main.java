@@ -12,12 +12,20 @@ import src.server.DataServices.DBQueries;
 import src.server.DataServices.InputVisualization;
 import src.server.DataServices.UserQueries;
 
+import src.model.MainApplication;
 import java.sql.SQLException;
 
 public class Main {
-	public static void main(String[] args) throws SQLException {
-//		MainApplication mainApp = new MainApplication();
-//		mainApp.run();
+	public static void main(String[] args) {
+		try {
+			MainApplication mainApp = new MainApplication();
+			mainApp.run();
+		} catch (Exception e) {
+			System.err.println("Unexpected exception: " + e.getMessage());
+			// Handle other unexpected exceptions
+		}
+	}
+}
 
 
 //		System.out.println(userTest.getAge(userTest.getDateOfBirth()));
@@ -42,7 +50,8 @@ public class Main {
 //		System.out.println(Exercise.TDEEcalc(bmr, "medium"));
 
 
-		System.out.println(InputVisualization.getDateListbyUser(UserQueries.getUserIDbyUsername("trangvu")));
+//		System.out.println(InputVisualization.getDateListbyUser(UserQueries.getUserIDbyUsername("trangvu")));
+//
+//	}
+//}
 
-	}
-}

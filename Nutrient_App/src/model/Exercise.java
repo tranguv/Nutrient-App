@@ -1,37 +1,26 @@
 package src.model;
 
-import src.server.DataServices.DBQueries;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
-//import static src.server.DataServices.DBQueries.getConnection;
+import src.server.DataServices.ExerciseQueries;
 
 public class Exercise {
-    private String name;
+    private String exerciseType;
     private int duration;
-    public enum Intensity {
-        low,
-        medium,
-        high
-    }
+    private int id;
     private Intensity intensity;
-    private User user;
 
     public Exercise() {}
-    public Exercise(User user, String name, int duration, Intensity intensity) {
-        this.user = user;
-        this.name = name;
+    public Exercise(String exerciseType, int duration, Intensity intensity) {
+        this.exerciseType = exerciseType;
         this.duration = duration;
         this.intensity = intensity;
     }
 
+    public int getID() {return id;}
+
     public String getName() {
-        return name;
+        return exerciseType;
     }
 
     public int getDuration() {
@@ -45,7 +34,10 @@ public class Exercise {
         else if (this.intensity == Intensity.medium) return Intensity.medium.toString();
         else return Intensity.high.toString();
     }
-    public void setName(String name) {this.name = name;}
+
+    public void setID(int id) {this.id = id;}
+    
+    public void setName(String exerciseType) {this.exerciseType = exerciseType;}
 
     public void setDuration(int duration) {this.duration = duration;}
 
@@ -53,9 +45,9 @@ public class Exercise {
 
     public static double caloriesBurntExercise(User user, Exercise exe, String intensity) throws SQLException {
         double kcal_burnt = 0;
-        if (intensity.equals("low")) kcal_burnt = ((DBQueries.getMETLow(exe.getName()) * 3.5 * user.getWeight() * exe.getDuration())) / 200 ;
-        else if (intensity.equals("medium")) kcal_burnt = ((DBQueries.getMETMed(exe.getName()) * 3.5 * user.getWeight()) * exe.getDuration()) / 200 ;
-        else if (intensity.equals("high")) kcal_burnt = ((DBQueries.getMETHigh(exe.getName()) * 3.5 * user.getWeight())* exe.getDuration()) / 200 ;
+        if (intensity.equals("low")) kcal_burnt = ((ExerciseQueries.getMETLow(exe.getName()) * 3.5 * user.getWeight() * exe.getDuration())) / 200 ;
+        else if (intensity.equals("medium")) kcal_burnt = ((ExerciseQueries.getMETMed(exe.getName()) * 3.5 * user.getWeight()) * exe.getDuration()) / 200 ;
+        else if (intensity.equals("high")) kcal_burnt = ((ExerciseQueries.getMETHigh(exe.getName()) * 3.5 * user.getWeight())* exe.getDuration()) / 200 ;
         return kcal_burnt;
     }
 

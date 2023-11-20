@@ -3,7 +3,7 @@ package src.model;
 import javax.swing.SwingUtilities;
 import java.util.List;
 
-import src.client.Dashboard;
+import src.client.LogData.Dashboard;
 import src.client.Authentication.LoginPage;
 import src.client.Authentication.SignUpPage;
 

@@ -65,6 +65,7 @@ public class LoginPage extends JFrame {
 						UserQueries find = new UserQueries();
 						User user = find.getUserByID(find.getUserIDbyUsername(username));
 						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla", user);
+						dispose();
 						dashboardGUI.execute();
 
 					} else {

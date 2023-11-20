@@ -37,7 +37,8 @@ public class WeightPredictionPanel extends JPanel {
     private JPanel createDatePanel() {
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        startDateField = new JTextField(String.valueOf(Calendar.getInstance()));
+        LocalDate today = LocalDate.now();
+        startDateField = new JTextField(String.valueOf(today));
         startDateField.setEditable(false);
         endDateField = new JTextField(10);
         JButton calculateButton = new JButton("Let's Find out!");
@@ -73,12 +74,14 @@ public class WeightPredictionPanel extends JPanel {
 
     private void calculateWeightLoss() {
         String endDateStr = endDateField.getText();
+        String now = LocalDate.now().toString();
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate endDate = LocalDate.parse(endDateStr, dateFormatter);
+        LocalDate startDate = LocalDate.parse(now, dateFormatter);
 
         // Call your weight loss calculation method here based on the selected date range
-        double weightLoss = calculateWeightLossForDateRange(Calendar.getInstance(), endDate);
+        double weightLoss = calculateWeightLossForDateRange(startDate, endDate);
 
         // Update the chart dataset
         dataset.clear();
@@ -88,14 +91,9 @@ public class WeightPredictionPanel extends JPanel {
         resultLabel.setText("Weight Loss Prediction: " + weightLoss + " kg");
     }
 
-    private double calculateWeightLossForDateRange(Calendar startDate, LocalDate endDate) {
+    private double calculateWeightLossForDateRange(LocalDate startDate, LocalDate endDate) {
         // Your weight loss calculation logic here
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String today = startDate.toString();
-        String endDateStr = endDate.toString();
-        LocalDateTime date1 = LocalDateTime.from(LocalDate.parse(today, DateTimeFormatter.ISO_LOCAL_DATE));
-        LocalDateTime date2 = LocalDateTime.from(LocalDate.parse(endDateStr, dtf));
-        int numberDay = (int) Duration.between(date1, date2).toDays();
+        long numberDay = startDate.datesUntil(endDate).count();
         double calorieIntake = 0.0; // Replace with the actual calorie intake calculation
         double caloriesBurned = 0.0; // Replace with the actual calories burned calculation
         double calorieDeficit = caloriesBurned - calorieIntake;

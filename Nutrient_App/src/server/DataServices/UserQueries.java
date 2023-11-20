@@ -136,6 +136,7 @@ public class UserQueries {
 	// 	}
 
 	// }
+
 	public static User getUserByID(int id){
 		User user = null;
 		try (Connection connection = DBConfig.getConnection()) {

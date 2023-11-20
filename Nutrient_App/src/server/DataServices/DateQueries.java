@@ -33,6 +33,26 @@ public class DateQueries {
 		}
 	}
 
+	//	GET SELECTED DATE INFO BY USER
+	public static Date getDate(User user) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT date_log FROM DATE_LOG WHERE userID = ? ";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(1, UserQueries.getUserIDbyUsername(user.getUsername()));
+//				preparedStatement.setDate(2, date);
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getDate("date_log");
+					}
+				}
+				throw new RuntimeException("Cannot find date_log");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
     //INSERT NEW DATE LOG IF NOT EXISTS
 	public static int addDate(User user, Date date) {
 		// Date curr_date = java.sql.Date.valueOf(LocalDate.now());

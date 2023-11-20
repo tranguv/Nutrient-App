@@ -188,4 +188,6 @@ public class MealQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
+
 }

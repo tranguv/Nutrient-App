@@ -6,8 +6,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
+import src.model.DateLog;
 import src.model.User;
 
 public class DateQueries {
@@ -33,6 +36,7 @@ public class DateQueries {
 		}
 	}
 
+
 	//	GET SELECTED DATE INFO BY USER
 	public static Date getDate(User user) {
 		try (Connection connection = DBConfig.getConnection()) {
@@ -53,26 +57,38 @@ public class DateQueries {
 		}
 	}
 
-    //INSERT NEW DATE LOG IF NOT EXISTS
-	public static int addDate(User user, Date date) {
-		// Date curr_date = java.sql.Date.valueOf(LocalDate.now());
-		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES(?, ?, ?)" +
-					"SELECT LAST_INSERT_ID() AS date_log_id;";
-			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-				preparedStatement.setInt(0, 0);
-				preparedStatement.setDate(1, date);
-				try (ResultSet rs = preparedStatement.executeQuery()) {
-					if (rs.next()) {
-						return rs.getInt("date_log_id");
+	//INSERT NEW DATE LOG IF NOT EXISTS
+//	public static int addDate(User user, Date date) {
+
+		//	LOG DATE
+		public static int addDate (DateLog dateLog){
+
+			// Date curr_date = java.sql.Date.valueOf(LocalDate.now());
+			try (Connection connection = DBConfig.getConnection()) {
+				String sql = "INSERT INTO DATE_LOG (userID, date_log) VALUES(?, ?)";
+
+				try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					String formattedDate = dateFormat.format(dateLog.getDate());
+
+					preparedStatement.setInt(1, dateLog.getUserID());
+					System.out.println("dateLog.getDate().toString(): " + dateLog.getDate().toString());
+					System.out.println("dateLog.getUserID(): " + dateLog.getUserID());
+					preparedStatement.setDate(2, java.sql.Date.valueOf(formattedDate));
+					preparedStatement.executeUpdate();
+					try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
+						if (rs.next()) {
+							return rs.getInt(1);
+						}
 					}
+					throw new RuntimeException("Cannot find last inserted date_log_id");
+//				return -1;
 				}
-				throw new RuntimeException("Cannot find last inserted date_log_id");
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Error accessing the database", e);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error accessing the database", e);
 		}
+
 	}
 
-}

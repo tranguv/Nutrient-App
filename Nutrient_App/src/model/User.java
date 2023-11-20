@@ -17,8 +17,8 @@ public class User {
 	
 	public User() {
 	}
-	
-	
+
+	//User newUser = new User(username, String.valueOf(password), "Dang", "Peos", "M", dob, weight, height, "metric");
 	public User(String username, String password, String fName, String lName, String sex, String dateOfBirth, double weight, double height, String units) {
 		super();
 		this.dateOfBirth = dateOfBirth;

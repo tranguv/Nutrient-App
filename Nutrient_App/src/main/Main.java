@@ -8,16 +8,18 @@ import src.client.Authentication.ChooseProfile;
 import src.client.Authentication.LoginPage;
 import src.client.Authentication.SignUpPage;
 import src.model.User;
+
 import src.server.DataServices.DBQueries;
 import src.server.DataServices.InputVisualization;
 import src.server.DataServices.UserQueries;
+
 
 import java.sql.SQLException;
 
 public class Main {
 	public static void main(String[] args) throws SQLException {
-//		MainApplication mainApp = new MainApplication();
-//		mainApp.run();
+		MainApplication mainApp = new MainApplication();
+		mainApp.run();
 
 
 //		System.out.println(userTest.getAge(userTest.getDateOfBirth()));
@@ -35,6 +37,7 @@ public class Main {
 //		System.out.println(DBQueries.getMETMed("Aerobics"));
 //		System.out.println(DBQueries.getMETHigh("Martial Arts"));
 
+
 //		User userTest = new User("an1","pham1","An", "Pham", "M","2003-09-13",60,175,"metric");
 //		Exercise exe = new Exercise(userTest, "Frisbee", 50, Exercise.Intensity.medium);
 //		System.out.println(Exercise.caloriesBurntExercise(userTest, exe,"medium"));
@@ -43,6 +46,13 @@ public class Main {
 
 
 		System.out.println(InputVisualization.getDateListbyUser(UserQueries.getUserIDbyUsername("trangvu")));
+
+
+		// User userTest = new User("an1","pham1","An", "Pham", "M","2003-09-13",60,175,"metric");
+		// Exercise exe = new Exercise(userTest, "Frisbee", 50, Exercise.Intensity.medium);
+//		System.out.println(Exercise.caloriesBurntExercise(userTest, exe,"medium"));
+		// double bmr = Exercise.BMRcalc(userTest);
+		// System.out.println(Exercise.TDEEcalc(bmr, "medium"));
 
 	}
 }

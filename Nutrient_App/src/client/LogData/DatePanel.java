@@ -11,11 +11,18 @@ import java.awt.event.KeyEvent;
 
 public class DatePanel extends JPanel {
     private String selectedDate;
+    private JLabel dateLabel; // Reference to the date label
 
     public DatePanel() {
         setLayout(new GridBagLayout());
-        setBorder(BorderFactory.createTitledBorder("Date"));
+        setBorder(BorderFactory.createTitledBorder(""));
         addDateFields();
+    }
+
+    public void setDate(String text) {
+        if (dateLabel != null) {
+            dateLabel.setText(text);
+        }
     }
 
     private void addDateFields() {
@@ -26,7 +33,8 @@ public class DatePanel extends JPanel {
         // Date Label
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(new JLabel("Date:"), gbc);
+        dateLabel = new JLabel("Date:"); // Initialize the date label
+        add(dateLabel, gbc);
 
         // Date Field
         gbc.gridx++;

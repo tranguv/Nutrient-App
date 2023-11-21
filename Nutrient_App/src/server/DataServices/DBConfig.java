@@ -16,7 +16,7 @@ public class DBConfig {
         InputStream input = null;
 
         try {
-            input = new FileInputStream("src\\dbconfig.properties");
+            input = new FileInputStream("src//dbconfig.properties");
             prop.load(input);
 
             String url = prop.getProperty("db.url");

@@ -122,4 +122,8 @@ public class User {
 		Period p = Period.between(dob, todayDate);
 		return p.getYears();
 	}
+
+    public void setFirstName(String firstName) {
+		this.fName = firstName;
+    }
 }

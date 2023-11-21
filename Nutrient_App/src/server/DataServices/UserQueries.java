@@ -208,14 +208,19 @@ public class UserQueries {
 		}
 		return firstName;
 	}
-	public static boolean updateUserDetails(String username, String fname, String lname, String sex) {
+	public static boolean updateUserDetails(String username, String fname, String lname, String sex, String dob,double height, double weight) {
 		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ? WHERE username = ?";
+			// Update SQL statement to include height and weight
+			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ?, dob = ?,height = ?, weight = ? WHERE username = ?";
+
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, fname);
 				pState.setString(2, lname);
 				pState.setString(3, sex);
-				pState.setString(4, username);
+				pState.setString(4, dob);
+				pState.setDouble(5, height); // Assuming height is a double
+				pState.setDouble(6, weight); // Assuming weight is a double
+				pState.setString(7, username);
 
 				int rowsAffected = pState.executeUpdate();
 				return rowsAffected > 0;
@@ -225,6 +230,7 @@ public class UserQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
 
 
 }

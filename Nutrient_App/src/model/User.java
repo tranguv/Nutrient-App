@@ -9,8 +9,8 @@ public class User {
 	private String lName;
 	private String sex;
 	private String dateOfBirth;
-	private double height;
-	private double weight;
+	private double height = 0;
+	private double weight =0 ;
 	private String username;
 	private String password;
 	private String units;
@@ -121,5 +121,9 @@ public class User {
 		LocalDate todayDate = LocalDate.now();
 		Period p = Period.between(dob, todayDate);
 		return p.getYears();
+	}
+
+	public void setFirstName(String firstName) {
+		this.fName = firstName;
 	}
 }

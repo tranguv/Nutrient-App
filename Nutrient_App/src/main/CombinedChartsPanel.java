@@ -15,161 +15,163 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class CombinedChartsPanel extends ApplicationFrame {
 
+    private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private DefaultPieDataset pieDataset = new DefaultPieDataset();
+    private User user;
 
-    static DefaultCategoryDataset  dataset = new DefaultCategoryDataset();
-    static DefaultPieDataset dataset1 = new DefaultPieDataset();
-    User user ;
     public CombinedChartsPanel(String title, User user) {
         super(title);
         this.user = user;
+
+        initializeData();
         JPanel combinedPanel = createCombinedPanel();
         setContentPane(combinedPanel);
-        // Create and add button panel here
+        setupButtonPanel();
+    }
+
+    private void initializeData() {
+        initializeLineChartData();
+        initializePieChartData();
+    }
+
+    private void initializeLineChartData() {
+        // Initialize Line Chart Data
+        Random rand = new Random();
+        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-01");
+        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-02");
+        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-03");
+        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-04");
+        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-05");
+        
+
+        // Exercise data
+        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-01");
+        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-02");
+        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-03");
+        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-04");
+        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-05");
+        
+    }
+
+    private void initializePieChartData() {
+        // Initialize Pie Chart Data
+        Random rand = new Random();
+        pieDataset.setValue("Fruit and Vegetable", rand.nextInt(40));
+        pieDataset.setValue("Starch", rand.nextInt(40));
+        pieDataset.setValue("Milk and Dairy Food", rand.nextInt(40));
+        pieDataset.setValue("Food and Drink High in Fat/Sugar", rand.nextInt(40));
+        pieDataset.setValue("Meat and Fish", rand.nextInt(40));
+        pieDataset.setValue("Other", rand.nextInt(40));
+    }
+
+    private JPanel createCombinedPanel() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+        mainPanel.add(createDateSelectionPanel());
+        mainPanel.add(createChartPanel());
+        mainPanel.add(createButtonPanel());
+
+        return mainPanel;
+    }
+
+    private JPanel createDateSelectionPanel() {
+        JPanel dateSelectionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        DatePanel datePanelStart = createDatePanel("Start Day (yyyy-mm-dd): ");
+        DatePanel datePanelEnd = createDatePanel("End Day (yyyy-mm-dd): ");
+        dateSelectionPanel.add(datePanelStart);
+        dateSelectionPanel.add(datePanelEnd);
+
+        JButton submitButton = createSubmitButton(datePanelStart, datePanelEnd);
+        dateSelectionPanel.add(submitButton);
+
+        return dateSelectionPanel;
+    }
+
+    private DatePanel createDatePanel(String labelText) {
+        DatePanel datePanel = new DatePanel();
+        datePanel.setDate(labelText);
+        return datePanel;
+    }
+
+    private JButton createSubmitButton(DatePanel start, DatePanel end) {
+        JButton submit = new JButton("Submit");
+        submit.addActionListener(e -> {
+            System.out.println("Start Date: " + start.getSelectedDate());
+            System.out.println("End Date: " + end.getSelectedDate());
+        });
+        return submit;
+    }
+
+    private JPanel createChartPanel() {
+        JPanel chartPanel = new JPanel(new GridLayout(1, 2));
+
+        Dimension chartSize = new Dimension(800, 500);
+        chartPanel.add(createChartPanel(createBarLineChart(), chartSize));
+        chartPanel.add(createChartPanel(createPieChart(), chartSize));
+
+        return chartPanel;
+    }
+
+    private ChartPanel createChartPanel(JFreeChart chart, Dimension size) {
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(size);
+        return chartPanel;
+    }
+
+    private JFreeChart createBarLineChart() {
+        return ChartFactory.createBarChart(
+                "Bar/Line Chart", "Category", "Value", dataset,
+                PlotOrientation.VERTICAL, true, true, false);
+    }
+
+    private JFreeChart createPieChart() {
+        return ChartFactory.createPieChart(
+                "Pie Chart", pieDataset, true, true, false);
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(createRecalculateButton());
+        buttonPanel.add(createProfileButton());
+        buttonPanel.add(createLogDietButton());
+        return buttonPanel;
+    }
+    private JButton createRecalculateButton(){
+        JButton recalculationButton = new JButton("Recalculate");
+        recalculationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                initializeData();
+                createCombinedPanel().revalidate();
+                createCombinedPanel().repaint();
+            }
+        } );
+        return recalculationButton;
+    }
+    private JButton createProfileButton() {
+        JButton profileButton = new JButton("Profile");
+        profileButton.addActionListener(e -> new ChooseProfile(user));
+        return profileButton;
+    }
+
+    private JButton createLogDietButton() {
+        JButton logDietButton = new JButton("Log Diet");
+        logDietButton.addActionListener(e -> new Dashboard().callDashBoard());
+        return logDietButton;
+    }
+
+    private void setupButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private JPanel createCombinedPanel() {
-        // Main panel with BoxLayout for vertical stacking
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
-        // Date selection panel with horizontal layout
-        JPanel dateSelectionPanel = new JPanel();
-        dateSelectionPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        // Add DatePanel for start and end dates
-        DatePanel datePanelStart = new DatePanel();
-        datePanelStart.setDate("Start Day (yyyy-mm-dd): ");
-        dateSelectionPanel.add(datePanelStart);
-        DatePanel datePanelEnd = new DatePanel();
-        datePanelEnd.setDate("End Day (yyyy-mm-dd): ");
-        dateSelectionPanel.add(datePanelEnd);
-
-        // Add date selection panel to main panel
-        mainPanel.add(dateSelectionPanel);
-        JButton submit = new JButton("Submit");
-        submit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Start Date: " + datePanelStart.getSelectedDate());
-                System.out.println("End Date: " + datePanelEnd.getSelectedDate());
-            }
-        });
-        dateSelectionPanel.add(submit);
-        // Panel for charts
-        JPanel chartPanel = new JPanel(new GridLayout(1, 2)); // Horizontal layout
-
-        Dimension chartSize = new Dimension(300, 300); // Example size
-
-        JFreeChart barLineChart = createBarLineChart();
-        ChartPanel barLineChartPanel = new ChartPanel(barLineChart);
-        barLineChartPanel.setPreferredSize(chartSize);
-        barLineChartPanel.setMinimumSize(chartSize);
-        barLineChartPanel.setMaximumSize(chartSize);
-        chartPanel.add(barLineChartPanel);
-
-        JFreeChart pieChart = createPieChart();
-        ChartPanel pieChartPanel = new ChartPanel(pieChart);
-        pieChartPanel.setPreferredSize(chartSize);
-        pieChartPanel.setMinimumSize(chartSize);
-        pieChartPanel.setMaximumSize(chartSize);
-        chartPanel.add(pieChartPanel);
-
-        // Add chart panel to main panel
-        mainPanel.add(chartPanel);
-
-        WeightPredictionPanel weightPredictionPanel = new WeightPredictionPanel();
-        mainPanel.add(weightPredictionPanel);
-
-        // Create and add button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton recalculateButton = new JButton("Recalculate");
-        JButton profileButton = new JButton("Profile");
-        JButton logDietButton = new JButton("Log Diet");
-        buttonPanel.add(recalculateButton);
-        buttonPanel.add(profileButton);
-        buttonPanel.add(logDietButton);
-
-        // Add button panel to main panel
-        mainPanel.add(buttonPanel);
-
-        recalculateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-        profileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new ChooseProfile(user);
-            }
-        });
-
-        logDietButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Dashboard().callDashBoard();
-            }
-        });
-
-        return mainPanel;
-    }
-    private static void addDataforLineChart(String category, String date, int value) {
-        dataset.addValue(value, category, date);
-    }
-
-    private JFreeChart createBarLineChart() {
-        // Add data to the dataset
-        dataset.addValue(2000, "Calories", "2023-01-01");
-        dataset.addValue(1500, "Calories", "2023-01-02");
-        dataset.addValue(1800, "Calories", "2023-01-03");
-        dataset.addValue(2000, "Calories", "2023-01-04");
-        dataset.addValue(1200, "Calories", "2023-01-05");
-        dataset.addValue(1800, "Calories", "2023-01-06");
-
-        // Exercise data
-        dataset.addValue(300, "Exercise", "2023-01-01");
-        dataset.addValue(450, "Exercise", "2023-01-02");
-        dataset.addValue(600, "Exercise", "2023-01-03");
-        dataset.addValue(200, "Exercise", "2023-01-04");
-        dataset.addValue(150, "Exercise", "2023-01-05");
-        dataset.addValue(300, "Exercise", "2023-01-06");
-
-        // Create and return the chart
-        return ChartFactory.createBarChart(
-                "Bar/Line Chart", "Category", "Value", dataset,
-                PlotOrientation.VERTICAL, true, true, false
-        );
-    }
-
-
-    private JFreeChart createPieChart() {
-
-        // Example data
-        dataset1.setValue("Fruit and Vegetable", 20);
-        dataset1.setValue("Starch", 30);
-        dataset1.setValue("Milk and Dairy Food", 15);
-        dataset1.setValue("Food and Drink High in Fat/Sugar", 15);
-        dataset1.setValue("Meat and Fish", 10);
-        dataset1.setValue("Other", 30);
-
-        return ChartFactory.createPieChart(
-                "Pie Chart", dataset1, true, true, false
-        );
-    }
-
-    public  void execute() {
+    public void execute() {
         CombinedChartsPanel demo = new CombinedChartsPanel("Combined Charts Example", this.user);
-        System.out.println(this.user.getUsername());
-        System.out.println(this.user.getPassword());
-        System.out.println(this.user.getFirstName());
-        System.out.println(this.user.getLastName());
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -15,6 +15,7 @@ import src.client.LogData.Dashboard;
 import src.client.LogData.DashboardController;
 import src.client.LogData.DashboardGUI;
 import src.main.CombinedChartsPanel;
+import src.model.MainApplication;
 import src.model.User;
 import src.server.DataServices.UserQueries;
 
@@ -64,6 +65,7 @@ public class LoginPage extends JFrame {
 					if (isValidUser) {
 						UserQueries find = new UserQueries();
 						User user = find.getUserByID(find.getUserIDbyUsername(username));
+						MainApplication.setUser(user);
 						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla", user);
 						dispose();
 						dashboardGUI.execute();

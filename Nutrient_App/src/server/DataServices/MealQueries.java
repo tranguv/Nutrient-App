@@ -313,4 +313,33 @@ public class MealQueries {
 		}
 	}
 
+	public static ArrayList<Double> getDailyKcalIntake(int userID,  Date date) {
+		ArrayList<Double> kcalIntake = new ArrayList<>();
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = String.format("SELECT ((na.NutrientValue / 100) * i.quantity) AS daily_kcal_intake\n" +
+					"FROM `USER` u\n" +
+					"JOIN DATE_LOG dl ON dl.userID = u.userID\n" +
+					"JOIN MEAL_DETAILS md ON dl.date_log_id = md.date_log_id\n" +
+					"JOIN INGREDIENTS i ON i.meal_id = md.meal_id\n" +
+					"JOIN FOOD_NAME fn ON fn.FoodID = i.FoodID\n" +
+					"JOIN NUTRIENT_AMOUNT na ON na.FoodID = fn.FoodID\n" +
+					"JOIN NUTRIENT_NAME nn ON nn.NutrientNameID = na.NutrientNameID\n" +
+					"WHERE dl.date_log = ?\n" +
+					"     AND u.userID = ?\n" +
+					"    AND nn.NutrientCode = 208;") ;
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setDate(1, date);
+				pState.setInt(2, userID);
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						kcalIntake.add(resultSet.getDouble("daily_kcal_intake"));
+					}
+				}
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+		return kcalIntake;
+	}
 }

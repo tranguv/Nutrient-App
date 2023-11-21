@@ -71,7 +71,7 @@ public class WeightPredictionPanel extends JPanel {
         return resultPanel;
     }
 
-    private void calculateWeightLoss() {
+    public void calculateWeightLoss() {
         String endDateStr = endDateField.getText();
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

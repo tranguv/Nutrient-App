@@ -147,7 +147,7 @@ public class DBQueries {
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(0, mealID);
                 preparedStatement.setString(1, ingre.getName());
-                preparedStatement.setInt(2, ingre.getQuantity());
+                preparedStatement.setDouble(2, ingre.getQuantity());
                 preparedStatement.setString(3, ingre.getUnit());
                 preparedStatement.executeUpdate();
             }

@@ -15,10 +15,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class CombinedChartsPanel extends ApplicationFrame {
-
-
+    private DatePanel datePanelStart;
+    private DatePanel datePanelEnd;
     static DefaultCategoryDataset  dataset = new DefaultCategoryDataset();
     static DefaultPieDataset dataset1 = new DefaultPieDataset();
     User user ;
@@ -31,7 +33,6 @@ public class CombinedChartsPanel extends ApplicationFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
-
     private JPanel createCombinedPanel() {
         // Main panel with BoxLayout for vertical stacking
         JPanel mainPanel = new JPanel();
@@ -42,10 +43,10 @@ public class CombinedChartsPanel extends ApplicationFrame {
         dateSelectionPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         // Add DatePanel for start and end dates
-        DatePanel datePanelStart = new DatePanel();
+        datePanelStart = new DatePanel();
         datePanelStart.setDate("Start Day (yyyy-mm-dd): ");
         dateSelectionPanel.add(datePanelStart);
-        DatePanel datePanelEnd = new DatePanel();
+        datePanelEnd = new DatePanel();
         datePanelEnd.setDate("End Day (yyyy-mm-dd): ");
         dateSelectionPanel.add(datePanelEnd);
 

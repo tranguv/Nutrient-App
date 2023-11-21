@@ -136,7 +136,6 @@ public class UserQueries {
 	// 	}
 
 	// }
-
 	public static User getUserByID(int id){
 		User user = null;
 		try (Connection connection = DBConfig.getConnection()) {
@@ -209,14 +208,19 @@ public class UserQueries {
 		}
 		return firstName;
 	}
-	public static boolean updateUserDetails(String username, String fname, String lname, String sex) {
+	public static boolean updateUserDetails(String username, String fname, String lname, String sex, String dob,double height, double weight) {
 		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ? WHERE username = ?";
+			// Update SQL statement to include height and weight
+			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ?, dob = ?,height = ?, weight = ? WHERE username = ?";
+
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, fname);
 				pState.setString(2, lname);
 				pState.setString(3, sex);
-				pState.setString(4, username);
+				pState.setString(4, dob);
+				pState.setDouble(5, height); // Assuming height is a double
+				pState.setDouble(6, weight); // Assuming weight is a double
+				pState.setString(7, username);
 
 				int rowsAffected = pState.executeUpdate();
 				return rowsAffected > 0;
@@ -227,29 +231,6 @@ public class UserQueries {
 		}
 	}
 
-	// GET BMR INDEX OF A USER
-	public double getBMR(int userID){
-		String sql = String.format("SELECT (\n" +
-				"        CASE\n" +
-				"\t\t\tWHEN U.sex = 'F' THEN 88.362+(13.397*U.weight)+(4.799*U.height)-(5.677* TIMESTAMPDIFF(YEAR, U.dob, NOW()))\n" +
-				"            WHEN U.sex = 'M' THEN 447.593+(9.247*U.weight)+(3.098*U.height)-(4.330* TIMESTAMPDIFF(YEAR, U.dob, NOW()))\n" +
-				"\t\tEND) as bmr\n" +
-				"FROM USER U\n" +
-				"WHERE U.userID = %d;", userID);
-		Double bmr = 0.0;
-		try(Connection connection = DBConfig.getConnection()){
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				bmr = resultSet.getDouble("bmr");
-			}
-			preparedStatement.close();
-			resultSet.close();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return bmr;
-	}
+
 }
-

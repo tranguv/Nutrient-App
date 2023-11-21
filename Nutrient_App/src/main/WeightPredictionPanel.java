@@ -1,6 +1,8 @@
 package src.main;
 
 import org.jfree.data.category.DefaultCategoryDataset;
+import src.server.DataServices.ExerciseQueries;
+import src.server.DataServices.MealQueries;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +74,7 @@ public class WeightPredictionPanel extends JPanel {
         return resultPanel;
     }
 
-    private void calculateWeightLoss() {
+    public void calculateWeightLoss() {
         String endDateStr = endDateField.getText();
         String now = LocalDate.now().toString();
 
@@ -91,13 +93,16 @@ public class WeightPredictionPanel extends JPanel {
         resultLabel.setText("Weight Loss Prediction: " + weightLoss + " kg");
     }
 
-    private double calculateWeightLossForDateRange(LocalDate startDate, LocalDate endDate) {
+    public double calculateWeightLossForDateRange(LocalDate startDate, LocalDate endDate) {
         // Your weight loss calculation logic here
         long numberDay = startDate.datesUntil(endDate).count();
-        double calorieIntake = 0.0; // Replace with the actual calorie intake calculation
-        double caloriesBurned = 0.0; // Replace with the actual calories burned calculation
+//        double calorieIntake = ExerciseQueries.getCaloriesIntake(2); // Replace with the actual user id
+        double calorieIntake = 0;
+        double caloriesBurned = ExerciseQueries.getCaloriesExpended(2); // Replace with the actual user i
         double calorieDeficit = caloriesBurned - calorieIntake;
         double fatLoss = calorieDeficit / 7700;
+        double averageCalorieIntake = calorieIntake / MealQueries.getNumOfMeals(2);
+        double averageCalorieBurned = caloriesBurned / ExerciseQueries.getNumberOfExercises(2);
         double projectedWeightLoss = fatLoss * numberDay;
 
         // This is a placeholder method. You should replace it with your actual calculation.

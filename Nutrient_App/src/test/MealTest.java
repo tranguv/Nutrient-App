@@ -1,6 +1,7 @@
  package src.test;
 
  import java.sql.SQLIntegrityConstraintViolationException;
+ import java.time.LocalDate;
  import java.util.Calendar;
  import java.util.Date;
  import java.util.List;
@@ -10,6 +11,7 @@
  import javax.swing.JOptionPane;
 
  import src.client.Authentication.SignUpPage;
+ import src.main.WeightPredictionPanel;
  import src.model.DateLog;
  import src.model.FoodItem;
  import src.model.Meal;
@@ -23,7 +25,8 @@
  public class MealTest {
      public static void main(String[] args) {
          // TODO Auto-generated method stub
-         System.out.println(ExerciseQueries.getCaloriesExpended(2));
+         System.out.println(MealQueries.getTop6FoodGroupByPercentage(2));
+//         System.out.println(ExerciseQueries.getCaloriesExpended(2));
 //         try {
 //             User newUser = new User("tester1", "test1", "ok", "nha", "F", "2003-11-11", 60, 170, "metric");
 //

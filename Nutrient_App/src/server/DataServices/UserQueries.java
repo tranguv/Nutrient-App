@@ -13,9 +13,9 @@ import src.model.User;
 public class UserQueries {
 
 
-    //for log in validation
-    public static boolean validateUser(String username, String password) {
-        try (Connection connection = DBConfig.getConnection()) {
+	//for log in validation
+	public static boolean validateUser(String username, String password) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM USER WHERE username = ? AND user_password = ?";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, username);
@@ -33,11 +33,11 @@ public class UserQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
-    }
+	}
 
 	//for sign up validation
-	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {	
-        try (Connection connection = DBConfig.getConnection()) {
+	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
@@ -52,7 +52,7 @@ public class UserQueries {
 				pState.setDouble(7, user.getWeight());
 				pState.setDouble(8, user.getHeight());
 				pState.setString(9, user.getUnits());
-	
+
 				int rowsAffected = pState.executeUpdate();
 				if (rowsAffected > 0) {
 					try (ResultSet generatedKeys = pState.getGeneratedKeys()) {
@@ -75,7 +75,7 @@ public class UserQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
-	}	
+	}
 
 	//GET CURRENT USER ID
 	public static int getUserID(){
@@ -225,6 +225,31 @@ public class UserQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
+	}
+
+	// GET BMR INDEX OF A USER
+	public double getBMR(int userID){
+		String sql = String.format("SELECT (\n" +
+				"        CASE\n" +
+				"\t\t\tWHEN U.sex = 'F' THEN 88.362+(13.397*U.weight)+(4.799*U.height)-(5.677* TIMESTAMPDIFF(YEAR, U.dob, NOW()))\n" +
+				"            WHEN U.sex = 'M' THEN 447.593+(9.247*U.weight)+(3.098*U.height)-(4.330* TIMESTAMPDIFF(YEAR, U.dob, NOW()))\n" +
+				"\t\tEND) as bmr\n" +
+				"FROM USER U\n" +
+				"WHERE U.userID = %d;", userID);
+		Double bmr = 0.0;
+		try(Connection connection = DBConfig.getConnection()){
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				bmr = resultSet.getDouble("bmr");
+			}
+			preparedStatement.close();
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return bmr;
 	}
 }
 

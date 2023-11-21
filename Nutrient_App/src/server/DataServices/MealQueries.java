@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.sql.Date;
 
@@ -18,6 +19,28 @@ import src.model.DateLog;
 import src.model.Meal;
 
 public class MealQueries {
+	//GET NUMBER OF MEALS ALL THE TIME
+	public static int getNumOfMeals(int userID) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = String.format("SELECT COUNT(*) AS total_exercises\n" +
+					"FROM EXERCISE_LOG E\n" +
+					"JOIN DATE_LOG D ON E.date_log_id = D.date_log_id\n" +
+					"WHERE D.userID = %d", userID);
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt("total_exercises");
+					} else {
+						return 0;
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
 	//CHECK IF MEAL EXISTS, IF YES RETURN MEAL ID
 	public static int getMealID(Meal meal) {
 		try (Connection connection = DBConfig.getConnection()) {
@@ -305,6 +328,39 @@ public class MealQueries {
 					}
 				}
 				return foodItem;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+	// GET TOP 6 FOOD GROUP BY PERCENTAGE List<FoodGroupName, Percentage>
+	public static HashMap<String, Double> getTop6FoodGroupByPercentage(int userID){
+		HashMap<String, Double> foodGroups = new HashMap<>();
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = String.format("SELECT\n" +
+					"  FG.FoodGroupName,\n" +
+					"  COUNT(FG.FoodGroupID) AS FoodGroupCount,\n" +
+					"  (COUNT(FG.FoodGroupID) / (SELECT COUNT(*) FROM FOOD_GROUP) * 100) AS Percentage\n" +
+					"FROM USER U\n" +
+					"JOIN DATE_LOG D ON D.userID = U.userID\n" +
+					"JOIN MEAL_DETAILS M ON D.date_log_id = M.date_log_id\n" +
+					"JOIN INGREDIENTS I ON I.meal_id = M.meal_id\n" +
+					"JOIN FOOD_NAME FN ON I.FoodID = FN.FoodID\n" +
+					"JOIN FOOD_GROUP FG ON FN.FoodGroupID = FG.FoodGroupID\n" +
+					"WHERE U.userID = %d\n" +
+					"GROUP BY FG.FoodGroupID\n" +
+					"ORDER BY Percentage DESC LIMIT 6;\n", userID);
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						String foodGroupName = resultSet.getString("FoodGroupName");
+						double percentage = resultSet.getDouble("Percentage");
+						foodGroups.put(foodGroupName, percentage);
+					}
+				}
+				return foodGroups;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

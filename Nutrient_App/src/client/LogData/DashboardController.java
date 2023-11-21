@@ -85,7 +85,7 @@ public class DashboardController {
     }
 
     private void addMeal() {
-        ExercisePanel exercisePanel = dashboardGUI.getExercisePanel();
+        MealPanel mealPanel = dashboardGUI.getMealPanel();
 
         List<Ingredient> ingredientList = new ArrayList<>();
         String mealType = dashboardGUI.getMealPanel().getMealTypeComboBox().getSelectedItem().toString();
@@ -95,9 +95,9 @@ public class DashboardController {
         List<String> quantities = new ArrayList<>();
         List<String> units = new ArrayList<>();
 
-        GridBagLayout layout = (GridBagLayout) exercisePanel.getLayout();
+        GridBagLayout layout = (GridBagLayout) mealPanel.getLayout();
 
-        for (Component component : exercisePanel.getComponents()) {
+        for (Component component : mealPanel.getComponents()) {
             GridBagConstraints gbc = layout.getConstraints(component);
 
             System.out.println("compo:" + component.getName());
@@ -175,13 +175,16 @@ public class DashboardController {
     private void addExercise() {
         // Your add exercise logic goes here
         //{exerciseName, [duration, intensity]}
+        ExercisePanel exercisePanel = dashboardGUI.getExercisePanel();
         List<Exercise> exerciseList = new ArrayList<>();
         List<String> exercises = new ArrayList<>();
         List<Integer> duration = new ArrayList<>();
         List<String> intensity = new ArrayList<>();
-        
+
+        GridBagLayout layout = (GridBagLayout) exercisePanel.getLayout();
+
         // Iterate over the components of the ExercisePanel
-        for (Component component : dashboardGUI.getExercisePanel().getComponents()) {
+        for (Component component : exercisePanel.getComponents()) {
             System.out.println("compo:" + component.getName());
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;

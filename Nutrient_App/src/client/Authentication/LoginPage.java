@@ -59,12 +59,13 @@ public class LoginPage extends JFrame {
 		        try {
 		            // Try to log in the user
 					boolean isValidUser = src.server.DataServices.UserQueries.validateUser(username, String.valueOf(password));
-		            
+
 					// If successful, show a success message.
 					if (isValidUser) {
 						UserQueries find = new UserQueries();
 						User user = find.getUserByID(find.getUserIDbyUsername(username));
 						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla", user);
+						dispose();
 						dashboardGUI.execute();
 
 					} else {

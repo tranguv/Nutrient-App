@@ -62,6 +62,7 @@ public class MealPanel extends JPanel {
             String selectedIngredient = ingredientCombo.getSelectedItem().toString();
             String foodGroupName = MealQueries.getFoodGroupName(selectedIngredient);
             foodGroup.setText(foodGroupName);
+            updateUnitCombo(foodGroup.getText());
         });
         add(foodGroup, gbc);
 
@@ -81,7 +82,8 @@ public class MealPanel extends JPanel {
 
         // Unit Field
         gbc.gridx++;
-        unitCombo = new JComboBox<>(new String[]{"g", "lb"});
+        String units[] = {"g", "ml", "cup"};
+        unitCombo = new JComboBox<>(units);
         unitCombo.setPreferredSize(new Dimension(100, 30));
         add(unitCombo, gbc);
 
@@ -104,6 +106,57 @@ public class MealPanel extends JPanel {
             revalidate();
             repaint();
         });
+    }
+
+    private void updateUnitCombo(String foodGroupName) {
+        String[] units;
+
+        int foodGroupIndex = MealQueries.getFoodGroupID(foodGroupName);
+        switch (foodGroupIndex) {
+            default:
+                units = new String[]{"g", "ml"}; // Default units
+                break;
+            case 1: //dairy n egg
+                units = new String[]{"ml", "cup", "egg"};
+                break;
+            case 5:
+                units = new String[]{"g"};
+                break;
+            case 8:
+            case 10:
+            case 13:
+            case 15:
+            case 17:
+            case 20:
+                units = new String[]{"g", "ml"};
+                break;
+            case 9: //fruits
+                units = new String[]{"fruit", "ml"};
+                break;
+            case 4: //fats n oils
+            case 12: //nuts n seed
+            case 16: //legumes
+            case 11: // vegetables
+                units = new String[]{"ml"};
+                break;
+            case 14: //beverages
+                units = new String[]{"ml", "cup"};
+                break;
+            case 22:
+                units = new String[]{"dish"};
+                break;
+            case 2:
+            case 3:
+            case 6:
+            case 7:
+            case 18:
+            case 19:
+            case 21:
+                units = new String[]{"g", "ml", "cup"};
+                break;
+        }
+
+        unitCombo.setModel(new DefaultComboBoxModel<>(units));
     }
 
     private void addIngredientFields() {
@@ -138,6 +191,7 @@ public class MealPanel extends JPanel {
             String selectedIngredient = newIngredientCombo.getSelectedItem().toString();
             String foodGroupName = MealQueries.getFoodGroupName(selectedIngredient);
             foodGroup.setText(foodGroupName);
+            updateUnitCombo(foodGroup.getText());
         });
         add(foodGroup, gbc);
 

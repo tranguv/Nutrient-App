@@ -96,28 +96,65 @@ public class UserQueries {
 	}
 
 	//GET USER ID BY USERNAME
-	public static int getUserIDbyUsername(String username){
+	public static int getUserIDbyUsername(String username) throws SQLException {
 		int userID = 0;
-		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "SELECT userID FROM USER WHERE username = ?";
-			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-				pState.setString(1, username);
-				try (ResultSet resultSet = pState.executeQuery()) {
-					while (resultSet.next()) {
-						userID = resultSet.getInt("userID");
-					}
-				}
-				return userID;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error accessing the database", e);
+		Connection connection = DBConfig.getConnection();
+		String sql = "SELECT userID FROM USER WHERE username = ?";
+		PreparedStatement pState = connection.prepareStatement(sql);
+		pState.setString(1, username);
+		ResultSet resultSet = pState.executeQuery();
+		while (resultSet.next()) {
+			userID = resultSet.getInt("userID");
 		}
+		return userID;
 	}
+
+
+//		try (Connection connection = DBConfig.getConnection()) {
+//			String sql = "SELECT userID FROM USER WHERE username = ?";
+//			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+//				pState.setString(1, username);
+//				try (ResultSet resultSet = pState.executeQuery()) {
+//					while (resultSet.next()) {
+//						userID = resultSet.getInt("userID");
+//					}
+//				}
+//				return userID;
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			throw new RuntimeException("Error accessing the database", e);
+//		}
+//}
+
 
 	//for updating user profile
 
 	//for deleting user profile
+
+
+
+//	for getting user profile by username
+//	 public static User getUser(String username){
+//		User user = new User();
+//	 	try (Connection connection = DBConfig.getConnection()) {
+//	 		String sql = "SELECT username FROM USER WHERE username = ?";
+//	 		try (PreparedStatement pState = connection.prepareStatement(sql)) {
+//	 			pState.setString(1, username);
+////	 			pState.executeQuery();
+//				try (ResultSet resultSet = pState.executeQuery()) {
+//					while (resultSet.next()) {
+//						user = resultSet.getObject();
+//					}
+//				}
+//				 return
+//	 		}
+//	 	} catch (SQLException e) {
+//	 		e.printStackTrace();
+//	 		throw new RuntimeException("Error accessing the database", e);
+//	 	}
+//
+//	 }
 
 	//for getting user profile by username
 	// public static User getUser(String username){
@@ -233,3 +270,8 @@ public class UserQueries {
 
 
 }
+
+
+
+
+

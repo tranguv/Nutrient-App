@@ -10,18 +10,33 @@ import src.client.Authentication.LoginPage;
 import src.client.Authentication.SignUpPage;
 import src.model.User;
 
+
 import src.server.DataServices.*;
 
 
 //import java.sql.Date;
 import java.sql.Date;
+
+import src.server.DataServices.DBQueries;
+import src.server.DataServices.InputVisualization;
+import src.server.DataServices.UserQueries;
+
+import src.model.MainApplication;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
-	public static void main(String[] args) throws SQLException {
-		MainApplication mainApp = new MainApplication();
-		mainApp.run();
+	public static void main(String[] args) {
+		try {
+			MainApplication mainApp = new MainApplication();
+			mainApp.run();
+		} catch (Exception e) {
+			System.err.println("Unexpected exception: " + e.getMessage());
+			// Handle other unexpected exceptions
+		}
+	}
+}
 
 
 //		System.out.println(userTest.getAge(userTest.getDateOfBirth()));
@@ -50,6 +65,7 @@ public class Main {
 //		System.out.println(InputVisualization.getDateListbyUser(UserQueries.getUserIDbyUsername("trangvu")));
 
 
+
 		// User userTest = new User("an1","pham1","An", "Pham", "M","2003-09-13",60,175,"metric");
 		// Exercise exe = new Exercise(userTest, "Frisbee", 50, Exercise.Intensity.medium);
 //		System.out.println(Exercise.caloriesBurntExercise(userTest, exe,"medium"));
@@ -57,17 +73,24 @@ public class Main {
 		// System.out.println(Exercise.TDEEcalc(bmr, "medium"));
 
 //		WeightPredictionPanel wpp = new WeightPredictionPanel();
-		User user = UserQueries.getUserByID(10);
-		Date date = DateQueries.getDate(user);
+//		User user = UserQueries.getUserByID(10);
+//		Date date = DateQueries.getDate(user);
 //		System.out.println(user.getUsername());
 //		System.out.println(date.toString());
 //		DatePanel dp = new DatePanel();
 //		dp.setSelectedDate("2023-11-16");
-		ArrayList<Double> caloryList = MealQueries.getDailyKcalIntake(10, date);
-		for (int i = 0; i < caloryList.size(); i++) {
-			System.out.println(caloryList.get(i));
-		}
 
+//		ArrayList<Double> caloryList = MealQueries.getDailyKcalIntake(10, date);
+//
+//		for (int i = 0; i < caloryList.size(); i++) {
+//			System.out.println(caloryList.get(i));
+//		}
 
-	}
-}
+//
+//	}
+//}
+
+//
+//	}
+//}
+

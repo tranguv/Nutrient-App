@@ -134,6 +134,7 @@ public class UserQueries {
 	//for deleting user profile
 
 
+
 //	for getting user profile by username
 //	 public static User getUser(String username){
 //		User user = new User();
@@ -261,6 +262,7 @@ public class UserQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
 
 }
 

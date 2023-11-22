@@ -36,7 +36,6 @@ public class DateQueries {
 		}
 	}
 
-
 	//	GET SELECTED DATE INFO BY USER
 	public static Date getDate(User user) {
 		try (Connection connection = DBConfig.getConnection()) {
@@ -57,8 +56,13 @@ public class DateQueries {
 		}
 	}
 
+
 	//INSERT NEW DATE LOG IF NOT EXISTS
 //	public static int addDate(User user, Date date) {
+
+    //	LOG DATE
+
+
 
 		//	LOG DATE
 		public static int addDate (DateLog dateLog){
@@ -91,4 +95,6 @@ public class DateQueries {
 		}
 
 	}
+
+
 

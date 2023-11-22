@@ -216,7 +216,6 @@ public class MealQueries {
 		}
 	}
 
-
 	// GET FOOD ITEM BY ID
 	public static FoodItem getFoodItemByID(int foodID){
 		FoodItem foodItem = null;
@@ -313,6 +312,7 @@ public class MealQueries {
 		}
 	}
 
+
 	public static ArrayList<Double> getDailyKcalIntake(int userID,  Date date) {
 		ArrayList<Double> kcalIntake = new ArrayList<>();
 		try (Connection connection = DBConfig.getConnection()) {
@@ -342,4 +342,5 @@ public class MealQueries {
 		}
 		return kcalIntake;
 	}
+
 }

@@ -1,6 +1,7 @@
 package src.server.DataServices;
 
 
+
 import src.model.User;
 
 import java.sql.Connection;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 //            e.printStackTrace();
 //        }
 //    }
+
 
 import java.util.List;
 
@@ -191,4 +193,5 @@ public class ExerciseQueries {
 		}
 		return caloriesIntake;
 	}
+
 }

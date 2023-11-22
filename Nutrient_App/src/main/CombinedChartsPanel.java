@@ -9,6 +9,7 @@ import org.jfree.ui.RefineryUtilities;
 import src.client.Authentication.ChooseProfile;
 import src.client.LogData.Dashboard;
 import src.client.LogData.DatePanel;
+import src.model.MainApplication;
 import src.model.User;
 
 import javax.swing.*;
@@ -22,10 +23,10 @@ public class CombinedChartsPanel extends ApplicationFrame {
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private DefaultPieDataset pieDataset = new DefaultPieDataset();
     private User user;
-
-    public CombinedChartsPanel(String title, User user) {
+    private MainApplication mainapp = new MainApplication();
+    public CombinedChartsPanel(String title) {
         super(title);
-        this.user = user;
+        this.user = mainapp.getUser();
 
         initializeData();
         JPanel combinedPanel = createCombinedPanel();
@@ -155,7 +156,9 @@ public class CombinedChartsPanel extends ApplicationFrame {
     }
     private JButton createProfileButton() {
         JButton profileButton = new JButton("Profile");
-        profileButton.addActionListener(e -> new ChooseProfile(user));
+        MainApplication a = new MainApplication();
+        this.user = a.getUser();
+        profileButton.addActionListener(e -> new ChooseProfile(this.user));
         return profileButton;
     }
 
@@ -171,7 +174,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
     }
 
     public void execute() {
-        CombinedChartsPanel demo = new CombinedChartsPanel("Combined Charts Example", this.user);
+        CombinedChartsPanel demo = new CombinedChartsPanel("Combined Charts Example");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+import src.client.LogData.Dashboard;
 import src.main.CombinedChartsPanel;
 import src.model.MainApplication;
 import src.model.User;
@@ -107,7 +108,7 @@ public class SignUpPage extends JFrame{
 						newUser.setId(UserQueries.getUserID());
 						MainApplication.setUser(newUser);
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
-						new CombinedChartsPanel("blabla",newUser).execute();
+						new Dashboard().callDashBoard();
 						dispose();
 					} else {
 						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);

@@ -106,6 +106,7 @@ public class SignUpPage extends JFrame{
 					// Move the createUser method call into the try block
 					if (UserQueries.createUser(newUser)) {
 						newUser.setId(UserQueries.getUserID());
+						newUser.setAge(dob);
 						MainApplication.setUser(newUser);
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
 						new Dashboard().callDashBoard();

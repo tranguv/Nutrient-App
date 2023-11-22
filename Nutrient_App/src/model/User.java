@@ -14,6 +14,7 @@ public class User {
 	private String username;
 	private String password;
 	private String units;
+	private int age;
 	
 	public User() {
 	}
@@ -30,6 +31,7 @@ public class User {
 		this.username = username;
 		this.password = password;
 		this.units = units;
+		this.age = setAge(this.dateOfBirth);
 	}
 
 	public int getId() {
@@ -50,6 +52,21 @@ public class User {
 
 	public String getLastName() {
 		return lName;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public int setAge(String dob) {
+		LocalDate dateOfBirth = LocalDate.parse(dob);
+		LocalDate curDate = LocalDate.now();
+
+		if(dateOfBirth != null && curDate != null){
+			this.age = Period.between(dateOfBirth, curDate).getYears();
+		}
+
+		return this.age;
 	}
 
 	public void setLastName(String lName) {

@@ -37,7 +37,7 @@ public class UserQueries {
 	//for sign up validation
 	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
 		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
 
@@ -51,6 +51,7 @@ public class UserQueries {
 				pState.setDouble(7, user.getWeight());
 				pState.setDouble(8, user.getHeight());
 				pState.setString(9, user.getUnits());
+				pState.setInt(10, user.getAge());
 
 				int rowsAffected = pState.executeUpdate();
 				if (rowsAffected > 0) {

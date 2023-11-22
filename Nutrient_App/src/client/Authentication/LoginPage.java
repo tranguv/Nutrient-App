@@ -6,17 +6,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.EventListener;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 import javax.swing.*;
 
 import src.client.LogData.Dashboard;
-import src.client.LogData.DashboardController;
-import src.client.LogData.DashboardGUI;
 import src.main.CombinedChartsPanel;
 import src.model.MainApplication;
 import src.model.User;
+import src.server.DataServices.MealQueries;
 import src.server.DataServices.UserQueries;
 
 public class LoginPage extends JFrame {
@@ -65,10 +64,18 @@ public class LoginPage extends JFrame {
 					if (isValidUser) {
 						UserQueries find = new UserQueries();
 						User user = find.getUserByID(find.getUserIDbyUsername(username));
+						user.setId(find.getUserIDbyUsername(username));
 						MainApplication.setUser(user);
-						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla", user);
+						MealQueries meal = new MealQueries();
+						if ( meal.userHasRecords(user.getId())){
+							CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
+							dashboardGUI.execute();
+						}else{
+							new Dashboard().callDashBoard();
+						}
+
 						dispose();
-						dashboardGUI.execute();
+
 
 					} else {
 						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");
@@ -83,6 +90,10 @@ public class LoginPage extends JFrame {
 
 		// sign up
 		JLabel signup = new JLabel("Don't have account? Sign Up");
+		Font font = signup.getFont();
+		Map attributes = font.getAttributes();
+		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		signup.setFont(font.deriveFont(attributes));
 		signup.addMouseListener((MouseListener) new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dispose();

@@ -1,7 +1,14 @@
 package src.client.LogData;
 
+import src.main.CombinedChartsPanel;
+import src.model.MainApplication;
+import src.model.User;
+import src.server.DataServices.MealQueries;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class DashboardGUI extends JFrame {
     private DatePanel datePanel;
@@ -9,12 +16,17 @@ public class DashboardGUI extends JFrame {
     private ExercisePanel exercisePanel;
     private JButton addMealButton, addExerciseButton, saveLogButton;
     private JTextArea mealsTextArea, exercisesTextArea, historyTextArea;
-
+    private JButton returnToMainButton;
+    private MealQueries meal;
+    private User user;
     public DashboardGUI() {
         setTitle("Nutrition App");
         setSize(1200, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
+
+        this.user = new MainApplication().getUser();
+        this.meal = new MealQueries(); // Initialize MealQueries
 
         // Initialize panels
         this.datePanel = new DatePanel();
@@ -35,6 +47,19 @@ public class DashboardGUI extends JFrame {
         buttonPanel.add(addMealButton);
         buttonPanel.add(addExerciseButton);
 
+        returnToMainButton = new JButton("Return to Main Page");
+        returnToMainButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DashboardGUI.this.dispose();
+                CombinedChartsPanel mainPage = new CombinedChartsPanel("User");
+                mainPage.execute();
+                mainPage.setVisible(true);
+            }
+        });
+        buttonPanel.add(returnToMainButton);
+        checkUserRecords(); // Check if the user has records and set button visibility
+
         // Log panel
         JPanel logPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         logPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -43,24 +68,8 @@ public class DashboardGUI extends JFrame {
         logPanel.add(new JScrollPane(mealsTextArea));
         logPanel.add(new JScrollPane(exercisesTextArea));
 
-        // // History text area
-        // historyTextArea = new JTextArea();
-        // historyTextArea.setEditable(false);
-        // JScrollPane historyScrollPane = new JScrollPane(historyTextArea);
-        // historyScrollPane.setPreferredSize(new Dimension(980, 100));
-
-        // // History panel
-        // JPanel historyPanel = new JPanel(new BorderLayout());
-        // historyPanel.add(historyScrollPane, BorderLayout.CENTER);
-        // historyPanel.setBorder(BorderFactory.createTitledBorder("History"));
-
-        // Inside the DashboardGUI constructor
         HistoryPanel historyPanel = new HistoryPanel();
-        add(historyPanel, BorderLayout.AFTER_LAST_LINE);
-
-        // Inside the DashboardController where you want to update the history
         historyPanel.appendToHistory("New history entry");
-
 
         // Add panels to the frame
         add(combinedInputPanel, BorderLayout.NORTH);
@@ -68,13 +77,19 @@ public class DashboardGUI extends JFrame {
         add(logPanel, BorderLayout.SOUTH);
         add(historyPanel, BorderLayout.AFTER_LAST_LINE);
 
-        // Set default close operation and make the frame visible
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         setVisible(true);
     }
 
     // Add getters for accessing panels and buttons if needed
+    private void checkUserRecords() {
+        if (meal.userHasRecords(this.user.getId())) {
+            returnToMainButton.setVisible(true);
+        } else {
+            returnToMainButton.setVisible(true);
+        }
+    }
+
     public DatePanel getDatePanel() {
         return datePanel;
     }
@@ -82,7 +97,9 @@ public class DashboardGUI extends JFrame {
     public MealPanel getMealPanel() {
         return mealPanel;
     }
-
+    public JButton getReturnToMainButton() {
+        return returnToMainButton;
+    }
     public ExercisePanel getExercisePanel() {
         return exercisePanel;
     }

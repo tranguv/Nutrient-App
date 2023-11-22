@@ -2,13 +2,7 @@ package src.client.LogData;
 
 import javax.swing.*;
 
-import src.model.DateLog;
-import src.model.Exercise;
-import src.model.FoodItem;
-import src.model.Ingredient;
-import src.model.Intensity;
-import src.model.Meal;
-import src.model.MealType;
+import src.model.*;
 import src.server.DataServices.DateQueries;
 import src.server.DataServices.ExerciseQueries;
 import src.server.DataServices.MealQueries;
@@ -25,9 +19,11 @@ import java.util.List;
 
 public class DashboardController {
     private DashboardGUI dashboardGUI;
-
+    private MainApplication main = new MainApplication();
+    private User user;
     public DashboardController(DashboardGUI dashboardGUI) {
         this.dashboardGUI = dashboardGUI;
+        this.user = main.getUser();
         initializeListeners();
     }
 
@@ -58,16 +54,16 @@ public class DashboardController {
     private DateLog addDate(){
         String date = dashboardGUI.getDatePanel().getSelectedDate();
 
-        if(date == null){
+        if(date == null || !date.matches("\\d{4}-\\d{2}-\\d{2}")){
             JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "Please select a date", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "Please select a valid date (YYYY-MM-DD)", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
         
         // Split the date string
         String[] parts = date.split("-");
 
-        // Extract month, day, and year
+        // Extract year, month, and day
         String year = parts[0];
         String month = parts[1];
         String day = parts[2];
@@ -76,8 +72,8 @@ public class DashboardController {
         cal.set(Calendar.YEAR, Integer.parseInt(year));
         cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
         cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-
-        DateLog selectedDate = new DateLog(2, cal.getTime());
+        System.out.println(this.user.getId());
+        DateLog selectedDate = new DateLog(this.user.getId(), cal.getTime());
         int dateID = DateQueries.addDate(selectedDate);
         selectedDate.setDateLogId(dateID);
         return selectedDate;

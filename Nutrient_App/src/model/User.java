@@ -1,7 +1,9 @@
 package src.model;
 
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 public class User {
 	private int id;
@@ -15,7 +17,7 @@ public class User {
 	private String password;
 	private String units;
 	private int age;
-	
+
 	public User() {
 	}
 
@@ -58,8 +60,14 @@ public class User {
 		return age;
 	}
 
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+
 	public int setAge(String dob) {
-		LocalDate dateOfBirth = LocalDate.parse(dob);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate dateOfBirth = LocalDate.parse(dob, formatter);
 		LocalDate curDate = LocalDate.now();
 
 		if(dateOfBirth != null && curDate != null){
@@ -134,7 +142,9 @@ public class User {
 	}
 
 	public int getAge(String dateOfBirth) {
-		LocalDate dob = LocalDate.parse(dateOfBirth);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate dob = LocalDate.parse(dateOfBirth, formatter);
+
 		LocalDate todayDate = LocalDate.now();
 		Period p = Period.between(dob, todayDate);
 		return p.getYears();

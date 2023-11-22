@@ -448,8 +448,8 @@ public class MealQueries {
 	}
 
 	// CHECK IF USER DIETARY RESTRICTIONS ARE MET (EXCEEDED, MET, BELOW)
-	public static HashMap<String, String> userDietaryRestrictionsMet(int userID) {
-		HashMap<String, String> maps = new HashMap<>();
+	public static HashMap<String, Double> userDietaryRestrictionsMet(int userID) {
+		HashMap<String, Double> maps = new HashMap<>();
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = String.format(String.format("SELECT\n" +
 					"  FG.FoodGroupName,\n" +
@@ -474,9 +474,9 @@ public class MealQueries {
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = pState.executeQuery()) {
 					while (resultSet.next()) {
-						String foodGroupName = resultSet.getString("FoodGroupName");
-						String status = resultSet.getString("Status") + " " + resultSet.getString("Percentage") + "%";
-						maps.put(foodGroupName, status);
+						String foodGroupName = resultSet.getString("FoodGroupName") + " - " + resultSet.getString("Status") + " " + resultSet.getString("Percentage") + "%";
+						Double percentage = resultSet.getDouble("Percentage");
+						maps.put(foodGroupName, percentage);
 					}
 				}
 				return maps;

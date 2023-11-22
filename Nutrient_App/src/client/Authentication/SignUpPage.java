@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import src.main.CombinedChartsPanel;
 import src.model.MainApplication;
+import src.model.User;
 import src.server.DataServices.UserQueries;
 
 public class SignUpPage extends JFrame{
@@ -106,7 +107,7 @@ public class SignUpPage extends JFrame{
 						newUser.setId(UserQueries.getUserID());
 						MainApplication.setUser(newUser);
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
-						new CombinedChartsPanel("blabla",newUser).execute();
+						new CombinedChartsPanel("blabla").execute();
 						dispose();
 					} else {
 						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);

@@ -1,5 +1,7 @@
 package src.server.DataServices;
 
+import src.model.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

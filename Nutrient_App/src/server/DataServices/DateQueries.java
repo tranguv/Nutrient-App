@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 
 import src.model.DateLog;
+import src.model.User;
 
 public class DateQueries {
 	//	GET SELECTED DATE INFO BY USER

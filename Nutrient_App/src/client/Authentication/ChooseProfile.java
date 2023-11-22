@@ -1,5 +1,6 @@
 package src.client.Authentication;
 
+import src.model.User;
 import src.server.DataServices.UserQueries;
 import javax.swing.*;
 import java.awt.*;
@@ -188,7 +189,7 @@ public class ChooseProfile extends JFrame {
             firstNameTF.setBackground(Color.white);
             weightTF.setBackground(Color.white);
             heightTF.setBackground(Color.white);
-
+            genderCB.setBackground(Color.white);
             // Custom handling for JComboBox background if needed
         });
 

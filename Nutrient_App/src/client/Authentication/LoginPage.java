@@ -6,11 +6,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 import javax.swing.*;
 
 import src.main.CombinedChartsPanel;
 import src.model.MainApplication;
+import src.model.User;
 import src.server.DataServices.UserQueries;
 
 public class LoginPage extends JFrame {
@@ -60,7 +63,7 @@ public class LoginPage extends JFrame {
 						UserQueries find = new UserQueries();
 						User user = find.getUserByID(find.getUserIDbyUsername(username));
 						MainApplication.setUser(user);
-						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla", user);
+						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
 						dispose();
 						dashboardGUI.execute();
 
@@ -77,6 +80,10 @@ public class LoginPage extends JFrame {
 
 		// sign up
 		JLabel signup = new JLabel("Don't have account? Sign Up");
+		Font font = signup.getFont();
+		Map attributes = font.getAttributes();
+		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		signup.setFont(font.deriveFont(attributes));
 		signup.addMouseListener((MouseListener) new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dispose();

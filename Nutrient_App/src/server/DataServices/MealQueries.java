@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.sql.Date;
 
@@ -18,6 +19,28 @@ import src.model.DateLog;
 import src.model.Meal;
 
 public class MealQueries {
+	//GET NUMBER OF MEALS ALL THE TIME
+	public static int getNumOfMeals(int userID) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = String.format("SELECT COUNT(*) AS total_exercises\n" +
+					"FROM EXERCISE_LOG E\n" +
+					"JOIN DATE_LOG D ON E.date_log_id = D.date_log_id\n" +
+					"WHERE D.userID = %d", userID);
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt("total_exercises");
+					} else {
+						return 0;
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
 	//CHECK IF MEAL EXISTS, IF YES RETURN MEAL ID
 	public static int getMealID(Meal meal) {
 		try (Connection connection = DBConfig.getConnection()) {
@@ -194,6 +217,26 @@ public class MealQueries {
 		}
 	}
 
+	// GET FOODGROUPID BY FOODGROUPNAME
+	public static int getFoodGroupID(String foodGroupName){
+		int foodGroupID = 0;
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT FoodGroupID FROM `FOOD_GROUP` WHERE FoodGroupName = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setString(1, foodGroupName);
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						foodGroupID = resultSet.getInt("FoodGroupID");
+					}
+				}
+				return foodGroupID;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
 	//GET FOOD GROUP NAME BY FOOD DESCRIPTION
 	//USER WILL SEARCH FOR FOOD DESCRIPTION AND THE FOOD GROUP NAME WILL BE RETURNED
 	//FOOD DESCRIPTION IS IN ENGLISH
@@ -313,6 +356,7 @@ public class MealQueries {
 	}
 
 
+
 	public static ArrayList<Double> getDailyKcalIntake(int userID,  Date date) {
 		ArrayList<Double> kcalIntake = new ArrayList<>();
 		try (Connection connection = DBConfig.getConnection()) {
@@ -341,6 +385,71 @@ public class MealQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 		return kcalIntake;
+	}
+
+
+	// GET TOP 6 FOOD GROUP BY PERCENTAGE List<FoodGroupName, Percentage>
+	public static HashMap<String, Double> getTop6FoodGroupByPercentage(int userID){
+		HashMap<String, Double> foodGroups = new HashMap<>();
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = String.format("SELECT\n" +
+					"  FG.FoodGroupName,\n" +
+					"  COUNT(FG.FoodGroupID) AS FoodGroupCount,\n" +
+					"  (COUNT(FG.FoodGroupID) / (SELECT COUNT(*) FROM FOOD_GROUP) * 100) AS Percentage\n" +
+					"FROM USER U\n" +
+					"JOIN DATE_LOG D ON D.userID = U.userID\n" +
+					"JOIN MEAL_DETAILS M ON D.date_log_id = M.date_log_id\n" +
+					"JOIN INGREDIENTS I ON I.meal_id = M.meal_id\n" +
+					"JOIN FOOD_NAME FN ON I.FoodID = FN.FoodID\n" +
+					"JOIN FOOD_GROUP FG ON FN.FoodGroupID = FG.FoodGroupID\n" +
+					"WHERE U.userID = %d\n" +
+					"GROUP BY FG.FoodGroupID\n" +
+					"ORDER BY Percentage DESC LIMIT 6;\n", userID);
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						String foodGroupName = resultSet.getString("FoodGroupName");
+						double percentage = resultSet.getDouble("Percentage");
+						foodGroups.put(foodGroupName, percentage);
+					}
+				}
+				return foodGroups;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
+	// GET THE PERCENTAGE OF VEGETABLES AND FRUITS IN LAST WEEK BY USER ID
+	public static double getVegetableAndFruitPercentage(int userID) {
+		double percentage = 0;
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = String.format("SELECT\n" +
+					"  (COUNT(FG.FoodGroupID) / (SELECT COUNT(*) FROM FOOD_GROUP) * 100) AS Percentage\n" +
+					"FROM USER U\n" +
+					"JOIN DATE_LOG D ON D.userID = U.userID\n" +
+					"JOIN MEAL_DETAILS M ON D.date_log_id = M.date_log_id\n" +
+					"JOIN INGREDIENTS I ON I.meal_id = M.meal_id\n" +
+					"JOIN FOOD_NAME FN ON I.FoodID = FN.FoodID\n" +
+					"JOIN FOOD_GROUP FG ON FN.FoodGroupID = FG.FoodGroupID\n" +
+					"WHERE U.userID = %d\n" +
+					"AND FG.FoodGroupID IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)\n" +
+					"AND D.date_log_id >= (SELECT MAX(date_log_id) FROM DATE_LOG) - 7\n" +
+					"GROUP BY FG.FoodGroupID\n" +
+					"ORDER BY Percentage DESC LIMIT 6;\n", userID);
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						percentage = resultSet.getDouble("Percentage");
+					}
+				}
+				return percentage;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
 	}
 
 }

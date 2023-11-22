@@ -33,7 +33,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ExerciseQueries {
-    //	GET Exercise List
+	//	GET Exercise List
 	public static List<String> getExerciseList() {
 		List<String> exercisetypes = new ArrayList<>();
 		try (Connection connection = DBConfig.getConnection()) {
@@ -140,20 +140,31 @@ public class ExerciseQueries {
 		return caloriesExpended;
 	}
 
-	// GET CALORIES EXPENDED FOR ALL EXERCISES LAST 30 DAYS
+	// GET CALORIES EXPENDED FOR ALL EXERCISES LAST 365 DAYS
 	public static double getCaloriesExpended(int userId){
 		double caloriesExpended = 0;
-		String sql = String.format("SELECT SUM(CASE WHEN UPPER(E.intensity) = 'MEDIUM' THEN M.MEDIUM\n" +
-						"                WHEN UPPER(E.intensity) = 'HIGH' THEN M.HIGH\n" +
-						"                WHEN UPPER(E.intensity) = 'LOW' THEN M.LOW\n" +
-						"                ELSE 0 END * E.duration) AS total_met_values\n" +
-						"FROM EXERCISE_LOG E\n" +
-						"JOIN METvalues M ON M.CATEGORIES = E.exercise_type\n" +
-						"WHERE date_log_id IN (\n" +
-						"    SELECT date_log_id\n" +
-						"    FROM DATE_LOG\n" +
-						"    WHERE userID = %d AND date_log BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()\n" +
-						");\n", userId);
+		String sql = String.format("SELECT SUM(\n" +
+				"        CASE\n" +
+				"            WHEN UPPER(E.intensity) = 'MEDIUM' THEN M.MEDIUM\n" +
+				"            WHEN UPPER(E.intensity) = 'HIGH' THEN M.HIGH\n" +
+				"            WHEN UPPER(E.intensity) = 'LOW' THEN M.LOW\n" +
+				"            ELSE 0  -- You can handle other cases or set a default value\n" +
+				"        END * E.duration * (\n" +
+				"        CASE\n" +
+				"\t\t\tWHEN U.sex = 'F' THEN 88.362+(13.397*U.weight)+(4.799*U.height)-(5.677* TIMESTAMPDIFF(YEAR, U.dob, NOW()))\n" +
+				"            WHEN U.sex = 'M' THEN 447.593+(9.247*U.weight)+(3.098*U.height)-(4.330* TIMESTAMPDIFF(YEAR, U.dob, NOW()))\n" +
+				"\t\tEND)\n" +
+				"    ) AS total_met_values\n" +
+				"FROM USER U\n" +
+				"JOIN DATE_LOG D ON D.userID = U.userID\n" +
+				"JOIN EXERCISE_LOG E ON E.date_log_id = D.date_log_id\n" +
+				"JOIN METvalues M ON M.CATEGORIES = E.exercise_type\n" +
+				"WHERE\n" +
+				"    E.date_log_id IN (\n" +
+				"        SELECT date_log_id\n" +
+				"        FROM DATE_LOG\n" +
+				"        WHERE userID = %d AND date_log >= DATE_SUB(NOW(), INTERVAL 365 DAY) AND date_log <= NOW()\n" +
+				"    );", userId);
 		try(Connection connection = DBConfig.getConnection()){
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -168,30 +179,27 @@ public class ExerciseQueries {
 		return caloriesExpended;
 	}
 
-	//GET ALL CALORIES INTAKE FOR LAST 30 DAYS
-	public static double getCaloriesIntake(int userId){
-		double caloriesIntake = 0;
-		String sql = "SELECT SUM(C.calories) AS total_calories\n" +
-						"FROM MEAL_LOG M\n" +
-						"JOIN MEAL M2 ON M.meal_id = M2.meal_id\n" +
-						"JOIN CALORIES C ON M2.meal_type = C.meal_type\n" +
-						"WHERE date_log_id IN (\n" +
-						"    SELECT date_log_id\n" +
-						"    FROM DATE_LOG\n" +
-						"    WHERE userID = 2 AND date_log BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()\n" +
-						");\n";
+
+
+	// GET NUMBER OF EXERCISES ALL THE TIME
+	public static int getNumberOfExercises(int userId){
+		int numberOfExercises = 0;
+		String sql = String.format("SELECT COUNT(*) AS total_exercises\n" +
+				"FROM EXERCISE_LOG E\n" +
+				"JOIN DATE_LOG D ON E.date_log_id = D.date_log_id\n" +
+				"WHERE D.userID = %d", userId);
 		try(Connection connection = DBConfig.getConnection()){
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				caloriesIntake = resultSet.getDouble("total_calories");
+				numberOfExercises = resultSet.getInt("total_exercises");
 			}
 			preparedStatement.close();
 			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return caloriesIntake;
+		return numberOfExercises;
 	}
 
 }

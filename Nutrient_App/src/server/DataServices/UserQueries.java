@@ -13,9 +13,9 @@ import src.model.User;
 public class UserQueries {
 
 
-    //for log in validation
-    public static boolean validateUser(String username, String password) {
-        try (Connection connection = DBConfig.getConnection()) {
+	//for log in validation
+	public static boolean validateUser(String username, String password) {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM USER WHERE username = ? AND user_password = ?";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, username);
@@ -33,11 +33,11 @@ public class UserQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
-    }
+	}
 
 	//for sign up validation
-	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {	
-        try (Connection connection = DBConfig.getConnection()) {
+	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
+		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
@@ -52,7 +52,7 @@ public class UserQueries {
 				pState.setDouble(7, user.getWeight());
 				pState.setDouble(8, user.getHeight());
 				pState.setString(9, user.getUnits());
-	
+
 				int rowsAffected = pState.executeUpdate();
 				if (rowsAffected > 0) {
 					try (ResultSet generatedKeys = pState.getGeneratedKeys()) {
@@ -75,7 +75,7 @@ public class UserQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
-	}	
+	}
 
 	//GET CURRENT USER ID
 	public static int getUserID(){
@@ -245,14 +245,19 @@ public class UserQueries {
 		}
 		return firstName;
 	}
-	public static boolean updateUserDetails(String username, String fname, String lname, String sex) {
+	public static boolean updateUserDetails(String username, String fname, String lname, String sex, String dob,double height, double weight) {
 		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ? WHERE username = ?";
+			// Update SQL statement to include height and weight
+			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ?, dob = ?,height = ?, weight = ? WHERE username = ?";
+
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, fname);
 				pState.setString(2, lname);
 				pState.setString(3, sex);
-				pState.setString(4, username);
+				pState.setString(4, dob);
+				pState.setDouble(5, height); // Assuming height is a double
+				pState.setDouble(6, weight); // Assuming weight is a double
+				pState.setString(7, username);
 
 				int rowsAffected = pState.executeUpdate();
 				return rowsAffected > 0;
@@ -264,5 +269,10 @@ public class UserQueries {
 	}
 
 
+
 }
+
+
+
+
 

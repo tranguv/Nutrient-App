@@ -1,17 +1,11 @@
 package src.server.DataServices;
 
-import src.main.WeightPredictionPanel;
 import src.model.DateLog;
 import src.model.User;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 public class InputVisualization {
     private Date date;
@@ -44,38 +38,46 @@ public class InputVisualization {
         }
     }
 
-    public static int TimePeriodbyUser(LocalDate start, LocalDate end) {
-//        WeightPredictionPanel wpp = new WeightPredictionPanel();
-//        String txt_start = wpp.getStartDateField().getText();
-//        String txt_end = wpp.getEndDateField().getText();
+//    public static int TimePeriodbyUser(User user) {
+//        int days = 0;
+//        Date start_date = DateQueries.getDate(user);
 //
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-////        Date end_date = null;
-////        Date start_date = null;
-//        try {
-//            start_date = dateFormat.parse(txt_start);
-//            end_date = dateFormat.parse(txt_end);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        days = (int) Math.abs(end_date.getTime() - start_date.getTime());
-        int days = 0;
-        days = (int) ChronoUnit.DAYS.between(start, end);
-        return days;
-    }
-//    public static ArrayList<Double> getCaloriesIntake(int userID) {
-//        ArrayList<Double> kcalIntakeList = new ArrayList<>();
 //        try (Connection connection = DBConfig.getConnection()) {
-//            String sql = "SELECT date_log FROM DATE_LOG WHERE userID = ?";
+//            String sql
+//        }catch (SQLException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Error accessing the database", e);
+//        }
+//    }
+
+    // GET CALORIES INTAKE BY USER FOR A DATE RANGE
+//    public static ArrayList<Double> getCaloriesIntake(int userID, Date start_date, Date end_date) {
+//        ArrayList<Double> kcalIntakeList = new ArrayList<>();
+//
+//        try (Connection connection = DBConfig.getConnection()) {
+//            String sql = String.format("SELECT u.username,\n" +
+//                    "    md.meal_type,\n" +
+//                    "    dl.date_log AS start_date,\n" +
+//                    "    DATE_ADD(dl.date_log, INTERVAL 1 DAY) AS end_date,\n" +
+//                    "    SUM(na.NutrientValue / 100 * i.quantity) AS total_nutrient\n" +
+//                    "FROM USER u\n" +
+//                    "JOIN DATE_LOG dl ON dl.userID = u.userID\n" +
+//                    "JOIN MEAL_DETAILS md ON dl.date_log_id = md.date_log_id\n" +
+//                    "JOIN INGREDIENTS i ON i.meal_id = md.meal_id\n" +
+//                    "JOIN FOOD_NAME fn ON fn.FoodID = i.FoodID\n" +
+//                    "JOIN NUTRIENT_AMOUNT na ON na.FoodID = fn.FoodID\n" +
+//                    "JOIN NUTRIENT_NAME nn ON nn.NutrientNameID = na.NutrientNameID\n" +
+//                    "WHERE dl.date_log >= %s\n" +
+//                    "    AND dl.date_log <= %s\n" +
+//                    "    AND u.userID = %d\n" +
+//                    "    AND nn.NutrientCode = 208", start_date, end_date, userID);
 //            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 //                preparedStatement.setInt(1,    userID);
 //                try (ResultSet rs = preparedStatement.executeQuery()) {
 //                    while (rs.next()) {
-//                        dateListbyUser.add(rs.getDate("date_log"));
 //
 //                    }
 //                }
-//                return dateListbyUser;
 //            }
 //        } catch (SQLException e) {
 //            e.printStackTrace();

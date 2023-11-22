@@ -79,13 +79,12 @@ public class DashboardController {
 
         DateLog selectedDate = new DateLog(2, cal.getTime());
         int dateID = DateQueries.addDate(selectedDate);
-        System.out.println("Date ID: " + dateID);
         selectedDate.setDateLogId(dateID);
         return selectedDate;
     }
 
     private void addMeal() {
-        ExercisePanel exercisePanel = dashboardGUI.getExercisePanel();
+        MealPanel mealPanel = dashboardGUI.getMealPanel();
 
         List<Ingredient> ingredientList = new ArrayList<>();
         String mealType = dashboardGUI.getMealPanel().getMealTypeComboBox().getSelectedItem().toString();
@@ -95,18 +94,15 @@ public class DashboardController {
         List<String> quantities = new ArrayList<>();
         List<String> units = new ArrayList<>();
 
-        GridBagLayout layout = (GridBagLayout) exercisePanel.getLayout();
+        GridBagLayout layout = (GridBagLayout) mealPanel.getLayout();
 
-        for (Component component : exercisePanel.getComponents()) {
+        for (Component component : mealPanel.getComponents()) {
             GridBagConstraints gbc = layout.getConstraints(component);
 
-            System.out.println("compo:" + component.getName());
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
                 String text = textField.getText();
-                System.out.println("text:" + text);
                 if (!text.isEmpty()) {
-                    System.out.println("inside JTextField");
                     if (textField.getName().equals("quantity")) {
                         quantities.add(text);
                     } else if (textField.getName().equals("unit")) {
@@ -116,15 +112,12 @@ public class DashboardController {
                     }
                 }
             } else if (component instanceof JComboBox) {
-                System.out.println("inside JComboBox");
                 JComboBox<?> comboBox = (JComboBox<?>) component;
                 Object selectedItem = comboBox.getSelectedItem();
                 if (selectedItem != null) {
-                    System.out.println("selectedItem:" + selectedItem.toString());
                     if (comboBox.getName().equals("unit")) {
                         units.add(selectedItem.toString());
                     } else {
-                        System.out.println("ingredient add nha");
                         ingredients.add(selectedItem.toString());
                     }
                 }
@@ -132,9 +125,6 @@ public class DashboardController {
         }
 
         ingredients.remove(0);
-        System.out.println("ingre:" + ingredients.toString());
-        System.out.println("quantities:" + quantities.toString());
-        System.out.println("units:" + units.toString());
 
         for (int i = 0; i < ingredients.size(); i++) {
             FoodItem foodItem = MealQueries.getFoodItem(ingredients.get(i));
@@ -142,19 +132,16 @@ public class DashboardController {
             ingredientList.add(ingredient);
         }
 
-        System.out.println("ingreList " + ingredientList.toString());
         DateLog dateLog = addDate();
 
         Meal meal = new Meal(mealTypeEnum);
         meal.addIngredients(ingredientList);
         int mealID = MealQueries.addMeal(dateLog, meal);
         meal.setMealId(mealID);
-        System.out.println("Meal added successfully!");
         for (Ingredient ingredient : ingredientList) {
-            System.out.println("ingredient: " + ingredient.toString());
             MealQueries.addIngredients(mealID, ingredient);
         }
-        System.out.println("Ingredient added successfully!");
+        JOptionPane.showMessageDialog(null, "Meal added successfully!");
         // Update meals log
         StringBuilder historyEntry = new StringBuilder("Added meal: " + mealType + " - ");
 
@@ -175,13 +162,16 @@ public class DashboardController {
     private void addExercise() {
         // Your add exercise logic goes here
         //{exerciseName, [duration, intensity]}
+        ExercisePanel exercisePanel = dashboardGUI.getExercisePanel();
         List<Exercise> exerciseList = new ArrayList<>();
         List<String> exercises = new ArrayList<>();
         List<Integer> duration = new ArrayList<>();
         List<String> intensity = new ArrayList<>();
-        
+
+        GridBagLayout layout = (GridBagLayout) exercisePanel.getLayout();
+
         // Iterate over the components of the ExercisePanel
-        for (Component component : dashboardGUI.getExercisePanel().getComponents()) {
+        for (Component component : exercisePanel.getComponents()) {
             System.out.println("compo:" + component.getName());
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
@@ -232,7 +222,7 @@ public class DashboardController {
         if (exerciseList.size() > 0) {
             int exerciseID = ExerciseQueries.logExercise(dateLog, exerciseList.get(0));
             exerciseList.get(0).setID(exerciseID);
-            System.out.println("Exercise added successfully!");
+            JOptionPane.showMessageDialog(null, "Keep up the good work!");
         } else {
             JPanel panel = new JPanel();
             JOptionPane.showMessageDialog(panel, "Please enter an exercise", "Error", JOptionPane.ERROR_MESSAGE);

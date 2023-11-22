@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import src.main.CombinedChartsPanel;
+import src.model.MainApplication;
 import src.model.User;
 import src.server.DataServices.UserQueries;
 
@@ -104,10 +105,10 @@ public class SignUpPage extends JFrame{
 					// Move the createUser method call into the try block
 					if (UserQueries.createUser(newUser)) {
 						newUser.setId(UserQueries.getUserID());
+						MainApplication.setUser(newUser);
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
 						new CombinedChartsPanel("blabla",newUser).execute();
 						dispose();
-
 					} else {
 						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
 						System.out.println("User signed up unsuccessfully!");

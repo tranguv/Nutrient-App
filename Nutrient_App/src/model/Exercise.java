@@ -4,29 +4,23 @@ import java.sql.SQLException;
 
 import src.server.DataServices.ExerciseQueries;
 
-//import static src.server.DataServices.DBQueries.getConnection;
-
 public class Exercise {
-    private String name;
+    private String exerciseType;
     private int duration;
-    public enum Intensity {
-        low,
-        medium,
-        high
-    }
+    private int id;
     private Intensity intensity;
-    private User user;
 
     public Exercise() {}
-    public Exercise(User user, String name, int duration, Intensity intensity) {
-        this.user = user;
-        this.name = name;
+    public Exercise(String exerciseType, int duration, Intensity intensity) {
+        this.exerciseType = exerciseType;
         this.duration = duration;
         this.intensity = intensity;
     }
 
+    public int getID() {return id;}
+
     public String getName() {
-        return name;
+        return exerciseType;
     }
 
     public int getDuration() {
@@ -40,7 +34,10 @@ public class Exercise {
         else if (this.intensity == Intensity.medium) return Intensity.medium.toString();
         else return Intensity.high.toString();
     }
-    public void setName(String name) {this.name = name;}
+
+    public void setID(int id) {this.id = id;}
+    
+    public void setName(String exerciseType) {this.exerciseType = exerciseType;}
 
     public void setDuration(int duration) {this.duration = duration;}
 

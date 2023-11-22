@@ -1,20 +1,16 @@
 package src.server.DataServices;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.sql.Date;
 
 import src.model.FoodItem;
 import src.model.Ingredient;
-import src.model.User;
 import src.model.DateLog;
 import src.model.Meal;
 

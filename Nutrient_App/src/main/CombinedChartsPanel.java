@@ -9,7 +9,6 @@ import org.jfree.ui.RefineryUtilities;
 import src.client.Authentication.ChooseProfile;
 import src.client.LogData.Dashboard;
 import src.client.LogData.DatePanel;
-import src.model.User;
 
 import javax.swing.*;
 import java.awt.*;

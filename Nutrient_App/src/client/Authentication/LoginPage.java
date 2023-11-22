@@ -6,17 +6,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.EventListener;
 
 import javax.swing.*;
 
-import src.client.LogData.Dashboard;
-import src.client.LogData.DashboardController;
-import src.client.LogData.DashboardGUI;
 import src.main.CombinedChartsPanel;
 import src.model.MainApplication;
-import src.model.User;
 import src.server.DataServices.UserQueries;
 
 public class LoginPage extends JFrame {

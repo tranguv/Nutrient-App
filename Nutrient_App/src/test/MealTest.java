@@ -1,26 +1,6 @@
  package src.test;
 
- import java.sql.SQLIntegrityConstraintViolationException;
- import java.time.LocalDate;
- import java.util.Calendar;
- import java.util.Date;
- import java.util.List;
- import java.util.ArrayList;
- import java.util.Arrays;
-
- import javax.swing.JOptionPane;
-
- import src.client.Authentication.SignUpPage;
- import src.main.WeightPredictionPanel;
- import src.model.DateLog;
- import src.model.FoodItem;
- import src.model.Meal;
- import src.model.MealType;
- import src.model.User;
- import src.model.Ingredient;
- import src.server.DataServices.ExerciseQueries;
  import src.server.DataServices.MealQueries;
- import src.server.DataServices.UserQueries;
 
  public class MealTest {
      public static void main(String[] args) {

@@ -11,7 +11,6 @@ import javax.swing.*;
 
 import src.main.CombinedChartsPanel;
 import src.model.MainApplication;
-import src.model.User;
 import src.server.DataServices.UserQueries;
 
 public class SignUpPage extends JFrame{

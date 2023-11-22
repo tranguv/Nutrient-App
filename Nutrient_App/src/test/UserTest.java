@@ -1,6 +1,5 @@
 package src.test;
 
-import src.model.User;
 import src.server.DataServices.UserQueries;
 
 public class UserTest {

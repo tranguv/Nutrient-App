@@ -1,6 +1,5 @@
 package src.client.Authentication;
 
-import src.model.User;
 import src.server.DataServices.UserQueries;
 import javax.swing.*;
 import java.awt.*;

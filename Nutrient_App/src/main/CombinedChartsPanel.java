@@ -201,6 +201,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         demo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         demo.setVisible(true);
     }
+<<<<<<< HEAD
     private void initializeLineChartDataV2() {
         int userID = this.user.getId(); // Assuming there's a method to get the user ID
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -235,3 +236,6 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
 
 }
+=======
+}
+>>>>>>> eee1199a2784a8dcbf976f508ba527426405f32d

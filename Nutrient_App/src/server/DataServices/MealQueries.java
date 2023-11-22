@@ -352,6 +352,11 @@ public class MealQueries {
 		}
 	}
 
+
+
+
+
+
 	// GET TOP 6 FOOD GROUP BY PERCENTAGE List<FoodGroupName, Percentage>
 	public static HashMap<String, Double> getTop6FoodGroupByPercentage(int userID){
 		HashMap<String, Double> foodGroups = new HashMap<>();
@@ -411,6 +416,7 @@ public class MealQueries {
 		}
 		return false;
 	}
+
 	public static ArrayList<Double> getDailyKcalIntake(int userID,  Date date) {
 		ArrayList<Double> kcalIntake = new ArrayList<>();
 		try (Connection connection = DBConfig.getConnection()) {
@@ -440,4 +446,5 @@ public class MealQueries {
 		}
 		return kcalIntake;
 	}
+
 }

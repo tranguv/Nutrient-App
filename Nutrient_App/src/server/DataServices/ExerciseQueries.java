@@ -1,5 +1,26 @@
 package src.server.DataServices;
 
+
+
+import src.model.User;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+
+
+//    GET CALORIES INFO
+//    public static double getKcal(User user) {
+//        double kcal = 0;
+//        try (Connection connection = DBConfig.getConnection()) {
+//            String sql = ""
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
 import java.util.List;
 
 import src.model.DateLog;
@@ -180,6 +201,7 @@ public class ExerciseQueries {
 		}
 		return numberOfExercises;
 	}
+
 	public static boolean userHasExerciseRecords(int userID) {
 		try (Connection connection = DBConfig.getConnection()) {
 			// Query to check if the user has any entries in the EXERCISE_LOG table
@@ -200,5 +222,4 @@ public class ExerciseQueries {
 		}
 		return false;
 	}
-
 }

@@ -11,17 +11,21 @@ import src.client.LogData.Dashboard;
 import src.client.LogData.DatePanel;
 import src.model.MainApplication;
 import src.model.User;
+import src.server.DataServices.MealQueries;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Random;
 
 public class CombinedChartsPanel extends ApplicationFrame {
 
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private DefaultPieDataset pieDataset = new DefaultPieDataset();
+    private DefaultPieDataset dietAlign = new DefaultPieDataset();
+
     private User user;
     private MainApplication mainapp = new MainApplication();
     public CombinedChartsPanel(String title) {
@@ -37,6 +41,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
     private void initializeData() {
         initializeLineChartData();
         initializePieChartData();
+        initializeDietAlignData();
     }
 
     private void initializeLineChartData() {
@@ -47,7 +52,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-03");
         dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-04");
         dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-05");
-        
+
 
         // Exercise data
         dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-01");
@@ -55,7 +60,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-03");
         dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-04");
         dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-05");
-        
+
     }
 
     private void initializePieChartData() {
@@ -68,6 +73,17 @@ public class CombinedChartsPanel extends ApplicationFrame {
         pieDataset.setValue("Meat and Fish", rand.nextInt(40));
         pieDataset.setValue("Other", rand.nextInt(40));
     }
+
+    private void initializeDietAlignData() {
+        // Initialize Pie Chart Data
+        Random rand = new Random();
+        HashMap<String, Double> dietAlignData = MealQueries.userDietaryRestrictionsMet(MainApplication.getUser().getId());
+        //replace with food group name
+        for (String key : dietAlignData.keySet()) {
+            dietAlign.setValue(key, dietAlignData.get(key));
+        }
+    }
+
 
     private JPanel createCombinedPanel() {
         JPanel mainPanel = new JPanel();
@@ -109,20 +125,40 @@ public class CombinedChartsPanel extends ApplicationFrame {
     }
 
     private JPanel createChartPanel() {
-        JPanel chartPanel = new JPanel(new GridLayout(1, 2));
+        JPanel chartPanel = new JPanel(new GridLayout(2, 2));
 
         Dimension chartSize = new Dimension(800, 500);
         chartPanel.add(createChartPanel(createBarLineChart(), chartSize));
         chartPanel.add(createChartPanel(createPieChart(), chartSize));
+        chartPanel.add(createChartPanel(createDietAlignPanel(), chartSize));
+        chartPanel.add(createWeightPredictionPanel(chartSize));
 
         return chartPanel;
     }
+
+    private JPanel createWeightPredictionPanel(Dimension size) {
+        WeightPredictionPanel weightPredictionPanel = new WeightPredictionPanel();
+        weightPredictionPanel.setPreferredSize(size);
+
+        // Center the WeightPredictionPanel within its parent container
+        JPanel centeredPanel = new JPanel(new GridBagLayout());
+        centeredPanel.add(weightPredictionPanel);
+
+        return centeredPanel;
+    }
+
 
     private ChartPanel createChartPanel(JFreeChart chart, Dimension size) {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(size);
         return chartPanel;
     }
+
+    private JFreeChart createDietAlignPanel() {
+        return ChartFactory.createPieChart(
+                        "Diet Align with Canadian Food Guide", dietAlign, true, true, false);
+    }
+
 
     private JFreeChart createBarLineChart() {
         return ChartFactory.createBarChart(

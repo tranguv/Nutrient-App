@@ -8,6 +8,7 @@
          // TODO Auto-generated method stub
          System.out.println(MealQueries.getTop6FoodGroupByPercentage(2));
          UserQueries a= new UserQueries();
+        System.out.println(a.getUserIDbyUsername("bao"));
 
 //         System.out.println(ExerciseQueries.getCaloriesExpended(2));
 //         try {

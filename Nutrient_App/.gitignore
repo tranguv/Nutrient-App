@@ -7,3 +7,4 @@
 /src/dbconfig.properties
 .idea/
 Nutrient_App/.idea/
+*.iml

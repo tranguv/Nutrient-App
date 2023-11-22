@@ -6,12 +6,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.EventListener;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 import javax.swing.*;
 
-import src.client.Dashboard;
+import src.client.LogData.Dashboard;
+import src.main.CombinedChartsPanel;
+import src.model.MainApplication;
+import src.model.User;
+import src.server.DataServices.MealQueries;
+import src.server.DataServices.UserQueries;
 
 public class LoginPage extends JFrame {
 	public LoginPage() {
@@ -37,7 +42,7 @@ public class LoginPage extends JFrame {
 
 		// Password label and text field
 		JLabel passwordLB = new JLabel("Password:");
-		JTextField passwordTF = new JTextField(20);
+		JPasswordField passwordTF = new JPasswordField(20);
 
 		// Submit button
 		JButton submitB = new JButton("SUBMIT");
@@ -45,19 +50,33 @@ public class LoginPage extends JFrame {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        String username = usernameTF.getText();
-		        String password = passwordTF.getText(); // Ideally, this should be collected from a JPasswordField
+				char[] password = passwordTF.getPassword(); // Ideally, this should be collected from a JPasswordField
 
-				if (username.isEmpty() || password.isEmpty()) {
+				if (username.isEmpty() ) {
 					JOptionPane.showMessageDialog(LoginPage.this, "Username and password cannot be empty!");
 				}
 
 		        try {
 		            // Try to log in the user
-		            boolean isValidUser = src.server.DataServices.DBQueries.validateUser(username, password);
+					boolean isValidUser = src.server.DataServices.UserQueries.validateUser(username, String.valueOf(password));
 
-		            // If successful, show a success message.
+					// If successful, show a success message.
 					if (isValidUser) {
-						Dashboard dashboard = new Dashboard();
+						UserQueries find = new UserQueries();
+						User user = find.getUserByID(find.getUserIDbyUsername(username));
+						user.setId(find.getUserIDbyUsername(username));
+						MainApplication.setUser(user);
+						MealQueries meal = new MealQueries();
+						if ( meal.userHasRecords(user.getId())){
+							CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
+							dashboardGUI.execute();
+						}else{
+							new Dashboard().callDashBoard();
+						}
+
+						dispose();
+
+
 					} else {
 						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");
 					}
@@ -71,6 +90,10 @@ public class LoginPage extends JFrame {
 
 		// sign up
 		JLabel signup = new JLabel("Don't have account? Sign Up");
+		Font font = signup.getFont();
+		Map attributes = font.getAttributes();
+		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		signup.setFont(font.deriveFont(attributes));
 		signup.addMouseListener((MouseListener) new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dispose();
@@ -127,9 +150,5 @@ public class LoginPage extends JFrame {
 		// Validate and repaint the frame
 		validate();
 		repaint();
-	}
-
-	public void loginValidation(java.awt.event.ActionEvent evt) {
-		
 	}
 }

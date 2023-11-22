@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6359aeec-498a-4a6d-88fb-be6937d50f9b" name="Changes" comment="" />
+    <list default="true" id="6359aeec-498a-4a6d-88fb-be6937d50f9b" name="Changes" comment="">
+
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/LoginLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/LoginLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/SignupLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/model/authLogic/SignupLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/server/DataServices/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/server/DataServices/DBConfig.java" afterDir="false" />
+
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nutrient_App/src/client/Dashboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/Nutrient_App/src/client/Dashboard.java" afterDir="false" />
+
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -11,25 +21,41 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Nutrient_App/src/viewmodel/DataServices/DBConfig.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Nutrient_App/src/main/Main.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Nutrient_App/src/model/AuthValidation.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
   <component name="ProjectId" id="2XUtgwOHh3fZ8EmDqLfb9LTrPmo" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Nutrient_App" />
-    <property name="project.structure.last.edited" value="Artifacts" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.2" />
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "quangnew",
+    "last_opened_file_path": "C:/Users/death/Documents/GitHub/Nutrient-App/Nutrient_App",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Nutrient-App" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Nutrient-App" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -39,8 +65,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1698695601263</updated>
+      <workItem from="1700194201116" duration="35000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

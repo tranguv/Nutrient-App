@@ -1,11 +1,7 @@
 package src.server.DataServices;
 
-import src.model.DateLog;
-import src.model.User;
-
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class InputVisualization {
     private Date date;

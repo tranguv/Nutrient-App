@@ -1,24 +1,5 @@
  package src.test;
 
- import java.sql.SQLIntegrityConstraintViolationException;
- import java.time.LocalDate;
- import java.util.Calendar;
- import java.util.Date;
- import java.util.List;
- import java.util.ArrayList;
- import java.util.Arrays;
-
- import javax.swing.JOptionPane;
-
- import src.client.Authentication.SignUpPage;
- import src.main.WeightPredictionPanel;
- import src.model.DateLog;
- import src.model.FoodItem;
- import src.model.Meal;
- import src.model.MealType;
- import src.model.User;
- import src.model.Ingredient;
- import src.server.DataServices.ExerciseQueries;
  import src.server.DataServices.MealQueries;
  import src.server.DataServices.UserQueries;
 
@@ -26,6 +7,8 @@
      public static void main(String[] args) {
          // TODO Auto-generated method stub
          System.out.println(MealQueries.getTop6FoodGroupByPercentage(2));
+         UserQueries a= new UserQueries();
+         System.out.println(a.getUserIDbyUsername("bao"));
 //         System.out.println(ExerciseQueries.getCaloriesExpended(2));
 //         try {
 //             User newUser = new User("tester1", "test1", "ok", "nha", "F", "2003-11-11", 60, 170, "metric");

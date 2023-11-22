@@ -77,12 +77,13 @@ public class CombinedChartsPanel extends ApplicationFrame {
     private void initializeDietAlignData() {
         // Initialize Pie Chart Data
         Random rand = new Random();
-        HashMap<String, Double> dietAlignData = MealQueries.getTop6FoodGroupByPercentage(MainApplication.getUser().getId());
+        HashMap<String, String> dietAlignData = MealQueries.userDietaryRestrictionsMet(MainApplication.getUser().getId());
         //replace with food group name
         for (String key : dietAlignData.keySet()) {
-            dietAlign.setValue(key, dietAlignData.get(key));
+            dietAlign.setValue(key, Integer.parseInt(dietAlignData.get(key)));
         }
     }
+
 
     private JPanel createCombinedPanel() {
         JPanel mainPanel = new JPanel();

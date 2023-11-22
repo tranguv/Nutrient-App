@@ -6,6 +6,7 @@ import java.util.List;
 import src.client.LogData.Dashboard;
 import src.client.Authentication.LoginPage;
 import src.client.Authentication.SignUpPage;
+import src.server.DataServices.MealQueries;
 
 public class MainApplication {
 	private static User currentUser;
@@ -20,6 +21,9 @@ public class MainApplication {
 			public void run() {
 				// TODO Auto-generated method stub
 				LoginPage login = new LoginPage();
+				for ( int i = 2; i< 33; i++){
+					System.out.println(new MealQueries().userHasRecords(i));
+				}
 
 			}
 		});

@@ -58,16 +58,16 @@ public class DashboardController {
     private DateLog addDate(){
         String date = dashboardGUI.getDatePanel().getSelectedDate();
 
-        if(date == null){
+        if(date == null || !date.matches("\\d{4}-\\d{2}-\\d{2}")){
             JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "Please select a date", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "Please select a valid date (YYYY-MM-DD)", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
         
         // Split the date string
         String[] parts = date.split("-");
 
-        // Extract month, day, and year
+        // Extract year, month, and day
         String year = parts[0];
         String month = parts[1];
         String day = parts[2];

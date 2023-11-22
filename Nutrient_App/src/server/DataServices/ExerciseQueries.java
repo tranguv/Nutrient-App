@@ -180,4 +180,25 @@ public class ExerciseQueries {
 		}
 		return numberOfExercises;
 	}
+	public static boolean userHasExerciseRecords(int userID) {
+		try (Connection connection = DBConfig.getConnection()) {
+			// Query to check if the user has any entries in the EXERCISE_LOG table
+			String sql = "SELECT COUNT(*) AS total_records FROM EXERCISE_LOG E JOIN DATE_LOG D ON E.date_log_id = D.date_log_id WHERE D.userID = ?";
+
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(1, userID);
+
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt("total_records") > 0;
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+		return false;
+	}
+
 }

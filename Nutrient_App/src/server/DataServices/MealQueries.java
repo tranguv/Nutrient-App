@@ -1,16 +1,20 @@
 package src.server.DataServices;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.sql.Date;
 
 import src.model.FoodItem;
 import src.model.Ingredient;
+import src.model.User;
 import src.model.DateLog;
 import src.model.Meal;
 
@@ -46,7 +50,7 @@ public class MealQueries {
 				try (ResultSet rs = preparedStatement.executeQuery()) {
 					if (rs.next()) {
 						return rs.getInt("meal_id");
-					} 
+					}
 				}
 				return -1;
 			}
@@ -140,8 +144,8 @@ public class MealQueries {
 				try (ResultSet resultSet = pState.executeQuery()) {
 					int index = 0;
 					while (resultSet.next()) {
-						System.out.println(Arrays.toString(foodGroup));	
-						System.out.println(resultSet.getString("FoodGroupName"));	
+						System.out.println(Arrays.toString(foodGroup));
+						System.out.println(resultSet.getString("FoodGroupName"));
 						foodGroup[index++] = resultSet.getString("FoodGroupName");
 					}
 				}
@@ -166,7 +170,7 @@ public class MealQueries {
 						int foodID = resultSet.getInt("FoodID");
 						String foodDescription = resultSet.getString("FoodDescriptionF");
 						String foodDescriptionF = resultSet.getString("FoodDescription");
-						
+
 
 						//FOOD GROUP TABLE
 						int foodGroupID = resultSet.getInt("FoodGroupID");
@@ -177,7 +181,7 @@ public class MealQueries {
 						int foodSourceID = resultSet.getInt("FoodSourceID");
 						String foodSourceDescription = resultSet.getString("FoodSourceDescription");
 						String foodSourceDescriptionF = resultSet.getString("FoodSourceDescriptionF");
-						
+
 						FoodItem fi = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
 						foodItem.add(fi);
 						// foodItem[index++] = fi;
@@ -247,7 +251,7 @@ public class MealQueries {
 						//FOOD NAME TABLE
 						String foodDescription = resultSet.getString("FoodDescriptionF");
 						String foodDescriptionF = resultSet.getString("FoodDescription");
-						
+
 
 						//FOOD GROUP TABLE
 						int foodGroupID = resultSet.getInt("FoodGroupID");
@@ -258,7 +262,7 @@ public class MealQueries {
 						int foodSourceID = resultSet.getInt("FoodSourceID");
 						String foodSourceDescription = resultSet.getString("FoodSourceDescription");
 						String foodSourceDescriptionF = resultSet.getString("FoodSourceDescriptionF");
-						
+
 						foodItem = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
 					}
 				}
@@ -308,7 +312,7 @@ public class MealQueries {
 						//FOOD NAME TABLE
 						int foodID = resultSet.getInt("FoodID");
 						String foodDescriptionF = resultSet.getString("FoodDescription");
-						
+
 
 						//FOOD GROUP TABLE
 						int foodGroupID = resultSet.getInt("FoodGroupID");
@@ -319,7 +323,7 @@ public class MealQueries {
 						int foodSourceID = resultSet.getInt("FoodSourceID");
 						String foodSourceDescription = resultSet.getString("FoodSourceDescription");
 						String foodSourceDescriptionF = resultSet.getString("FoodSourceDescriptionF");
-						
+
 						foodItem = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
 					}
 				}
@@ -362,5 +366,32 @@ public class MealQueries {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
+	}
+	public static boolean userHasRecords(int userID) {
+		try (Connection connection = DBConfig.getConnection()) {
+			// This SQL query checks across multiple tables. You may need to adjust it based on your schema.
+			String sql = "SELECT COUNT(*) AS total_records FROM ("
+					+ "SELECT 1 FROM MEAL_DETAILS M JOIN DATE_LOG D ON M.date_log_id = D.date_log_id WHERE D.userID = ? "
+					+ "UNION ALL "
+					+ "SELECT 1 FROM EXERCISE_LOG E JOIN DATE_LOG D ON E.date_log_id = D.date_log_id WHERE D.userID = ? "
+					// Add more UNION ALL SELECT 1 FROM ... WHERE D.userID = ? for other tables where user data might be stored
+					+ ") AS combined";
+
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(1, userID);
+				preparedStatement.setInt(2, userID);
+				// Add more preparedStatement.setInt(n, userID); for additional UNION ALL queries
+
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt("total_records") > 0;
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+		return false;
 	}
 }

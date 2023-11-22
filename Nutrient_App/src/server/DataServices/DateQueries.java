@@ -15,11 +15,11 @@ import src.model.User;
 
 public class DateQueries {
 	//	GET SELECTED DATE INFO BY USER
-		public static Date getDate(User user) {
+		public static Date getDatebyUserID(int userID) {
 			try (Connection connection = DBConfig.getConnection()) {
 				String sql = "SELECT date_log FROM DATE_LOG WHERE userID = ? ";
 				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-					preparedStatement.setInt(1, UserQueries.getUserIDbyUsername(user.getUsername()));
+					preparedStatement.setInt(1, userID);
 	//				preparedStatement.setDate(2, date);
 					try (ResultSet rs = preparedStatement.executeQuery()) {
 						if (rs.next()) {

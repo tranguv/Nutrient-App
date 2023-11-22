@@ -5,4 +5,8 @@ public class DailyNutrientIntakeViz {
     public String nutrientName;
     public double nutrientVal;
     public double nutrientPercent;
+
+    public DailyNutrientIntakeViz() {
+
+    }
 }

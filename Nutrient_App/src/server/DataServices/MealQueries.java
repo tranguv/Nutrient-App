@@ -216,7 +216,24 @@ public class MealQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
-
+	public static int getFoodGroupID(String foodGroupName){
+		int foodGroupID = 0;
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT FoodGroupID FROM `FOOD_GROUP` WHERE FoodGroupName = ?";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setString(1, foodGroupName);
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						foodGroupID = resultSet.getInt("FoodGroupID");
+					}
+				}
+				return foodGroupID;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 	//GET FOOD GROUP NAME BY FOOD DESCRIPTION
 	//USER WILL SEARCH FOR FOOD DESCRIPTION AND THE FOOD GROUP NAME WILL BE RETURNED
 	//FOOD DESCRIPTION IS IN ENGLISH

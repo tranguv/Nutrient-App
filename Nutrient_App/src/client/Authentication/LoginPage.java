@@ -11,9 +11,11 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import src.client.LogData.Dashboard;
 import src.main.CombinedChartsPanel;
 import src.model.MainApplication;
 import src.model.User;
+import src.server.DataServices.MealQueries;
 import src.server.DataServices.UserQueries;
 
 public class LoginPage extends JFrame {
@@ -62,10 +64,18 @@ public class LoginPage extends JFrame {
 					if (isValidUser) {
 						UserQueries find = new UserQueries();
 						User user = find.getUserByID(find.getUserIDbyUsername(username));
+						user.setId(find.getUserIDbyUsername(username));
 						MainApplication.setUser(user);
-						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
+						MealQueries meal = new MealQueries();
+						if ( meal.userHasRecords(user.getId())){
+							CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
+							dashboardGUI.execute();
+						}else{
+							new Dashboard().callDashBoard();
+						}
+
 						dispose();
-						dashboardGUI.execute();
+
 
 					} else {
 						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");

@@ -21,9 +21,7 @@ public class MainApplication {
 			public void run() {
 				// TODO Auto-generated method stub
 				LoginPage login = new LoginPage();
-				for ( int i = 2; i< 33; i++){
-					System.out.println(new MealQueries().userHasRecords(i));
-				}
+
 
 			}
 		});

@@ -2,13 +2,7 @@ package src.client.LogData;
 
 import javax.swing.*;
 
-import src.model.DateLog;
-import src.model.Exercise;
-import src.model.FoodItem;
-import src.model.Ingredient;
-import src.model.Intensity;
-import src.model.Meal;
-import src.model.MealType;
+import src.model.*;
 import src.server.DataServices.DateQueries;
 import src.server.DataServices.ExerciseQueries;
 import src.server.DataServices.MealQueries;
@@ -25,9 +19,11 @@ import java.util.List;
 
 public class DashboardController {
     private DashboardGUI dashboardGUI;
-
+    private MainApplication main = new MainApplication();
+    private User user;
     public DashboardController(DashboardGUI dashboardGUI) {
         this.dashboardGUI = dashboardGUI;
+        this.user = main.getUser();
         initializeListeners();
     }
 
@@ -76,8 +72,8 @@ public class DashboardController {
         cal.set(Calendar.YEAR, Integer.parseInt(year));
         cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
         cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-
-        DateLog selectedDate = new DateLog(2, cal.getTime());
+        System.out.println(this.user.getId());
+        DateLog selectedDate = new DateLog(this.user.getId(), cal.getTime());
         int dateID = DateQueries.addDate(selectedDate);
         selectedDate.setDateLogId(dateID);
         return selectedDate;

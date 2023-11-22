@@ -78,6 +78,32 @@ public class MealQueries {
 		}
 	}
 
+	// CHECK IF MEAL LOG ALREADY HAS ONE OF THE MEALTYPES OF BREAKFAST, LUNCH, DINNER EACH
+	// IF COUNT > 0, MEAL LOG ALREADY HAS THAT MEAL TYPE RETURN TRUE
+	public static boolean checkMealType(String dateLogID, String mealType) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT COUNT(M.meal_type) AS total_meals\n" +
+					"FROM MEAL_DETAILS M\n" +
+					"JOIN DATE_LOG D ON M.date_log_id = D.date_log_id\n" +
+					"WHERE D.date_log = ? AND  M.meal_type = ?";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setString(1, dateLogID);
+				preparedStatement.setString(2, mealType);
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						if (rs.getInt("total_meals") >= 1) {
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
 	// for inserting meal log
 	public static int addMeal(DateLog date, Meal meal) {
 		String sqlInsert = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES(?, ?)";
@@ -469,7 +495,7 @@ public class MealQueries {
 					"JOIN FOOD_NAME FN ON I.FoodID = FN.FoodID\n" +
 					"JOIN FOOD_GROUP FG ON FN.FoodGroupID = FG.FoodGroupID\n" +
 					"LEFT JOIN SERVING_GUIDE SG ON SG.FoodGroupID = FG.FoodGroupID\n" +
-					"WHERE U.userID = 2 AND D.date_log BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() AND U.age BETWEEN SG.startAge AND SG.ThresholdAge\n" +
+					"WHERE U.userID = %d AND D.date_log BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() AND U.age BETWEEN SG.startAge AND SG.ThresholdAge\n" +
 					"GROUP BY FG.FoodGroupName", userID));
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = pState.executeQuery()) {

@@ -77,6 +77,7 @@ public class DateQueries {
 //	public static int addDate(User user, Date date) {
 
 	//	LOG DATE
+	//    LOG DATE
 	public static int addDate(DateLog dateLog) {
 		// Date curr_date = java.sql.Date.valueOf(LocalDate.now());
 		try (Connection connection = DBConfig.getConnection()) {
@@ -97,7 +98,7 @@ public class DateQueries {
 					}
 				}
 				throw new RuntimeException("Cannot find last inserted date_log_id");
-				//				return -1;
+				//                return -1;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

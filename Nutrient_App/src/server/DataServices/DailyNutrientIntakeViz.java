@@ -19,6 +19,10 @@ public class DailyNutrientIntakeViz {
         this.totalNutrientAmt = totalNutrientAmt;
     }
 
+    public DailyNutrientIntakeViz() {
+
+    }
+
     public double getTotalQuantity() {
         return totalQuantity;
     }

@@ -86,10 +86,13 @@ public class SignUpPage extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				String username = usernameTF.getText();
 				char[] password = passwordPF.getPassword(); // Ideally, this should be collected from a JPasswordField
-				String day = (String) dayComboBox.getSelectedItem();
-				String month = (String) monthComboBox.getSelectedItem();
-				String year = (String) yearComboBox.getSelectedItem();
-				String dob = year + "-" + month + "-" + day;
+//				String day = (String) dayComboBox.getSelectedItem();
+//				String month = (String) monthComboBox.getSelectedItem();
+//				String year = (String) yearComboBox.getSelectedItem();
+//				String dob = year + "-" + month + "-" + day;
+				String dob = yearComboBox.getSelectedItem() + "-" +
+				              String.format("%02d", Integer.parseInt((String) monthComboBox.getSelectedItem())) + "-" +
+				              String.format("%02d", Integer.parseInt((String) dayComboBox.getSelectedItem()));
 
 				try {
 					double weight = Double.parseDouble(weightTF.getText());
@@ -106,6 +109,7 @@ public class SignUpPage extends JFrame{
 					// Move the createUser method call into the try block
 					if (UserQueries.createUser(newUser)) {
 						newUser.setId(UserQueries.getUserID());
+						newUser.setAge(dob);
 						MainApplication.setUser(newUser);
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
 						new Dashboard().callDashBoard();

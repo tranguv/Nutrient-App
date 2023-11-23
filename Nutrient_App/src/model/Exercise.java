@@ -9,6 +9,8 @@ public class Exercise {
     private int duration;
     private int id;
     private Intensity intensity;
+    private double caloriesBurnt;
+    private String date;
 
     public Exercise() {}
     public Exercise(String exerciseType, int duration, Intensity intensity) {
@@ -34,6 +36,14 @@ public class Exercise {
         else if (this.intensity == Intensity.medium) return Intensity.medium.toString();
         else return Intensity.high.toString();
     }
+
+    public double getCaloriesBurnt() {return caloriesBurnt;}
+
+    public String getDate() {return date;}
+
+    public void setDate(String date) {this.date = date;}
+
+    public void setCaloriesBurnt(double caloriesBurnt) {this.caloriesBurnt = caloriesBurnt;}
 
     public void setID(int id) {this.id = id;}
     

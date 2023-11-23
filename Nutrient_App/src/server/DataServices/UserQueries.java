@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class UserQueries {
 
@@ -37,13 +39,13 @@ public class UserQueries {
 	//for sign up validation
 	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
 		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			System.out.println("SQL Query: " + sql);  // Debugging statement
 			System.out.println("User sex: " + user.getSex());
 
 			try (PreparedStatement pState = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				pState.setString(1, user.getUsername());
-				pState.setString(2, String.valueOf(user.getPassword()));
+				pState.setString(2, user.getPassword());
 				pState.setString(3, user.getFirstName());
 				pState.setString(4, user.getLastName());
 				pState.setString(5, user.getSex());
@@ -51,6 +53,7 @@ public class UserQueries {
 				pState.setDouble(7, user.getWeight());
 				pState.setDouble(8, user.getHeight());
 				pState.setString(9, user.getUnits());
+				pState.setInt(10, user.getAge());
 
 				int rowsAffected = pState.executeUpdate();
 				if (rowsAffected > 0) {
@@ -109,69 +112,10 @@ public class UserQueries {
 		return userID;
 	}
 
+	public static void main(String[] args) {
+		System.out.println(getUserByID(2));
+	}
 
-//		try (Connection connection = DBConfig.getConnection()) {
-//			String sql = "SELECT userID FROM USER WHERE username = ?";
-//			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-//				pState.setString(1, username);
-//				try (ResultSet resultSet = pState.executeQuery()) {
-//					while (resultSet.next()) {
-//						userID = resultSet.getInt("userID");
-//					}
-//				}
-//				return userID;
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			throw new RuntimeException("Error accessing the database", e);
-//		}
-//}
-
-
-	//for updating user profile
-
-	//for deleting user profile
-
-
-
-//	for getting user profile by username
-//	 public static User getUser(String username){
-//		User user = new User();
-//	 	try (Connection connection = DBConfig.getConnection()) {
-//	 		String sql = "SELECT username FROM USER WHERE username = ?";
-//	 		try (PreparedStatement pState = connection.prepareStatement(sql)) {
-//	 			pState.setString(1, username);
-////	 			pState.executeQuery();
-//				try (ResultSet resultSet = pState.executeQuery()) {
-//					while (resultSet.next()) {
-//						user = resultSet.getObject();
-//					}
-//				}
-//				 return
-//	 		}
-//	 	} catch (SQLException e) {
-//	 		e.printStackTrace();
-//	 		throw new RuntimeException("Error accessing the database", e);
-//	 	}
-//
-//	 }
-
-	//for getting user profile by username
-	// public static User getUser(String username){
-	// 	try (Connection connection = getConnection()) {
-	// 		String sql = "SELECT * FROM USER WHERE username = ?";
-	// 		try (PreparedStatement pState = connection.prepareStatement(sql)) {
-	// 			pState.setString(1, username);
-	// 			pState.executeQuery();
-
-	// 			try (ResultSet)
-	// 		}
-	// 	} catch (SQLException e) {
-	// 		e.printStackTrace();
-	// 		throw new RuntimeException("Error accessing the database", e);
-	// 	}
-
-	// }
 	public static User getUserByID(int id){
 		User user = null;
 		try (Connection connection = DBConfig.getConnection()) {
@@ -190,8 +134,8 @@ public class UserQueries {
 						double weight = Double.parseDouble(resultSet.getString("weight"));
 						double height = Double.parseDouble(resultSet.getString("height"));
 						String unit = resultSet.getString("units");
+						int age = resultSet.getInt("age");
 						user = new User(user_username,user_userPassword,firstName,lastname,sex,dob,weight,height,unit);
-
 						return user;
 					}
 				}
@@ -202,6 +146,7 @@ public class UserQueries {
 		}
 		return user;
 	}
+
 	public static String getUserFirstNamesById(int userId) {
 		String firstName = null;
 		try (Connection connection = DBConfig.getConnection()) {
@@ -247,7 +192,7 @@ public class UserQueries {
 	public static boolean updateUserDetails(String username, String fname, String lname, String sex, String dob,double height, double weight) {
 		try (Connection connection = DBConfig.getConnection()) {
 			// Update SQL statement to include height and weight
-			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ?, dob = ?,height = ?, weight = ? WHERE username = ?";
+			String sql = "UPDATE USER SET fname = ?, lname = ?, sex = ?, dob = ?,height = ?, weight = ?, age = ? WHERE username = ?";
 
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setString(1, fname);
@@ -256,7 +201,16 @@ public class UserQueries {
 				pState.setString(4, dob);
 				pState.setDouble(5, height); // Assuming height is a double
 				pState.setDouble(6, weight); // Assuming weight is a double
-				pState.setString(7, username);
+
+				LocalDate dateOfBirth = LocalDate.parse(dob);
+				LocalDate curDate = LocalDate.now();
+				int age = 0;
+				if(dateOfBirth != null && curDate != null){
+					age = Period.between(dateOfBirth, curDate).getYears();
+				}
+
+				pState.setInt(7, age);
+				pState.setString(8, username);
 
 				int rowsAffected = pState.executeUpdate();
 				return rowsAffected > 0;
@@ -266,9 +220,6 @@ public class UserQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
-
-
-
 }
 
 

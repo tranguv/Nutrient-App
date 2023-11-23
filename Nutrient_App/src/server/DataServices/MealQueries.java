@@ -78,6 +78,32 @@ public class MealQueries {
 		}
 	}
 
+	// CHECK IF MEAL LOG ALREADY HAS ONE OF THE MEALTYPES OF BREAKFAST, LUNCH, DINNER EACH
+	// IF COUNT > 0, MEAL LOG ALREADY HAS THAT MEAL TYPE RETURN TRUE
+	public static boolean checkMealType(String dateLogID, String mealType) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT COUNT(M.meal_type) AS total_meals\n" +
+					"FROM MEAL_DETAILS M\n" +
+					"JOIN DATE_LOG D ON M.date_log_id = D.date_log_id\n" +
+					"WHERE D.date_log = ? AND  M.meal_type = ?";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setString(1, dateLogID);
+				preparedStatement.setString(2, mealType);
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						if (rs.getInt("total_meals") >= 1) {
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
+
 	// for inserting meal log
 	public static int addMeal(DateLog date, Meal meal) {
 		String sqlInsert = "INSERT INTO MEAL_DETAILS (meal_type, date_log_id) VALUES(?, ?)";
@@ -136,7 +162,7 @@ public class MealQueries {
 
 
 	//GET FOOD GROUP
-	public static String[] getFoodGroup(){
+	public static String[] getFoodGroup() {
 		String[] foodGroup = new String[23];
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT FoodGroupName FROM `FOOD GROUP`";
@@ -158,7 +184,7 @@ public class MealQueries {
 	}
 
 	//GET FOOD ITEM JOIN FOOD GROUP, FOOD NAME AND FOOD SOURCE TABLES
-	public static List<FoodItem> getFoodItem(){
+	public static List<FoodItem> getFoodItem() {
 		List<FoodItem> foodItem = new ArrayList<FoodItem>();
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId";
@@ -196,7 +222,7 @@ public class MealQueries {
 	}
 
 	//GET FOOD DESCRIPTION JOIN FOOD GROUP, FOOD NAME AND FOOD SOURCE TABLES
-	public static List<String> getFoodDescription(){
+	public static List<String> getFoodDescription() {
 		List<String> foodItem = new ArrayList<>();
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId";
@@ -216,7 +242,8 @@ public class MealQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
-	public static int getFoodGroupID(String foodGroupName){
+
+	public static int getFoodGroupID(String foodGroupName) {
 		int foodGroupID = 0;
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT FoodGroupID FROM `FOOD_GROUP` WHERE FoodGroupName = ?";
@@ -234,10 +261,11 @@ public class MealQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
 	//GET FOOD GROUP NAME BY FOOD DESCRIPTION
 	//USER WILL SEARCH FOR FOOD DESCRIPTION AND THE FOOD GROUP NAME WILL BE RETURNED
 	//FOOD DESCRIPTION IS IN ENGLISH
-	public static String getFoodGroupName(String foodDescription){
+	public static String getFoodGroupName(String foodDescription) {
 		String foodGroupName = "";
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT FoodGroupName FROM `FOOD_GROUP` fg JOIN `FOOD_NAME` fn ON fg.FoodGroupID = fn.FoodGroupID WHERE fn.FoodDescription = ?";
@@ -257,7 +285,7 @@ public class MealQueries {
 	}
 
 	// GET FOOD ITEM BY ID
-	public static FoodItem getFoodItemByID(int foodID){
+	public static FoodItem getFoodItemByID(int foodID) {
 		FoodItem foodItem = null;
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId WHERE fn.FoodID = ?";
@@ -292,7 +320,7 @@ public class MealQueries {
 	}
 
 	//GET INGREDIENTS BY MEAL ID
-	public static List<Ingredient> getIngredientsFromMealID(int mealID){
+	public static List<Ingredient> getIngredientsFromMealID(int mealID) {
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM `INGREDIENT` WHERE meal_id = ?";
@@ -318,7 +346,7 @@ public class MealQueries {
 	}
 
 	//GET FOOD ITEM BY FOOD DESCRIPTION
-	public static FoodItem getFoodItem(String foodDescription){
+	public static FoodItem getFoodItem(String foodDescription) {
 		FoodItem foodItem = null;
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "SELECT * FROM `FOOD_NAME` fn JOIN `FOOD_GROUP` fg ON fg.FoodGroupID = fn.FoodGroupID JOIN `FOOD_SOURCE` fs ON fs.FoodSourceId = fn.FoodSourceId WHERE fn.FoodDescription = ?";
@@ -353,8 +381,7 @@ public class MealQueries {
 	}
 
 
-
-	public static ArrayList<Double> getDailyKcalIntake(int userID,  Date date) {
+	public static ArrayList<Double> getDailyKcalIntake(int userID, Date date) {
 		ArrayList<Double> kcalIntake = new ArrayList<>();
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = String.format("SELECT ((na.NutrientValue / 100) * i.quantity) AS daily_kcal_intake\n" +
@@ -367,7 +394,7 @@ public class MealQueries {
 					"JOIN NUTRIENT_NAME nn ON nn.NutrientNameID = na.NutrientNameID\n" +
 					"WHERE dl.date_log = ?\n" +
 					"     AND u.userID = ?\n" +
-					"    AND nn.NutrientCode = 208;") ;
+					"    AND nn.NutrientCode = 208;");
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
 				pState.setDate(1, date);
 				pState.setInt(2, userID);
@@ -377,7 +404,7 @@ public class MealQueries {
 					}
 				}
 			}
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
@@ -386,7 +413,7 @@ public class MealQueries {
 
 
 	// GET TOP 6 FOOD GROUP BY PERCENTAGE List<FoodGroupName, Percentage>
-	public static HashMap<String, Double> getTop6FoodGroupByPercentage(int userID){
+	public static HashMap<String, Double> getTop6FoodGroupByPercentage(int userID) {
 		HashMap<String, Double> foodGroups = new HashMap<>();
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = String.format("SELECT\n" +
@@ -417,6 +444,7 @@ public class MealQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
 	public static boolean userHasRecords(int userID) {
 		try (Connection connection = DBConfig.getConnection()) {
 			// This SQL query checks across multiple tables. You may need to adjust it based on your schema.
@@ -445,4 +473,43 @@ public class MealQueries {
 		return false;
 	}
 
+	// CHECK IF USER DIETARY RESTRICTIONS ARE MET (EXCEEDED, MET, BELOW)
+	public static HashMap<String, Double> userDietaryRestrictionsMet(int userID) {
+		HashMap<String, Double> maps = new HashMap<>();
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = String.format(String.format("SELECT\n" +
+					"  FG.FoodGroupName,\n" +
+					"  COUNT(FG.FoodGroupID) AS FoodGroupCount,\n" +
+					"  SG.ServingPerDay*COUNT(DISTINCT D.date_log) AS ServingForAWeek,\n" +
+					"  U.sex,\n" +
+					"  U.age,\n" +
+					"  CASE WHEN COUNT(FG.FoodGroupID) > SG.ServingPerDay*COUNT(DISTINCT D.date_log) THEN 'Exceeded'\n" +
+					"       WHEN COUNT(FG.FoodGroupID) = SG.ServingPerDay*COUNT(DISTINCT D.date_log) THEN 'Met'\n" +
+					"       ELSE 'Below'\n" +
+					"  END AS Status,\n" +
+					"  (COUNT(FG.FoodGroupID)/SG.ServingPerDay*COUNT(DISTINCT D.date_log))*100 AS Percentage\n" +
+					"FROM USER U\n" +
+					"JOIN DATE_LOG D ON D.userID = U.userID\n" +
+					"JOIN MEAL_DETAILS M ON D.date_log_id = M.date_log_id\n" +
+					"JOIN INGREDIENTS I ON I.meal_id = M.meal_id\n" +
+					"JOIN FOOD_NAME FN ON I.FoodID = FN.FoodID\n" +
+					"JOIN FOOD_GROUP FG ON FN.FoodGroupID = FG.FoodGroupID\n" +
+					"LEFT JOIN SERVING_GUIDE SG ON SG.FoodGroupID = FG.FoodGroupID\n" +
+					"WHERE U.userID = %d AND D.date_log BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() AND U.age BETWEEN SG.startAge AND SG.ThresholdAge\n" +
+					"GROUP BY FG.FoodGroupName", userID));
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						String foodGroupName = resultSet.getString("FoodGroupName") + " - " + resultSet.getString("Status") + " " + resultSet.getString("Percentage") + "%";
+						Double percentage = resultSet.getDouble("Percentage");
+						maps.put(foodGroupName, percentage);
+					}
+				}
+				return maps;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 }

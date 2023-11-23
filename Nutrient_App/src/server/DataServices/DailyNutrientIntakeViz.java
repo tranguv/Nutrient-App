@@ -44,7 +44,7 @@ public class DailyNutrientIntakeViz {
     }
 
 
-    public static List<DailyNutrientIntakeViz> getNutrientValConsumed(int userID, Date date) {
+    public static List<DailyNutrientIntakeViz> getNutrientValConsumed(int userID, Date startDate, Date endDate) {
         List<DailyNutrientIntakeViz> nutritionDataList = new ArrayList<>();
         try (Connection connection = DBConfig.getConnection()) {
             String sql = "SELECT SUM(i.quantity) AS total_quantity, nn.NutrientName, round(((na.NutrientValue / 100) * SUM(i.quantity)), 2) AS total_nutrient_amt\n" +
@@ -56,7 +56,7 @@ public class DailyNutrientIntakeViz {
                     "JOIN NUTRIENT_AMOUNT na ON na.FoodID = fn.FoodID\n" +
                     "JOIN NUTRIENT_NAME nn ON nn.NutrientNameID = na.NutrientNameID\n" +
                     "WHERE dl.userID = ?\n" +
-                    "\tAND dl.date_log = ?\n" +
+                    "\tAND dl.date_log >= ? AND dl.date_log <= ?\n" +
                     "\tAND i.FoodID <= 71\n" +
                     "    AND nn.NutrientName != 'ENERGY (KILOJOULES)'\n" +
                     "    AND nn.Unit = 'g'\n" +
@@ -65,7 +65,8 @@ public class DailyNutrientIntakeViz {
                     "ORDER BY total_nutrient_amt DESC";
             try (PreparedStatement pState = connection.prepareStatement(sql)) {
                 pState.setInt(1, userID);
-                pState.setDate(2, date);
+                pState.setDate(2, startDate);
+                pState.setDate(3, endDate);
                 try (ResultSet resultSet = pState.executeQuery()) {
                     while (resultSet.next()) {
                         double totalQuantity = resultSet.getDouble("total_quantity");

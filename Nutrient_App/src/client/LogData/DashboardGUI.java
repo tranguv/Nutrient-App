@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 public class DashboardGUI extends JFrame {
     private DatePanel datePanel;
@@ -52,8 +53,17 @@ public class DashboardGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DashboardGUI.this.dispose();
-                CombinedChartsPanel mainPage = new CombinedChartsPanel("User");
-                mainPage.execute();
+                CombinedChartsPanel mainPage = null;
+                try {
+                    mainPage = new CombinedChartsPanel("User");
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    mainPage.execute();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
                 mainPage.setVisible(true);
             }
         });

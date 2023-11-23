@@ -96,20 +96,6 @@ public class CombinedChartsPanel extends ApplicationFrame {
         for (String key : top5.keySet()) {
             dataset.addValue(top5.get(key).keySet().iterator().next(), key, top5.get(key).values().iterator().next());
         }
-//        Random rand = new Random();
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-01");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-02");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-03");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-04");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-05");
-//
-//
-//        // Exercise data
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-01");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-02");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-03");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-04");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-05");
 
     }
 
@@ -134,8 +120,25 @@ public class CombinedChartsPanel extends ApplicationFrame {
         Date endDate = Date.valueOf(localDate2);
 
         List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
+        System.out.println(daily);
+
+        List<DailyNutrientIntakeViz> top5Nutrients;
+        if (daily.size() >= 5) {
+            top5Nutrients = daily.subList(0,5);
+            List<DailyNutrientIntakeViz> remain = daily.subList(5, daily.size());
+            int totalQuantity = 0;
+            double totalNutAmt = 0;
+            for (DailyNutrientIntakeViz i : remain) {
+                totalQuantity += i.getTotalQuantity();
+                totalNutAmt += i.getTotalNutrientAmt();
+            }
+            DailyNutrientIntakeViz combined = new DailyNutrientIntakeViz(totalQuantity, "Other", totalNutAmt);
+            top5Nutrients.add(combined);
+        }
+        else top5Nutrients = daily.subList(0, daily.size());
+
         HashMap<String, Double> top5 = new HashMap<>();
-        for (DailyNutrientIntakeViz d : daily) {
+        for (DailyNutrientIntakeViz d : top5Nutrients) {
             top5.put(d.getNutrientName(), d.getTotalNutrientAmt());
         }
 

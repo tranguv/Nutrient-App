@@ -12,10 +12,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DashboardController {
     private DashboardGUI dashboardGUI;
@@ -134,6 +133,18 @@ public class DashboardController {
 
         Meal meal = new Meal(mealTypeEnum);
         meal.addIngredients(ingredientList);
+        Date date = dateLog.getDate();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = dateFormat.format(date);
+
+        if(!(mealType.equals("Snack")) && MealQueries.checkMealType(strDate, mealTypeEnum.toString())){
+            System.out.println("mealtype" + mealType);
+            System.out.println(MealQueries.checkMealType(strDate, mealTypeEnum.toString()));
+            JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Meal type already exists for this date", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         int mealID = MealQueries.addMeal(dateLog, meal);
         meal.setMealId(mealID);
         for (Ingredient ingredient : ingredientList) {

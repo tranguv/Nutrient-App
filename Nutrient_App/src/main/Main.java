@@ -24,6 +24,7 @@ import src.server.DataServices.UserQueries;
 import src.model.MainApplication;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,11 +49,29 @@ public class Main {
 //		Date specificDate2 = calendar.getTime();
 		Date date = DateQueries.getDatebyUserID(32);
 		List<DailyNutrientIntakeViz> nutrientdataList = DailyNutrientIntakeViz.getNutrientValConsumed(32, date);
-		List<DailyNutrientIntakeViz> getTop5Nutrient = DailyNutrientIntakeViz.getTop5Nutrient(nutrientdataList);
-		List<DailyNutrientIntakeViz> getRemainNutrient = DailyNutrientIntakeViz.getRemainNutrient(nutrientdataList);
-		for (int i = 0; i < getRemainNutrient.size(); i++ ) {
-			System.out.println(getRemainNutrient.get(i).getTotalNutrientAmt());
+//		List<DailyNutrientIntakeViz> top5NutrientList = DailyNutrientIntakeViz.getTop5Nutrient(nutrientdataList);
+		List<DailyNutrientIntakeViz> remainNutrientList = DailyNutrientIntakeViz.getRemainNutrient(nutrientdataList);
+
+		double totalQuantity = 0;
+		double totalNutAmt = 0;
+
+//		for (int i = 0; i < top5NutrientList.size(); i++ ) {
+//			System.out.printf("%.2f", (top5NutrientList.get(i).getTotalNutrientAmt() / top5NutrientList.get(i).getTotalQuantity()) * 100);
+//			System.out.print(" %");
+//			System.out.println();
+//		}
+
+		for (int i = 0; i < remainNutrientList.size(); i++) {
+			totalQuantity = remainNutrientList.get(i).getTotalQuantity();
+			totalNutAmt = remainNutrientList.get(i).getTotalNutrientAmt();
 		}
+		System.out.println((totalNutAmt / totalQuantity) * 100);
+
+
+//		for (int i = 0; i < getRemainNutrient.size(); i++ ) {
+//			System.out.println(getRemainNutrient.get(i).getTotalNutrientAmt());
+//		}
+
 
 	}
 }

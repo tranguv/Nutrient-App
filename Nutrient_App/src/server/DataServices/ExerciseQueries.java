@@ -1,31 +1,11 @@
 package src.server.DataServices;
 
-
-
 import src.model.User;
-
 import java.sql.Connection;
 import java.sql.SQLException;
-
-
-
-//    GET CALORIES INFO
-//    public static double getKcal(User user) {
-//        double kcal = 0;
-//        try (Connection connection = DBConfig.getConnection()) {
-//            String sql = ""
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
 import java.util.List;
-
 import src.model.DateLog;
 import src.model.Exercise;
-
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

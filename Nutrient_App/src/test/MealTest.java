@@ -3,8 +3,10 @@
  import src.server.DataServices.MealQueries;
  import src.server.DataServices.UserQueries;
 
+ import java.sql.SQLException;
+
  public class MealTest {
-     public static void main(String[] args) {
+     public static void main(String[] args) throws SQLException {
          // TODO Auto-generated method stub
          System.out.println(MealQueries.getTop6FoodGroupByPercentage(2));
          UserQueries a= new UserQueries();

@@ -1,6 +1,6 @@
 package src.main;
 import src.model.MainApplication;
-<<<<<<< HEAD
+
 // import src.model.authLogic.SignupLogic;
 import src.client.Authentication.ChooseProfile;
 import src.client.Authentication.LoginPage;
@@ -14,7 +14,6 @@ import src.server.DataServices.*;
 //import java.sql.Date;
 import java.sql.Date;
 
-import src.server.DataServices.DBQueries;
 import src.server.DataServices.InputVisualization;
 import src.server.DataServices.UserQueries;
 
@@ -26,8 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-=======
->>>>>>> 1f2ef13b2ca83bb182722bf5da0e1edfbd96a01b
+
 
 public class Main {
 	public static void main(String[] args) throws ParseException {

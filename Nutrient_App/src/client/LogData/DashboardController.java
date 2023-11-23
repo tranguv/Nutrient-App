@@ -32,6 +32,7 @@ public class DashboardController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addMeal();
+                System.out.println("Log Meal Succesfully");
             }
         });
 
@@ -40,6 +41,7 @@ public class DashboardController {
             public void actionPerformed(ActionEvent e) {
                 // Add exercise logic if needed
                 addExercise();
+                System.out.println("Log Excersices Succesfully");
             }
         });
 

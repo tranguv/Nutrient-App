@@ -53,6 +53,7 @@ public class DashboardGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 DashboardGUI.this.dispose();
                 CombinedChartsPanel mainPage = new CombinedChartsPanel("User");
+                System.out.println("Visualization Is Displayed Succesfully");
                 mainPage.execute();
                 mainPage.setVisible(true);
             }

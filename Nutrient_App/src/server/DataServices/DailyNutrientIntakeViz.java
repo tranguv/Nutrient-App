@@ -97,5 +97,4 @@ public class DailyNutrientIntakeViz {
         List<DailyNutrientIntakeViz> remainNutrient = nutritionDataList.subList(5, nutritionDataList.size());
         return remainNutrient;
     }
-
 }

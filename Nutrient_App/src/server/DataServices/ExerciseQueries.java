@@ -1,7 +1,5 @@
 package src.server.DataServices;
 
-
-
 import src.model.Intensity;
 import src.model.User;
 
@@ -23,10 +21,8 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import src.model.DateLog;
 import src.model.Exercise;
-
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.SQLException;

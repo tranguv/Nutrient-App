@@ -9,9 +9,11 @@ import org.jfree.ui.RefineryUtilities;
 import src.client.Authentication.ChooseProfile;
 import src.client.LogData.Dashboard;
 import src.client.LogData.DatePanel;
+import src.model.Exercise;
 import src.model.MainApplication;
 import src.model.User;
 import src.server.DataServices.DailyNutrientIntakeViz;
+import src.server.DataServices.ExerciseQueries;
 import src.server.DataServices.MealQueries;
 
 import javax.swing.*;
@@ -75,20 +77,39 @@ public class CombinedChartsPanel extends ApplicationFrame {
             start = "2023-11-15";
             end = "2023-11-22";
         }
-        Random rand = new Random();
-        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-01");
-        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-02");
-        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-03");
-        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-04");
-        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-05");
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(start, formatter);
+        LocalDate localDate2 = LocalDate.parse(end, formatter);
+        Date startDate = Date.valueOf(localDate);
+        Date endDate = Date.valueOf(localDate2);
 
-        // Exercise data
-        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-01");
-        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-02");
-        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-03");
-        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-04");
-        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-05");
+        ArrayList<Exercise> exercises = ExerciseQueries.getExercisesByDate(user.getId(), startDate, endDate);
+        HashMap<String, HashMap<Double, String>> top5 = new HashMap<>();
+        for (Exercise e : exercises) {
+            if (!top5.containsKey(e.getName())) {
+                top5.put(e.getName(), new HashMap<>());
+            }
+            top5.get(e.getName()).put(e.getCaloriesBurnt(), e.getDate().toString());
+        }
+
+        for (String key : top5.keySet()) {
+            dataset.addValue(top5.get(key).keySet().iterator().next(), key, top5.get(key).values().iterator().next());
+        }
+//        Random rand = new Random();
+//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-01");
+//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-02");
+//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-03");
+//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-04");
+//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-05");
+//
+//
+//        // Exercise data
+//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-01");
+//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-02");
+//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-03");
+//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-04");
+//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-05");
 
     }
 
@@ -105,6 +126,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
             start = "2023-11-15";
             end = "2023-11-22";
         }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(start, formatter);
         LocalDate localDate2 = LocalDate.parse(end, formatter);

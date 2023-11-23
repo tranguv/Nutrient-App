@@ -2,11 +2,10 @@ package src.server.DataServices;
 
 
 
+import src.model.Intensity;
 import src.model.User;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import java.sql.*;
 
 
 //    GET CALORIES INFO
@@ -21,6 +20,8 @@ import java.sql.SQLException;
 //    }
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import src.model.DateLog;
@@ -28,8 +29,6 @@ import src.model.Exercise;
 
 import java.util.ArrayList;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ExerciseQueries {
@@ -221,5 +220,47 @@ public class ExerciseQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 		return false;
+	}
+
+	public static void main(String[] args) {
+		String start = "2003-01-01";
+		String end = "2025-12-31";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate localDate = LocalDate.parse(start, formatter);
+		LocalDate localDate2 = LocalDate.parse(end, formatter);
+		Date startDate = Date.valueOf(localDate);
+		Date endDate = Date.valueOf(localDate2);
+		ArrayList<Exercise> exercises = getExercisesByDate(2, startDate, endDate);
+		for (Exercise exercise : exercises) {
+			System.out.println(exercise.getName() + " " + exercise.getCaloriesBurnt() + " " + exercise.getDate());
+		}
+	}
+
+	// GET EXERCISES ACCORDING TO START AND END DATE
+	public static ArrayList<Exercise> getExercisesByDate(int userId, Date startDate, Date endDate) {
+		ArrayList<Exercise> exercises = new ArrayList<>();
+		String sql = String.format("SELECT E.exercise_log_id, E.exercise_type, E.duration, E.intensity, E.date_log_id, D.date_log\n" +
+				"FROM EXERCISE_LOG E\n" +
+				"JOIN DATE_LOG D ON E.date_log_id = D.date_log_id\n" +
+				"WHERE D.userID = %d AND D.date_log >= '%s' AND D.date_log <= '%s'", userId, startDate, endDate);
+		try(Connection connection = DBConfig.getConnection()){
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Exercise exerciseLog = new Exercise();
+				exerciseLog.setID(resultSet.getInt("exercise_log_id"));
+				exerciseLog.setName(resultSet.getString("exercise_type"));
+				exerciseLog.setDuration(resultSet.getInt("duration"));
+				exerciseLog.setIntensity(Intensity.valueOf(resultSet.getString("intensity")));
+				exerciseLog.setCaloriesBurnt(getCaloriesExpended(exerciseLog.getName(), exerciseLog.getDuration(), exerciseLog.getIntensity().toString().toUpperCase()));
+				exerciseLog.setDate(String.valueOf(resultSet.getDate("date_log")));
+				exercises.add(exerciseLog);
+			}
+			preparedStatement.close();
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return exercises;
 	}
 }

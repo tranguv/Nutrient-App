@@ -2,19 +2,54 @@ package src.server.DataServices;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 
 import src.model.DateLog;
 import src.model.User;
 
 public class DateQueries {
+	//	GET SELECTED DATE INFO BY USER
+		public static Date getDatebyUserID(int userID) {
+			try (Connection connection = DBConfig.getConnection()) {
+				String sql = "SELECT date_log FROM DATE_LOG WHERE userID = ? ";
+				try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+					preparedStatement.setInt(1, userID);
+	//				preparedStatement.setDate(2, date);
+					try (ResultSet rs = preparedStatement.executeQuery()) {
+						if (rs.next()) {
+							return rs.getDate("date_log");
+						}
+					}
+					throw new RuntimeException("Cannot find date_log");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Error accessing the database", e);
+			}
+		}
 
+	public static Date getDate(User user) {
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT date_log FROM DATE_LOG WHERE userID = ? ";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(1, UserQueries.getUserIDbyUsername(user.getUsername()));
+				//				preparedStatement.setDate(2, date);
+				try (ResultSet rs = preparedStatement.executeQuery()) {
+					if (rs.next()) {
+						return rs.getDate("date_log");
+					}
+				}
+				throw new RuntimeException("Cannot find date_log");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 
 	//RETRIEVE DATE LOG ID BY USER ID AND DATE IF EXISTS
 	public static int getDateLogId(User user, Date date) {
@@ -36,7 +71,33 @@ public class DateQueries {
 		}
 	}
 
-    //	LOG DATE
+	//	GET SELECTED DATE INFO BY USER
+//	public static Date getDate(User user) {
+//		try (Connection connection = DBConfig.getConnection()) {
+//			String sql = "SELECT date_log FROM DATE_LOG WHERE userID = ? ";
+//			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//				preparedStatement.setInt(1, UserQueries.getUserIDbyUsername(user.getUsername()));
+////				preparedStatement.setDate(2, date);
+//				try (ResultSet rs = preparedStatement.executeQuery()) {
+//					if (rs.next()) {
+//						return rs.getDate("date_log");
+//					}
+//				}
+//				throw new RuntimeException("Cannot find date_log");
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			throw new RuntimeException("Error accessing the database", e);
+//		}
+//	}
+
+
+	//INSERT NEW DATE LOG IF NOT EXISTS
+//	public static int addDate(User user, Date date) {
+
+
+	//	LOG DATE
+	//    LOG DATE
 	public static int addDate(DateLog dateLog) {
 		// Date curr_date = java.sql.Date.valueOf(LocalDate.now());
 		try (Connection connection = DBConfig.getConnection()) {
@@ -57,12 +118,14 @@ public class DateQueries {
 					}
 				}
 				throw new RuntimeException("Cannot find last inserted date_log_id");
-//				return -1;
+				//                return -1;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
-
 }
+
+
+

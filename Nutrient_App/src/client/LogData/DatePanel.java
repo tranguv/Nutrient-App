@@ -4,10 +4,15 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.Date;
+//import java.sql.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DatePanel extends JPanel {
     private String selectedDate;
@@ -24,6 +29,10 @@ public class DatePanel extends JPanel {
         if (dateLabel != null) {
             dateLabel.setText(text);
         }
+    }
+
+    public void setSelectedDate(String text) {
+        this.selectedDate = text;
     }
 
     private void addDateFields() {
@@ -77,5 +86,24 @@ public class DatePanel extends JPanel {
 
     public String getSelectedDate() {
         return selectedDate;
+    }
+    public LocalDate getSelectedLocalDate() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String sel_date = getSelectedDate();
+        LocalDate sel_local_date = LocalDate.parse(sel_date, dateFormatter);
+        return sel_local_date;
+    }
+
+    public Date getSelectedDate_Date() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            String d1 = getSelectedDate();
+            date = (Date) dateFormat.parse(d1);
+            System.out.println(getSelectedDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 }

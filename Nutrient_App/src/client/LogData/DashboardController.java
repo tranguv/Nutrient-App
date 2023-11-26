@@ -2,13 +2,7 @@ package src.client.LogData;
 
 import javax.swing.*;
 
-import src.model.DateLog;
-import src.model.Exercise;
-import src.model.FoodItem;
-import src.model.Ingredient;
-import src.model.Intensity;
-import src.model.Meal;
-import src.model.MealType;
+import src.model.*;
 import src.server.DataServices.DateQueries;
 import src.server.DataServices.ExerciseQueries;
 import src.server.DataServices.MealQueries;
@@ -18,16 +12,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DashboardController {
     private DashboardGUI dashboardGUI;
-
+    private MainApplication main = new MainApplication();
+    private User user;
     public DashboardController(DashboardGUI dashboardGUI) {
         this.dashboardGUI = dashboardGUI;
+        this.user = main.getUser();
         initializeListeners();
     }
 
@@ -36,6 +31,7 @@ public class DashboardController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addMeal();
+                System.out.println("Log Meal Succesfully");
             }
         });
 
@@ -44,6 +40,7 @@ public class DashboardController {
             public void actionPerformed(ActionEvent e) {
                 // Add exercise logic if needed
                 addExercise();
+                System.out.println("Log Excersices Succesfully");
             }
         });
 
@@ -58,16 +55,16 @@ public class DashboardController {
     private DateLog addDate(){
         String date = dashboardGUI.getDatePanel().getSelectedDate();
 
-        if(date == null){
+        if(date == null || !date.matches("\\d{4}-\\d{2}-\\d{2}")){
             JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "Please select a date", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "Please select a valid date (YYYY-MM-DD)", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
         
         // Split the date string
         String[] parts = date.split("-");
 
-        // Extract month, day, and year
+        // Extract year, month, and day
         String year = parts[0];
         String month = parts[1];
         String day = parts[2];
@@ -76,16 +73,15 @@ public class DashboardController {
         cal.set(Calendar.YEAR, Integer.parseInt(year));
         cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
         cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-
-        DateLog selectedDate = new DateLog(2, cal.getTime());
+        System.out.println(this.user.getId());
+        DateLog selectedDate = new DateLog(this.user.getId(), cal.getTime());
         int dateID = DateQueries.addDate(selectedDate);
-        System.out.println("Date ID: " + dateID);
         selectedDate.setDateLogId(dateID);
         return selectedDate;
     }
 
     private void addMeal() {
-        ExercisePanel exercisePanel = dashboardGUI.getExercisePanel();
+        MealPanel mealPanel = dashboardGUI.getMealPanel();
 
         List<Ingredient> ingredientList = new ArrayList<>();
         String mealType = dashboardGUI.getMealPanel().getMealTypeComboBox().getSelectedItem().toString();
@@ -95,18 +91,15 @@ public class DashboardController {
         List<String> quantities = new ArrayList<>();
         List<String> units = new ArrayList<>();
 
-        GridBagLayout layout = (GridBagLayout) exercisePanel.getLayout();
+        GridBagLayout layout = (GridBagLayout) mealPanel.getLayout();
 
-        for (Component component : exercisePanel.getComponents()) {
+        for (Component component : mealPanel.getComponents()) {
             GridBagConstraints gbc = layout.getConstraints(component);
 
-            System.out.println("compo:" + component.getName());
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
                 String text = textField.getText();
-                System.out.println("text:" + text);
                 if (!text.isEmpty()) {
-                    System.out.println("inside JTextField");
                     if (textField.getName().equals("quantity")) {
                         quantities.add(text);
                     } else if (textField.getName().equals("unit")) {
@@ -116,15 +109,12 @@ public class DashboardController {
                     }
                 }
             } else if (component instanceof JComboBox) {
-                System.out.println("inside JComboBox");
                 JComboBox<?> comboBox = (JComboBox<?>) component;
                 Object selectedItem = comboBox.getSelectedItem();
                 if (selectedItem != null) {
-                    System.out.println("selectedItem:" + selectedItem.toString());
                     if (comboBox.getName().equals("unit")) {
                         units.add(selectedItem.toString());
                     } else {
-                        System.out.println("ingredient add nha");
                         ingredients.add(selectedItem.toString());
                     }
                 }
@@ -132,9 +122,6 @@ public class DashboardController {
         }
 
         ingredients.remove(0);
-        System.out.println("ingre:" + ingredients.toString());
-        System.out.println("quantities:" + quantities.toString());
-        System.out.println("units:" + units.toString());
 
         for (int i = 0; i < ingredients.size(); i++) {
             FoodItem foodItem = MealQueries.getFoodItem(ingredients.get(i));
@@ -142,19 +129,28 @@ public class DashboardController {
             ingredientList.add(ingredient);
         }
 
-        System.out.println("ingreList " + ingredientList.toString());
         DateLog dateLog = addDate();
 
         Meal meal = new Meal(mealTypeEnum);
         meal.addIngredients(ingredientList);
+        Date date = dateLog.getDate();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = dateFormat.format(date);
+
+        if(!(mealType.equals("Snack")) && MealQueries.checkMealType(strDate, mealTypeEnum.toString())){
+            System.out.println("mealtype" + mealType);
+            System.out.println(MealQueries.checkMealType(strDate, mealTypeEnum.toString()));
+            JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Meal type already exists for this date", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         int mealID = MealQueries.addMeal(dateLog, meal);
         meal.setMealId(mealID);
-        System.out.println("Meal added successfully!");
         for (Ingredient ingredient : ingredientList) {
-            System.out.println("ingredient: " + ingredient.toString());
             MealQueries.addIngredients(mealID, ingredient);
         }
-        System.out.println("Ingredient added successfully!");
+        JOptionPane.showMessageDialog(null, "Meal added successfully!");
         // Update meals log
         StringBuilder historyEntry = new StringBuilder("Added meal: " + mealType + " - ");
 
@@ -175,13 +171,16 @@ public class DashboardController {
     private void addExercise() {
         // Your add exercise logic goes here
         //{exerciseName, [duration, intensity]}
+        ExercisePanel exercisePanel = dashboardGUI.getExercisePanel();
         List<Exercise> exerciseList = new ArrayList<>();
         List<String> exercises = new ArrayList<>();
         List<Integer> duration = new ArrayList<>();
         List<String> intensity = new ArrayList<>();
-        
+
+        GridBagLayout layout = (GridBagLayout) exercisePanel.getLayout();
+
         // Iterate over the components of the ExercisePanel
-        for (Component component : dashboardGUI.getExercisePanel().getComponents()) {
+        for (Component component : exercisePanel.getComponents()) {
             System.out.println("compo:" + component.getName());
             if (component instanceof JTextField) {
                 JTextField textField = (JTextField) component;
@@ -232,7 +231,7 @@ public class DashboardController {
         if (exerciseList.size() > 0) {
             int exerciseID = ExerciseQueries.logExercise(dateLog, exerciseList.get(0));
             exerciseList.get(0).setID(exerciseID);
-            System.out.println("Exercise added successfully!");
+            JOptionPane.showMessageDialog(null, "Keep up the good work!");
         } else {
             JPanel panel = new JPanel();
             JOptionPane.showMessageDialog(panel, "Please enter an exercise", "Error", JOptionPane.ERROR_MESSAGE);

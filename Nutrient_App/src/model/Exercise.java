@@ -9,6 +9,8 @@ public class Exercise {
     private int duration;
     private int id;
     private Intensity intensity;
+    private double caloriesBurnt;
+    private String date;
 
     public Exercise() {}
     public Exercise(String exerciseType, int duration, Intensity intensity) {
@@ -34,6 +36,14 @@ public class Exercise {
         else if (this.intensity == Intensity.medium) return Intensity.medium.toString();
         else return Intensity.high.toString();
     }
+
+    public double getCaloriesBurnt() {return caloriesBurnt;}
+
+    public String getDate() {return date;}
+
+    public void setDate(String date) {this.date = date;}
+
+    public void setCaloriesBurnt(double caloriesBurnt) {this.caloriesBurnt = caloriesBurnt;}
 
     public void setID(int id) {this.id = id;}
     
@@ -68,8 +78,9 @@ public class Exercise {
         return bmrIndex;
     }
 
-    public static double TDEEcalc(double bmr, String inten) {
+    public static double TDEEcalc(User user, String inten) {
         double tdee = 0;
+        double bmr = BMRcalc(user);
         if (inten.equals(Intensity.low.toString())) {tdee = bmr * 1.375;}
         else if (inten.equals(Intensity.medium.toString())) {tdee = bmr * 1.55;}
         else if (inten.equals(Intensity.high.toString())) {tdee = bmr * 1.725;}

@@ -6,9 +6,10 @@ import java.util.List;
 import src.client.LogData.Dashboard;
 import src.client.Authentication.LoginPage;
 import src.client.Authentication.SignUpPage;
+import src.server.DataServices.MealQueries;
 
 public class MainApplication {
-	private List<User> users;
+	private static User currentUser;
 	
 	public MainApplication() {
 		// TODO Auto-generated constructor stub
@@ -19,10 +20,18 @@ public class MainApplication {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				// Dashboard db = new Dashboard();
-				// SignUpPage signup = new SignUpPage();
 				LoginPage login = new LoginPage();
+
+
 			}
 		});
+	}
+
+	public static User getUser(){
+		return currentUser;
+	}
+
+	public static void setUser(User user){
+		currentUser = user;
 	}
 }

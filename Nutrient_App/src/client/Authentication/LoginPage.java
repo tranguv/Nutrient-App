@@ -6,16 +6,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.EventListener;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 import javax.swing.*;
 
 import src.client.LogData.Dashboard;
-import src.client.LogData.DashboardController;
-import src.client.LogData.DashboardGUI;
 import src.main.CombinedChartsPanel;
+import src.model.MainApplication;
 import src.model.User;
+import src.server.DataServices.MealQueries;
 import src.server.DataServices.UserQueries;
 
 public class LoginPage extends JFrame {
@@ -59,13 +59,24 @@ public class LoginPage extends JFrame {
 		        try {
 		            // Try to log in the user
 					boolean isValidUser = src.server.DataServices.UserQueries.validateUser(username, String.valueOf(password));
-		            
+
 					// If successful, show a success message.
 					if (isValidUser) {
 						UserQueries find = new UserQueries();
 						User user = find.getUserByID(find.getUserIDbyUsername(username));
-						CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla", user);
-						dashboardGUI.execute();
+						user.setId(find.getUserIDbyUsername(username));
+						MainApplication.setUser(user);
+						MealQueries meal = new MealQueries();
+						System.out.println("Sign In Succesfully");
+						if ( meal.userHasRecords(user.getId())){
+							CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
+							dashboardGUI.execute();
+						}else{
+							new Dashboard().callDashBoard();
+						}
+
+						dispose();
+
 
 					} else {
 						JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password!");
@@ -80,6 +91,10 @@ public class LoginPage extends JFrame {
 
 		// sign up
 		JLabel signup = new JLabel("Don't have account? Sign Up");
+		Font font = signup.getFont();
+		Map attributes = font.getAttributes();
+		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		signup.setFont(font.deriveFont(attributes));
 		signup.addMouseListener((MouseListener) new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dispose();

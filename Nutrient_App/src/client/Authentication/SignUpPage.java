@@ -45,12 +45,32 @@ public class SignUpPage extends JFrame{
 		JLabel dobLB = new JLabel("Date of Birth (dd/mm/yy):");
 
 		JComboBox<String> dayComboBox = new JComboBox<>();
-		for (int day = 1; day <= 31; day++) {
+		dayComboBox.addItem("01");
+		dayComboBox.addItem("02");
+		dayComboBox.addItem("03");
+		dayComboBox.addItem("04");
+		dayComboBox.addItem("05");
+		dayComboBox.addItem("06");
+		dayComboBox.addItem("07");
+		dayComboBox.addItem("08");
+		dayComboBox.addItem("09");
+		for (int day = 10; day <= 31; day++) {
 			dayComboBox.addItem(String.valueOf(day));
 		}
 
 		JComboBox<String> monthComboBox = new JComboBox<>();
-		for (int month = 1; month <= 12; month++) {
+		monthComboBox.addItem("01");
+		monthComboBox.addItem("02");
+		monthComboBox.addItem("03");
+		monthComboBox.addItem("04");
+		monthComboBox.addItem("05");
+		monthComboBox.addItem("06");
+		monthComboBox.addItem("07");
+		monthComboBox.addItem("08");
+		monthComboBox.addItem("09");
+
+
+		for (int month = 10; month <= 12; month++) {
 			monthComboBox.addItem(String.valueOf(month));
 		}
 
@@ -114,6 +134,7 @@ public class SignUpPage extends JFrame{
 						newUser.setAge(dob);
 						MainApplication.setUser(newUser);
 						JOptionPane.showMessageDialog(SignUpPage.this, "Signed up successfully!");
+						System.out.println("Signed up Succesfully");
 						new Dashboard().callDashBoard();
 						dispose();
 					} else {

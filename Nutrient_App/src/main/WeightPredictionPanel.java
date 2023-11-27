@@ -50,6 +50,7 @@ public class WeightPredictionPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 calculateWeightLoss();
+                System.out.println("Calculation Weight Loss Succesfully");
             }
         });
 

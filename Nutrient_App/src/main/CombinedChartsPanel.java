@@ -288,9 +288,14 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
     private JButton createLogDietButton() {
         JButton logDietButton = new JButton("Log Diet");
-        logDietButton.addActionListener(e -> new Dashboard().callDashBoard());
+        logDietButton.addActionListener(e -> {
+            new Dashboard().callDashBoard();
+            dispose();
+        });
+
         return logDietButton;
     }
+
 
     private void setupButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

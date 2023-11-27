@@ -19,6 +19,10 @@ public class DailyNutrientIntakeViz {
         this.totalNutrientAmt = totalNutrientAmt;
     }
 
+    public DailyNutrientIntakeViz() {
+
+    }
+
     public double getTotalQuantity() {
         return totalQuantity;
     }
@@ -44,7 +48,11 @@ public class DailyNutrientIntakeViz {
     }
 
 
+
+  
+
     public static List<DailyNutrientIntakeViz> getNutrientValConsumed(int userID, Date startDate, Date endDate) {
+
         List<DailyNutrientIntakeViz> nutritionDataList = new ArrayList<>();
         try (Connection connection = DBConfig.getConnection()) {
             String sql = "SELECT SUM(i.quantity) AS total_quantity, nn.NutrientName, round(((na.NutrientValue / 100) * SUM(i.quantity)), 2) AS total_nutrient_amt\n" +
@@ -92,10 +100,15 @@ public class DailyNutrientIntakeViz {
         return top5Nutrients;
     }
 
+    
+
     public static List<DailyNutrientIntakeViz> getRemainNutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
         Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
         List<DailyNutrientIntakeViz> remainNutrient = nutritionDataList.subList(5, nutritionDataList.size());
         return remainNutrient;
     }
+
+
+
 
 }

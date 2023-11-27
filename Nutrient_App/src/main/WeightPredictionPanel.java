@@ -1,6 +1,8 @@
 package src.main;
 
 import org.jfree.data.category.DefaultCategoryDataset;
+import src.model.MainApplication;
+import src.server.DataServices.DailyNutrientIntakeViz;
 import src.server.DataServices.ExerciseQueries;
 import src.server.DataServices.MealQueries;
 
@@ -95,8 +97,9 @@ public class WeightPredictionPanel extends JPanel {
         // Your weight loss calculation logic here
         long numberDay = startDate.datesUntil(endDate).count();
 //        double calorieIntake = ExerciseQueries.getCaloriesIntake(2); // Replace with the actual user id
-        double calorieIntake = 0;
-        double caloriesBurned = ExerciseQueries.getCaloriesExpended(2); // Replace with the actual user i
+//        double calorieIntake = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
+        double calorieIntake = 0.0;
+        double caloriesBurned = ExerciseQueries.getCaloriesExpended(MainApplication.getUser().getId()); // Replace with the actual user i
         double calorieDeficit = caloriesBurned - calorieIntake;
         double fatLoss = calorieDeficit / 7700;
         double averageCalorieIntake = calorieIntake / MealQueries.getNumOfMeals(2);

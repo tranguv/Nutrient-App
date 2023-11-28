@@ -10,11 +10,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.List;
 
 public class WeightPredictionPanel extends JPanel {
 
@@ -94,12 +96,23 @@ public class WeightPredictionPanel extends JPanel {
         resultLabel.setText("Weight Loss Prediction: " + weightLoss + " kg");
     }
 
-    public String calculateWeightLossForDateRange(LocalDate startDate, LocalDate endDate) {
+    public static void main(String[] args) {
+        LocalDate start = LocalDate.of(2003, 06, 22);
+        LocalDate end = LocalDate.of(2023, 11, 28);
+        System.out.println(calculateWeightLossForDateRange(start, end));
+    }
+
+    public static String calculateWeightLossForDateRange(LocalDate startDate, LocalDate endDate) {
         // Your weight loss calculation logic here
         long numberDay = startDate.datesUntil(endDate).count();
 //        double calorieIntake = ExerciseQueries.getCaloriesIntake(2); // Replace with the actual user id
-//        double calorieIntake = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
+        Date start = Date.valueOf(startDate);
+        Date end = Date.valueOf(endDate);
+        List<DailyNutrientIntakeViz> listNutrient = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), start, end);
         double calorieIntake = 0.0;
+        for (DailyNutrientIntakeViz d: listNutrient){
+            calorieIntake += d.getTotalNutrientAmt();
+        }
         double caloriesBurned = ExerciseQueries.getCaloriesExpended(MainApplication.getUser().getId()); // Replace with the actual user i
         double calorieDeficit = caloriesBurned - calorieIntake;
         double fatLoss = calorieDeficit / 7700;

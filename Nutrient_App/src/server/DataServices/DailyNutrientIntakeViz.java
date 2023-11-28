@@ -47,10 +47,6 @@ public class DailyNutrientIntakeViz {
         this.totalNutrientAmt = totalNutrientAmount;
     }
 
-
-
-  
-
     public static List<DailyNutrientIntakeViz> getNutrientValConsumed(int userID, Date startDate, Date endDate) {
 
         List<DailyNutrientIntakeViz> nutritionDataList = new ArrayList<>();
@@ -99,8 +95,6 @@ public class DailyNutrientIntakeViz {
         List<DailyNutrientIntakeViz> top5Nutrients = nutritionDataList.subList(0, 5);
         return top5Nutrients;
     }
-
-    
 
     public static List<DailyNutrientIntakeViz> getRemainNutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
         Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));

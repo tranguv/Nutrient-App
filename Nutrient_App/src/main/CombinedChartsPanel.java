@@ -99,6 +99,43 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
     }
 
+    public static void main(String[] args) {
+        String start = "2023-11-15";
+        System.out.println(start);
+        String end = "2023-11-22";
+        System.out.println(end);
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(start, formatter);
+        LocalDate localDate2 = LocalDate.parse(end, formatter);
+        Date startDate = Date.valueOf(localDate);
+        Date endDate = Date.valueOf(localDate2);
+
+        List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
+        System.out.println(daily);
+
+        List<DailyNutrientIntakeViz> top5Nutrients;
+        if (daily.size() >= 5) {
+            top5Nutrients = daily.subList(0,5);
+            List<DailyNutrientIntakeViz> remain = daily.subList(5, daily.size());
+            int totalQuantity = 0;
+            double totalNutAmt = 0;
+            for (DailyNutrientIntakeViz i : remain) {
+                totalQuantity += i.getTotalQuantity();
+                totalNutAmt += i.getTotalNutrientAmt();
+            }
+            DailyNutrientIntakeViz combined = new DailyNutrientIntakeViz(totalQuantity, "Other", totalNutAmt);
+            top5Nutrients.add(combined);
+        }
+        else top5Nutrients = daily.subList(0, daily.size());
+
+        HashMap<String, Double> top5 = new HashMap<>();
+        for (DailyNutrientIntakeViz d : top5Nutrients) {
+            top5.put(d.getNutrientName(), d.getTotalNutrientAmt());
+        }
+    }
+
     private void initializePieChartData() throws ParseException {
         // Initialize Pie Chart Data
 

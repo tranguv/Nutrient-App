@@ -59,9 +59,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         }
         initializeLineChartData();
         initializePieChartData();
-        System.out.println("sau pire chart");
         initializeDietAlignData();
-        System.out.println("sau diet align");
 
     }
 
@@ -287,13 +285,13 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
     private JFreeChart createBarLineChart() {
         return ChartFactory.createBarChart(
-                "Bar/Line Chart", "Category", "Value", dataset,
+                "Daily Calories Intake and Exercises Expenditure", "Category", "Value", dataset,
                 PlotOrientation.VERTICAL, true, true, false);
     }
 
     private JFreeChart createPieChart() {
         return ChartFactory.createPieChart(
-                "Pie Chart", pieDataset, true, true, false);
+                "Average Daily Portions Of Nutrients ", pieDataset, true, true, false);
     }
 
     private JPanel createButtonPanel() {

@@ -30,7 +30,7 @@ import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 
-public class CombinedChartsPanel extends ApplicationFrame {
+
 public class CombinedChartsPanel extends ApplicationFrame {
     private DatePanel datePanelStart, datePanelEnd;
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -55,14 +55,12 @@ public class CombinedChartsPanel extends ApplicationFrame {
         if (datePanelStart == null || datePanelEnd == null) {
             // Handle the situation where datePanelStart or datePanelEnd is null
             // You might want to show an error message or set default values
-            System.out.println("date panel null");
+
             return;
         }
         initializeLineChartData();
         initializePieChartData();
-        System.out.println("sau pire chart");
-        initializeDietAlignData();
-        System.out.println("sau diet align");
+
 
     }
 
@@ -114,7 +112,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         Date endDate = Date.valueOf(localDate2);
 
         List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
-        System.out.println(daily);
+
 
         List<DailyNutrientIntakeViz> top5Nutrients;
         if (daily.size() >= 5) {
@@ -158,7 +156,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         Date endDate = Date.valueOf(localDate2);
 
         List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
-        System.out.println(daily);
+
 
         List<DailyNutrientIntakeViz> top5Nutrients;
         if (daily.size() >= 5) {

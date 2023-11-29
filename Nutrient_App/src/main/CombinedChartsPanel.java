@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class CombinedChartsPanel extends ApplicationFrame {
+public class CombinedChartsPanel extends ApplicationFrame {
     private DatePanel datePanelStart, datePanelEnd;
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private DefaultPieDataset pieDataset = new DefaultPieDataset();

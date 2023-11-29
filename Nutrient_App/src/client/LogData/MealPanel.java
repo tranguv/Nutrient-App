@@ -137,7 +137,7 @@ public class MealPanel extends JPanel {
             case 12: //nuts n seed
             case 16: //legumes
             case 11: // vegetables
-                units = new String[]{"ml"};
+                units = new String[]{"ml", "g"};
                 break;
             case 14: //beverages
                 units = new String[]{"ml", "cup"};

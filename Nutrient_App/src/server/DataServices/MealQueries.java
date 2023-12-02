@@ -514,35 +514,54 @@ public class MealQueries {
 		}
 	}
 
-	public static HashMap<String, Double> getNutAmt(int userID) {
-	        HashMap<String, Double> maps = new HashMap<>();
-	        try (Connection connection = DBConfig.getConnection()) {
-	            String sql = "select dl.userID, dl.date_log, na.FoodID, nn.NutrientName, na.NutrientNameID, na.NutrientValue, ROUND(((na.NutrientValue / 100) * i.quantity), 2) AS amt_consumed\n" +
-	                    "from DATE_LOG dl, NUTRIENT_NAME nn\n" +
-	                    "join NUTRIENT_AMOUNT na ON nn.NutrientNameID = na.NutrientNameID\n" +
-	                    "join INGREDIENTS i ON i.FoodID = na.FoodID\n" +
-	                    "where\n" +
-	                    "\tdl.userID = ?\n" +
-	                    "\tand (nn.NutrientName = 'PROTEIN'\n" +
-	                    "    or nn.NutrientName like 'CARB%'\n" +
-	                    "    or nn.NutrientName like 'VITAMIN%' \n" +
-	                    "    or nn.NutrientName = 'ENERGY (KILOCALORIES)')\n" +
-	                    "group by nn.NutrientName\n" +
-	                    "; ";
-	            try (PreparedStatement pState = connection.prepareStatement(sql)) {
-	                pState.setInt(1, userID);
-	                try (ResultSet resultSet = pState.executeQuery()) {
-	                    while (resultSet.next()) {
-	                        String NutrientName = resultSet.getString("NutrientName");
-	                        Double nutAmt = resultSet.getDouble("amt_consumed");
-	                        maps.put(NutrientName,nutAmt);
-	                    }
-	                }
-	                return maps;
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            throw new RuntimeException("Error accessing the database", e);
-	        }
-	    }
+	public static void main(String[] args) {
+		System.out.println(getNutAmt(1));
+	}
+
+	public static HashMap<String, Float> getNutAmt(int userID) {
+		HashMap<String, Float> maps = new HashMap<>();
+		try (Connection connection = DBConfig.getConnection()) {
+			String sql = "SELECT\n" +
+					"    dl.userID,\n" +
+					"    dl.date_log,\n" +
+					"    na.FoodID,\n" +
+					"    nn.NutrientName,\n" +
+					"    na.NutrientNameID,\n" +
+					"    na.NutrientValue,\n" +
+					"    ROUND(((na.NutrientValue / 100) * COALESCE(i.quantity, 1)), 2) AS amt_consumed\n" +
+					"FROM\n" +
+					"    DATE_LOG dl\n" +
+					"JOIN\n" +
+					"    NUTRIENT_NAME nn ON 1 = 1  -- Add the appropriate join condition here\n" +
+					"JOIN\n" +
+					"    NUTRIENT_AMOUNT na ON nn.NutrientNameID = na.NutrientNameID\n" +
+					"JOIN\n" +
+					"    INGREDIENTS i ON i.FoodID = na.FoodID\n" +
+					"JOIN\n" +
+					"    MEAL_DETAILS md ON md.meal_id = i.meal_id\n" +
+					"WHERE\n" +
+					"    dl.userID = ?\n" +
+					"    AND (nn.NutrientName = 'PROTEIN'\n" +
+					"        OR nn.NutrientName LIKE 'CARB%'\n" +
+					"        OR nn.NutrientName LIKE 'VITAMIN%'\n" +
+					"        OR nn.NutrientName = 'ENERGY (KILOCALORIES)')\n" +
+					"GROUP BY\n" +
+					"    nn.NutrientName;\n";
+			try (PreparedStatement pState = connection.prepareStatement(sql)) {
+				pState.setInt(1, userID);
+				try (ResultSet resultSet = pState.executeQuery()) {
+					while (resultSet.next()) {
+						String NutrientName = resultSet.getString("NutrientName");
+						System.out.println(resultSet.getDouble("amt_consumed"));
+						Float nutAmt = resultSet.getFloat("amt_consumed");
+						maps.put(NutrientName,nutAmt);
+					}
+				}
+				return maps;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error accessing the database", e);
+		}
+	}
 }

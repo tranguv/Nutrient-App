@@ -30,7 +30,6 @@ import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 
-
 public class CombinedChartsPanel extends ApplicationFrame {
     private DatePanel datePanelStart, datePanelEnd;
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -55,12 +54,12 @@ public class CombinedChartsPanel extends ApplicationFrame {
         if (datePanelStart == null || datePanelEnd == null) {
             // Handle the situation where datePanelStart or datePanelEnd is null
             // You might want to show an error message or set default values
-
+            System.out.println("date panel null");
             return;
         }
         initializeLineChartData();
         initializePieChartData();
-
+        initializeDietAlignData();
 
     }
 
@@ -85,6 +84,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
         ArrayList<Exercise> exercises = ExerciseQueries.getExercisesByDate(user.getId(), startDate, endDate);
         HashMap<String, HashMap<Double, String>> top5 = new HashMap<>();
+        HashMap<String, Double> dailyCalories =  MealQueries.getDailyKcalIntake(user.getId(), startDate, endDate);
         for (Exercise e : exercises) {
             if (!top5.containsKey(e.getName())) {
                 top5.put(e.getName(), new HashMap<>());
@@ -93,7 +93,12 @@ public class CombinedChartsPanel extends ApplicationFrame {
         }
 
         for (String key : top5.keySet()) {
+            System.out.println(top5.get(key).keySet().iterator().next() + " " +  key  + " " +  top5.get(key).values().iterator().next());
             dataset.addValue(top5.get(key).keySet().iterator().next(), key, top5.get(key).values().iterator().next());
+        }
+
+        for(String key : dailyCalories.keySet()) {
+            dataset.addValue(dailyCalories.get(key), dailyCalories.values().iterator().next(), key);
         }
 
     }
@@ -112,7 +117,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         Date endDate = Date.valueOf(localDate2);
 
         List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
-
+        System.out.println(daily);
 
         List<DailyNutrientIntakeViz> top5Nutrients;
         if (daily.size() >= 5) {
@@ -156,7 +161,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         Date endDate = Date.valueOf(localDate2);
 
         List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
-
+        System.out.println(daily);
 
         List<DailyNutrientIntakeViz> top5Nutrients;
         if (daily.size() >= 5) {
@@ -280,13 +285,13 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
     private JFreeChart createBarLineChart() {
         return ChartFactory.createBarChart(
-                "Bar/Line Chart", "Category", "Value", dataset,
+                "Daily Calories Intake and Exercises Expenditure", "Category", "Value", dataset,
                 PlotOrientation.VERTICAL, true, true, false);
     }
 
     private JFreeChart createPieChart() {
         return ChartFactory.createPieChart(
-                "Pie Chart", pieDataset, true, true, false);
+                "Average Daily Portions Of Nutrients ", pieDataset, true, true, false);
     }
 
     private JPanel createButtonPanel() {

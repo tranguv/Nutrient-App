@@ -97,27 +97,29 @@ public class WeightPredictionPanel extends JPanel {
     }
 
     public static void main(String[] args) {
-        LocalDate start = LocalDate.of(2003, 06, 22);
-        LocalDate end = LocalDate.of(2023, 11, 28);
+        LocalDate start = LocalDate.of(2023, 11, 28);
+        LocalDate end = LocalDate.of(2024, 1, 28);
         System.out.println(calculateWeightLossForDateRange(start, end));
     }
 
     public static String calculateWeightLossForDateRange(LocalDate startDate, LocalDate endDate) {
         // Your weight loss calculation logic here
+        int userID = MainApplication.getUser().getId();
         long numberDay = startDate.datesUntil(endDate).count();
 //        double calorieIntake = ExerciseQueries.getCaloriesIntake(2); // Replace with the actual user id
         Date start = Date.valueOf(startDate);
         Date end = Date.valueOf(endDate);
-        List<DailyNutrientIntakeViz> listNutrient = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), start, end);
+        List<DailyNutrientIntakeViz> listNutrient = DailyNutrientIntakeViz.getNutrientValConsumed(userID, start, end);
         double calorieIntake = 0.0;
         for (DailyNutrientIntakeViz d: listNutrient){
             calorieIntake += d.getTotalNutrientAmt();
         }
-        double caloriesBurned = ExerciseQueries.getCaloriesExpended(MainApplication.getUser().getId()); // Replace with the actual user i
-        double calorieDeficit = caloriesBurned - calorieIntake;
-        double fatLoss = calorieDeficit / 7700;
-        double averageCalorieIntake = calorieIntake / MealQueries.getNumOfMeals(2);
-        double averageCalorieBurned = caloriesBurned / ExerciseQueries.getNumberOfExercises(2);
+        double caloriesBurned = ExerciseQueries.getCaloriesExpended(userID); // Replace with the actual user i
+//        double calorieDeficit = caloriesBurned - calorieIntake;
+        double averageCalorieIntake = calorieIntake / MealQueries.getNumOfMeals(userID);
+        double averageCalorieBurned = caloriesBurned / ExerciseQueries.getNumberOfExercises(userID);
+        double averageCalorieDeficit = averageCalorieBurned - averageCalorieIntake;
+        double fatLoss = averageCalorieDeficit / 7700;
         double projectedWeightLoss = fatLoss * numberDay;
 
         // This is a placeholder method. You should replace it with your actual calculation.

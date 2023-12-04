@@ -21,79 +21,179 @@ public class MealPanel extends JPanel {
         addMealFields();
     }
 
-    private void addMealFields() {
+//    private void addMealFields() {
+//        GridBagConstraints gbc = new GridBagConstraints();
+//        gbc.insets = new Insets(5, 5, 5, 5);
+//        gbc.fill = GridBagConstraints.HORIZONTAL;
+//
+//        // Meal Type Label
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        add(new JLabel("Meal Type:"), gbc);
+//
+//        // Meal Type ComboBox
+//        gbc.gridx++;
+//        mealTypeComboBox = new JComboBox<>(new String[]{"Breakfast", "Lunch", "Dinner", "Snack"});
+//        mealTypeComboBox.setPreferredSize(new Dimension(100, 30));
+//        add(mealTypeComboBox, gbc);
+//
+//        // Ingredient Name Label
+//        gbc.gridx++;
+//        add(new JLabel("Ingredient Name:"), gbc);
+//
+//        // Ingredient ComboBox
+//        gbc.gridx++;
+//        JComboBox comboBox = new JComboBox(foodItems.toArray());
+//        autoSuggest = new S12FocusLost(comboBox);
+//        ingredientCombo = comboBox;
+//        ingredientCombo.setPreferredSize(new Dimension(200, 30));
+//        add(ingredientCombo, gbc);
+//
+//        // Food Group Label
+//        gbc.gridx++;
+//        add(new JLabel("Food Group:"), gbc);
+//
+//        // Food Group Display Field
+//        gbc.gridx++;
+//        JTextField foodGroup = new JTextField();
+//        foodGroup.setPreferredSize(new Dimension(200, 30));
+//        foodGroup.setEditable(false);
+//        ingredientCombo.addActionListener(e -> {
+//            String selectedIngredient = ingredientCombo.getSelectedItem().toString();
+//            String foodGroupName = MealQueries.getFoodGroupName(selectedIngredient);
+//            foodGroup.setText(foodGroupName);
+//            updateUnitCombo(foodGroup.getText());
+//        });
+//        add(foodGroup, gbc);
+//
+//        // Quantity Label
+//        gbc.gridx++;
+//        add(new JLabel("Quantity:"), gbc);
+//
+//        // Quantity Field
+//        gbc.gridx++;
+//        quantityField = new JTextField();
+//        quantityField.setPreferredSize(new Dimension(100, 30));
+//        add(quantityField, gbc);
+//
+//        // Unit Label
+//        gbc.gridx++;
+//        add(new JLabel("Unit:"), gbc);
+//
+//        // Unit Field
+//        gbc.gridx++;
+//        String units[] = {"g", "ml", "cup"};
+//        unitCombo = new JComboBox<>(units);
+//        unitCombo.setPreferredSize(new Dimension(100, 30));
+//        add(unitCombo, gbc);
+//
+//        mealTypeComboBox.setName("mealtype");
+//        ingredientCombo.setName("ingredient");
+//        quantityField.setName("quantity");
+//        unitCombo.setName("unit");
+//        foodGroup.setName("foodgroup");
+//
+//        // Add Ingredient Button
+//        JButton addIngredientButton = new JButton("+");
+//        addIngredientButton.setPreferredSize(new Dimension(50, 30));
+//        gbc.gridx++;
+//        gbc.gridwidth = 1;
+//        gbc.fill = GridBagConstraints.HORIZONTAL;
+//        add(addIngredientButton, gbc);
+//
+//        addIngredientButton.addActionListener(e -> {
+//            addIngredientFields();
+//            revalidate();
+//            repaint();
+//        });
+//    }
+//
+//
+private void addMealFields() {
+    GridBagConstraints gbc = initializeGridBagConstraints();
+
+    addMealTypeComponents(gbc);
+    addIngredientComponents(gbc);
+    addFoodGroupComponents(gbc);
+    addQuantityComponents(gbc);
+    addUnitComponents(gbc);
+    addIngredientButton(gbc);
+}
+
+    private GridBagConstraints initializeGridBagConstraints() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        return gbc;
+    }
 
-        // Meal Type Label
+    private void addMealTypeComponents(GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Meal Type:"), gbc);
 
-        // Meal Type ComboBox
         gbc.gridx++;
         mealTypeComboBox = new JComboBox<>(new String[]{"Breakfast", "Lunch", "Dinner", "Snack"});
         mealTypeComboBox.setPreferredSize(new Dimension(100, 30));
         add(mealTypeComboBox, gbc);
+    }
 
-        // Ingredient Name Label
+    private void addIngredientComponents(GridBagConstraints gbc) {
         gbc.gridx++;
         add(new JLabel("Ingredient Name:"), gbc);
 
-        // Ingredient ComboBox
         gbc.gridx++;
         JComboBox comboBox = new JComboBox(foodItems.toArray());
         autoSuggest = new S12FocusLost(comboBox);
         ingredientCombo = comboBox;
         ingredientCombo.setPreferredSize(new Dimension(200, 30));
         add(ingredientCombo, gbc);
+    }
 
-        // Food Group Label
+    private void addFoodGroupComponents(GridBagConstraints gbc) {
         gbc.gridx++;
         add(new JLabel("Food Group:"), gbc);
 
-        // Food Group Display Field
         gbc.gridx++;
         JTextField foodGroup = new JTextField();
         foodGroup.setPreferredSize(new Dimension(200, 30));
         foodGroup.setEditable(false);
+        add(foodGroup, gbc);
+
+        setupFoodGroupListener(foodGroup);
+    }
+
+    private void setupFoodGroupListener(JTextField foodGroup) {
         ingredientCombo.addActionListener(e -> {
             String selectedIngredient = ingredientCombo.getSelectedItem().toString();
             String foodGroupName = MealQueries.getFoodGroupName(selectedIngredient);
             foodGroup.setText(foodGroupName);
             updateUnitCombo(foodGroup.getText());
         });
-        add(foodGroup, gbc);
+    }
 
-        // Quantity Label
+    private void addQuantityComponents(GridBagConstraints gbc) {
         gbc.gridx++;
         add(new JLabel("Quantity:"), gbc);
 
-        // Quantity Field
         gbc.gridx++;
         quantityField = new JTextField();
         quantityField.setPreferredSize(new Dimension(100, 30));
         add(quantityField, gbc);
+    }
 
-        // Unit Label
+    private void addUnitComponents(GridBagConstraints gbc) {
         gbc.gridx++;
         add(new JLabel("Unit:"), gbc);
 
-        // Unit Field
         gbc.gridx++;
         String units[] = {"g", "ml", "cup"};
         unitCombo = new JComboBox<>(units);
         unitCombo.setPreferredSize(new Dimension(100, 30));
         add(unitCombo, gbc);
+    }
 
-        mealTypeComboBox.setName("mealtype");
-        ingredientCombo.setName("ingredient");
-        quantityField.setName("quantity");
-        unitCombo.setName("unit");
-        foodGroup.setName("foodgroup");
-
-        // Add Ingredient Button
+    private void addIngredientButton(GridBagConstraints gbc) {
         JButton addIngredientButton = new JButton("+");
         addIngredientButton.setPreferredSize(new Dimension(50, 30));
         gbc.gridx++;
@@ -107,6 +207,7 @@ public class MealPanel extends JPanel {
             repaint();
         });
     }
+
 
     private void updateUnitCombo(String foodGroupName) {
         String[] units;

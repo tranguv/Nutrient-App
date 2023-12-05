@@ -20,14 +20,9 @@ public class User {
 
 	public User() {
 	}
-
-	//User newUser = new User(username, String.valueOf(password), "Dang", "Peos", "M", dob, weight, height, "metric");
-	public User(String username, String password, String fName, String lName, String sex, String dateOfBirth, double weight, double height, String units) {
+	public User(String username, String password, String dateOfBirth, double weight, double height, String units) {
 		super();
 		this.dateOfBirth = dateOfBirth;
-		this.fName = fName;
-		this.lName = lName;
-		this.sex = sex;
 		this.height = height;
 		this.weight = weight;
 		this.username = username;
@@ -48,10 +43,6 @@ public class User {
 		return fName;
 	}
 
-	public void getFirstName(String fName) {
-		this.fName = fName;
-	}
-
 	public String getLastName() {
 		return lName;
 	}
@@ -59,11 +50,6 @@ public class User {
 	public int getAge() {
 		return age;
 	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
 
 	public int setAge(String dob) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -115,10 +101,6 @@ public class User {
 
 	public String getUsername() {
 		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getPassword() {

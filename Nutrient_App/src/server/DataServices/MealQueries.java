@@ -194,23 +194,14 @@ public class MealQueries {
 					while (resultSet.next()) {
 						//FOOD NAME TABLE
 						int foodID = resultSet.getInt("FoodID");
-						String foodDescription = resultSet.getString("FoodDescriptionF");
-						String foodDescriptionF = resultSet.getString("FoodDescription");
-
+						String foodDescription = resultSet.getString("FoodDescription");
 
 						//FOOD GROUP TABLE
 						int foodGroupID = resultSet.getInt("FoodGroupID");
 						String foodGroupName = resultSet.getString("FoodGroupName");
-						String foodGroupNameF = resultSet.getString("FoodGroupNameF");
 
-						//FOOD SOURCE TABLE
-						int foodSourceID = resultSet.getInt("FoodSourceID");
-						String foodSourceDescription = resultSet.getString("FoodSourceDescription");
-						String foodSourceDescriptionF = resultSet.getString("FoodSourceDescriptionF");
-
-						FoodItem fi = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
+						FoodItem fi = new FoodItem(foodID, foodGroupID, foodDescription, foodGroupName);
 						foodItem.add(fi);
-						// foodItem[index++] = fi;
 					}
 				}
 				return foodItem;
@@ -294,21 +285,13 @@ public class MealQueries {
 				try (ResultSet resultSet = pState.executeQuery()) {
 					while (resultSet.next()) {
 						//FOOD NAME TABLE
-						String foodDescription = resultSet.getString("FoodDescriptionF");
-						String foodDescriptionF = resultSet.getString("FoodDescription");
-
+						String foodDescription = resultSet.getString("FoodDescription");
 
 						//FOOD GROUP TABLE
 						int foodGroupID = resultSet.getInt("FoodGroupID");
 						String foodGroupName = resultSet.getString("FoodGroupName");
-						String foodGroupNameF = resultSet.getString("FoodGroupNameF");
 
-						//FOOD SOURCE TABLE
-						int foodSourceID = resultSet.getInt("FoodSourceID");
-						String foodSourceDescription = resultSet.getString("FoodSourceDescription");
-						String foodSourceDescriptionF = resultSet.getString("FoodSourceDescriptionF");
-
-						foodItem = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
+						foodItem = new FoodItem(foodID, foodGroupID, foodDescription, foodGroupName);
 					}
 				}
 				return foodItem;
@@ -356,20 +339,12 @@ public class MealQueries {
 					while (resultSet.next()) {
 						//FOOD NAME TABLE
 						int foodID = resultSet.getInt("FoodID");
-						String foodDescriptionF = resultSet.getString("FoodDescription");
-
 
 						//FOOD GROUP TABLE
 						int foodGroupID = resultSet.getInt("FoodGroupID");
 						String foodGroupName = resultSet.getString("FoodGroupName");
-						String foodGroupNameF = resultSet.getString("FoodGroupNameF");
 
-						//FOOD SOURCE TABLE
-						int foodSourceID = resultSet.getInt("FoodSourceID");
-						String foodSourceDescription = resultSet.getString("FoodSourceDescription");
-						String foodSourceDescriptionF = resultSet.getString("FoodSourceDescriptionF");
-
-						foodItem = new FoodItem(foodID, foodGroupID, foodSourceID, foodDescription, foodDescriptionF, foodGroupName, foodGroupNameF, foodSourceDescription, foodSourceDescriptionF);
+						foodItem = new FoodItem(foodID, foodGroupID, foodDescription, foodGroupName);
 					}
 				}
 				return foodItem;

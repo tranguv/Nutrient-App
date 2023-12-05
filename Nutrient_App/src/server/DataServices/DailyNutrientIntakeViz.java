@@ -90,6 +90,18 @@ public class DailyNutrientIntakeViz {
         return nutritionDataList;
     }
 
+
+//    public static List<DailyNutrientIntakeViz> getTop5Nutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
+//        Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
+//        List<DailyNutrientIntakeViz> top5Nutrients = nutritionDataList.subList(0, 5);
+//        return top5Nutrients;
+//    }
+//
+//    public static List<DailyNutrientIntakeViz> getRemainNutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
+//        Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
+//        List<DailyNutrientIntakeViz> remainNutrient = nutritionDataList.subList(5, nutritionDataList.size());
+//        return remainNutrient;
+
     public static List<DailyNutrientIntakeViz> getTop5Nutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
         Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
         List<DailyNutrientIntakeViz> top5Nutrients = nutritionDataList.subList(0, 5);
@@ -132,5 +144,6 @@ public class DailyNutrientIntakeViz {
 //            throw new RuntimeException("Error accessing the database", e);
 //        }
 //        return nutritionValues;
+
 //    }
 }

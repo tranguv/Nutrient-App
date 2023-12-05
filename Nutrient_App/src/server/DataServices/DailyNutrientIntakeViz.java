@@ -19,6 +19,10 @@ public class DailyNutrientIntakeViz {
         this.totalNutrientAmt = totalNutrientAmt;
     }
 
+    public DailyNutrientIntakeViz() {
+
+    }
+
     public double getTotalQuantity() {
         return totalQuantity;
     }
@@ -43,8 +47,8 @@ public class DailyNutrientIntakeViz {
         this.totalNutrientAmt = totalNutrientAmount;
     }
 
-
     public static List<DailyNutrientIntakeViz> getNutrientValConsumed(int userID, Date startDate, Date endDate) {
+
         List<DailyNutrientIntakeViz> nutritionDataList = new ArrayList<>();
         try (Connection connection = DBConfig.getConnection()) {
             String sql = "SELECT SUM(i.quantity) AS total_quantity, nn.NutrientName, round(((na.NutrientValue / 100) * SUM(i.quantity)), 2) AS total_nutrient_amt\n" +
@@ -86,6 +90,7 @@ public class DailyNutrientIntakeViz {
         return nutritionDataList;
     }
 
+
 //    public static List<DailyNutrientIntakeViz> getTop5Nutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
 //        Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
 //        List<DailyNutrientIntakeViz> top5Nutrients = nutritionDataList.subList(0, 5);
@@ -96,5 +101,49 @@ public class DailyNutrientIntakeViz {
 //        Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
 //        List<DailyNutrientIntakeViz> remainNutrient = nutritionDataList.subList(5, nutritionDataList.size());
 //        return remainNutrient;
+
+    public static List<DailyNutrientIntakeViz> getTop5Nutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
+        Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
+        List<DailyNutrientIntakeViz> top5Nutrients = nutritionDataList.subList(0, 5);
+        return top5Nutrients;
+    }
+
+    public static List<DailyNutrientIntakeViz> getRemainNutrient(List<DailyNutrientIntakeViz> nutritionDataList) {
+        Collections.sort(nutritionDataList, (data1, data2) -> Double.compare(data2.getTotalNutrientAmt(), data1.getTotalNutrientAmt()));
+        List<DailyNutrientIntakeViz> remainNutrient = nutritionDataList.subList(5, nutritionDataList.size());
+        return remainNutrient;
+    }
+
+    // GET NUTRITION VALUES (PROTEINS, CARB, VITAMINS AND OTHERS) FOR A MEAL
+//    public static HashMap<String, Double> getNutritionValuesForMeal(int userID, int mealID) {
+//        HashMap<String, Double> nutritionValues = new HashMap<>();
+//        try (Connection connection = DBConfig.getConnection()) {
+//            String sql = String.format("select dl.userID, dl.date_log, na.FoodID, nn.NutrientName, na.NutrientNameID, na.NutrientValue, ROUND(((na.NutrientValue / 100) * i.quantity), 2) AS amt_consumed\n" +
+//                    "from DATE_LOG dl, NUTRIENT_NAME nn\n" +
+//                    "join NUTRIENT_AMOUNT na ON nn.NutrientNameID = na.NutrientNameID\n" +
+//                    "join INGREDIENTS i ON i.FoodID = na.FoodID\n" +
+//                    "where na.FoodID = 16\n" +
+//                    "    and dl.userID = %d\n" +
+//                    "    and (nn.NutrientName = 'PROTEIN'\n" +
+//                    "    or nn.NutrientName like 'CARB%'\n" +
+//                    "    or nn.NutrientName like 'VITAMIN%' \n" +
+//                    "    or nn.NutrientName = 'ENERGY (KILOCALORIES)')\n" +
+//                    "group by nn.NutrientName\n", userID);
+//            try (PreparedStatement pState = connection.prepareStatement(sql)) {
+//                try (ResultSet resultSet = pState.executeQuery()) {
+//                    while (resultSet.next()) {
+//                        String nutrientName = resultSet.getString("NutrientName");
+//                        double totalNutrientAmount = resultSet.getDouble("total_nutrient_amt");
+//                        nutritionValues.put(nutrientName, totalNutrientAmount);
+//                    }
+//                }
+//            }
+//
+//        }catch (SQLException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Error accessing the database", e);
+//        }
+//        return nutritionValues;
+
 //    }
 }

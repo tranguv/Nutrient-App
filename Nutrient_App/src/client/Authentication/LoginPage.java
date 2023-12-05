@@ -67,6 +67,7 @@ public class LoginPage extends JFrame {
 						user.setId(find.getUserIDbyUsername(username));
 						MainApplication.setUser(user);
 						MealQueries meal = new MealQueries();
+						System.out.println("Sign In Succesfully");
 						if ( meal.userHasRecords(user.getId())){
 							CombinedChartsPanel dashboardGUI = new CombinedChartsPanel("blabla");
 							dashboardGUI.execute();

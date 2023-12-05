@@ -59,9 +59,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
         }
         initializeLineChartData();
         initializePieChartData();
-        System.out.println("sau pire chart");
         initializeDietAlignData();
-        System.out.println("sau diet align");
 
     }
 
@@ -86,6 +84,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
         ArrayList<Exercise> exercises = ExerciseQueries.getExercisesByDate(user.getId(), startDate, endDate);
         HashMap<String, HashMap<Double, String>> top5 = new HashMap<>();
+        HashMap<String, Double> dailyCalories =  MealQueries.getDailyKcalIntake(user.getId(), startDate, endDate);
         for (Exercise e : exercises) {
             if (!top5.containsKey(e.getName())) {
                 top5.put(e.getName(), new HashMap<>());
@@ -94,23 +93,51 @@ public class CombinedChartsPanel extends ApplicationFrame {
         }
 
         for (String key : top5.keySet()) {
+            System.out.println(top5.get(key).keySet().iterator().next() + " " +  key  + " " +  top5.get(key).values().iterator().next());
             dataset.addValue(top5.get(key).keySet().iterator().next(), key, top5.get(key).values().iterator().next());
         }
-//        Random rand = new Random();
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-01");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-02");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-03");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-04");
-//        dataset.addValue(rand.nextInt(2000), "Calories", "2023-01-05");
-//
-//
-//        // Exercise data
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-01");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-02");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-03");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-04");
-//        dataset.addValue(rand.nextInt(500), "Exercise", "2023-01-05");
 
+        for(String key : dailyCalories.keySet()) {
+            dataset.addValue(dailyCalories.get(key), dailyCalories.values().iterator().next(), key);
+        }
+
+    }
+
+    public static void main(String[] args) {
+        String start = "2023-11-15";
+        System.out.println(start);
+        String end = "2023-11-22";
+        System.out.println(end);
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(start, formatter);
+        LocalDate localDate2 = LocalDate.parse(end, formatter);
+        Date startDate = Date.valueOf(localDate);
+        Date endDate = Date.valueOf(localDate2);
+
+        List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
+        System.out.println(daily);
+
+        List<DailyNutrientIntakeViz> top5Nutrients;
+        if (daily.size() >= 5) {
+            top5Nutrients = daily.subList(0,5);
+            List<DailyNutrientIntakeViz> remain = daily.subList(5, daily.size());
+            int totalQuantity = 0;
+            double totalNutAmt = 0;
+            for (DailyNutrientIntakeViz i : remain) {
+                totalQuantity += i.getTotalQuantity();
+                totalNutAmt += i.getTotalNutrientAmt();
+            }
+            DailyNutrientIntakeViz combined = new DailyNutrientIntakeViz(totalQuantity, "Other", totalNutAmt);
+            top5Nutrients.add(combined);
+        }
+        else top5Nutrients = daily.subList(0, daily.size());
+
+        HashMap<String, Double> top5 = new HashMap<>();
+        for (DailyNutrientIntakeViz d : top5Nutrients) {
+            top5.put(d.getNutrientName(), d.getTotalNutrientAmt());
+        }
     }
 
     private void initializePieChartData() throws ParseException {
@@ -134,8 +161,25 @@ public class CombinedChartsPanel extends ApplicationFrame {
         Date endDate = Date.valueOf(localDate2);
 
         List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
+        System.out.println(daily);
+
+        List<DailyNutrientIntakeViz> top5Nutrients;
+        if (daily.size() >= 5) {
+            top5Nutrients = daily.subList(0,5);
+            List<DailyNutrientIntakeViz> remain = daily.subList(5, daily.size());
+            int totalQuantity = 0;
+            double totalNutAmt = 0;
+            for (DailyNutrientIntakeViz i : remain) {
+                totalQuantity += i.getTotalQuantity();
+                totalNutAmt += i.getTotalNutrientAmt();
+            }
+            DailyNutrientIntakeViz combined = new DailyNutrientIntakeViz(totalQuantity, "Other", totalNutAmt);
+            top5Nutrients.add(combined);
+        }
+        else top5Nutrients = daily.subList(0, daily.size());
+
         HashMap<String, Double> top5 = new HashMap<>();
-        for (DailyNutrientIntakeViz d : daily) {
+        for (DailyNutrientIntakeViz d : top5Nutrients) {
             top5.put(d.getNutrientName(), d.getTotalNutrientAmt());
         }
 
@@ -241,13 +285,13 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
     private JFreeChart createBarLineChart() {
         return ChartFactory.createBarChart(
-                "Bar/Line Chart", "Category", "Value", dataset,
+                "Daily Calories Intake and Exercises Expenditure", "Category", "Value", dataset,
                 PlotOrientation.VERTICAL, true, true, false);
     }
 
     private JFreeChart createPieChart() {
         return ChartFactory.createPieChart(
-                "Pie Chart", pieDataset, true, true, false);
+                "Average Daily Portions Of Nutrients ", pieDataset, true, true, false);
     }
 
     private JPanel createButtonPanel() {
@@ -285,9 +329,14 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
     private JButton createLogDietButton() {
         JButton logDietButton = new JButton("Log Diet");
-        logDietButton.addActionListener(e -> new Dashboard().callDashBoard());
+        logDietButton.addActionListener(e -> {
+            new Dashboard().callDashBoard();
+            dispose();
+        });
+
         return logDietButton;
     }
+
 
     private void setupButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

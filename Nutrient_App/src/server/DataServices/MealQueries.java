@@ -356,10 +356,10 @@ public class MealQueries {
 	}
 
 
-	public static ArrayList<Double> getDailyKcalIntake(int userID, Date date) {
-		ArrayList<Double> kcalIntake = new ArrayList<>();
+	public static HashMap<String, Double> getDailyKcalIntake(int userID, Date start, Date end) {
+		HashMap<String, Double> kcalIntake = new HashMap<>();
 		try (Connection connection = DBConfig.getConnection()) {
-			String sql = String.format("SELECT ((na.NutrientValue / 100) * i.quantity) AS daily_kcal_intake\n" +
+			String sql = "SELECT dl.date_log, ((na.NutrientValue / 100) * i.quantity) AS daily_kcal_intake\n" +
 					"FROM `USER` u\n" +
 					"JOIN DATE_LOG dl ON dl.userID = u.userID\n" +
 					"JOIN MEAL_DETAILS md ON dl.date_log_id = md.date_log_id\n" +
@@ -367,15 +367,16 @@ public class MealQueries {
 					"JOIN FOOD_NAME fn ON fn.FoodID = i.FoodID\n" +
 					"JOIN NUTRIENT_AMOUNT na ON na.FoodID = fn.FoodID\n" +
 					"JOIN NUTRIENT_NAME nn ON nn.NutrientNameID = na.NutrientNameID\n" +
-					"WHERE dl.date_log = ?\n" +
+					"\tAND dl.date_log >= ? AND dl.date_log <= ?\n" +
 					"     AND u.userID = ?\n" +
-					"    AND nn.NutrientCode = 208;");
+					"    AND nn.NutrientCode = 208";
 			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-				pState.setDate(1, date);
-				pState.setInt(2, userID);
+				pState.setDate(1, start);
+				pState.setDate(2, end);
+				pState.setInt(3, userID);
 				try (ResultSet resultSet = pState.executeQuery()) {
 					while (resultSet.next()) {
-						kcalIntake.add(resultSet.getDouble("daily_kcal_intake"));
+						kcalIntake.put(resultSet.getString("date_log"), resultSet.getDouble("daily_kcal_intake"));
 					}
 				}
 			}
@@ -487,4 +488,36 @@ public class MealQueries {
 			throw new RuntimeException("Error accessing the database", e);
 		}
 	}
+
+	public static HashMap<String, Double> getNutAmt(int userID) {
+	        HashMap<String, Double> maps = new HashMap<>();
+	        try (Connection connection = DBConfig.getConnection()) {
+	            String sql = "select dl.userID, dl.date_log, na.FoodID, nn.NutrientName, na.NutrientNameID, na.NutrientValue, ROUND(((na.NutrientValue / 100) * i.quantity), 2) AS amt_consumed\n" +
+	                    "from DATE_LOG dl, NUTRIENT_NAME nn\n" +
+	                    "join NUTRIENT_AMOUNT na ON nn.NutrientNameID = na.NutrientNameID\n" +
+	                    "join INGREDIENTS i ON i.FoodID = na.FoodID\n" +
+	                    "where\n" +
+	                    "\tdl.userID = ?\n" +
+	                    "\tand (nn.NutrientName = 'PROTEIN'\n" +
+	                    "    or nn.NutrientName like 'CARB%'\n" +
+	                    "    or nn.NutrientName like 'VITAMIN%' \n" +
+	                    "    or nn.NutrientName = 'ENERGY (KILOCALORIES)')\n" +
+	                    "group by nn.NutrientName\n" +
+	                    "; ";
+	            try (PreparedStatement pState = connection.prepareStatement(sql)) {
+	                pState.setInt(1, userID);
+	                try (ResultSet resultSet = pState.executeQuery()) {
+	                    while (resultSet.next()) {
+	                        String NutrientName = resultSet.getString("NutrientName");
+	                        Double nutAmt = resultSet.getDouble("amt_consumed");
+	                        maps.put(NutrientName,nutAmt);
+	                    }
+	                }
+	                return maps;
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            throw new RuntimeException("Error accessing the database", e);
+	        }
+	    }
 }

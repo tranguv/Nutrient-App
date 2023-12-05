@@ -1,10 +1,5 @@
 package src.main;
-import src.model.MainApplication;
 // import src.model.authLogic.SignupLogic;
-import src.client.Authentication.ChooseProfile;
-import src.client.Authentication.LoginPage;
-import src.client.Authentication.SignUpPage;
-import src.model.User;
 
 
 import src.server.DataServices.*;
@@ -13,19 +8,8 @@ import src.server.DataServices.*;
 //import java.sql.Date;
 import java.sql.Date;
 
-import src.server.DataServices.DBQueries;
-import src.server.DataServices.InputVisualization;
-import src.server.DataServices.UserQueries;
 
-import src.model.MainApplication;
-
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+		import java.text.ParseException;
 
 
 public class Main {
@@ -45,9 +29,9 @@ public class Main {
 //		calendar.set(2023, 10, 21, 12, 0, 0);
 //		Date specificDate2 = calendar.getTime();
 		Date date = DateQueries.getDatebyUserID(32);
-		List<DailyNutrientIntakeViz> nutrientdataList = DailyNutrientIntakeViz.getNutrientValConsumed(32, date);
+//		List<DailyNutrientIntakeViz> nutrientdataList = DailyNutrientIntakeViz.getNutrientValConsumed(32, date);
 //		List<DailyNutrientIntakeViz> top5NutrientList = DailyNutrientIntakeViz.getTop5Nutrient(nutrientdataList);
-		List<DailyNutrientIntakeViz> remainNutrientList = DailyNutrientIntakeViz.getRemainNutrient(nutrientdataList);
+//		List<DailyNutrientIntakeViz> remainNutrientList = DailyNutrientIntakeViz.getRemainNutrient(nutrientdataList);
 
 		double totalQuantity = 0;
 		double totalNutAmt = 0;
@@ -58,11 +42,11 @@ public class Main {
 //			System.out.println();
 //		}
 
-		for (int i = 0; i < remainNutrientList.size(); i++) {
-			totalQuantity = remainNutrientList.get(i).getTotalQuantity();
-			totalNutAmt = remainNutrientList.get(i).getTotalNutrientAmt();
-		}
-		System.out.println((totalNutAmt / totalQuantity) * 100);
+//		for (int i = 0; i < remainNutrientList.size(); i++) {
+//			totalQuantity = remainNutrientList.get(i).getTotalQuantity();
+//			totalNutAmt = remainNutrientList.get(i).getTotalNutrientAmt();
+//		}
+//		System.out.println((totalNutAmt / totalQuantity) * 100);
 
 
 //		for (int i = 0; i < getRemainNutrient.size(); i++ ) {

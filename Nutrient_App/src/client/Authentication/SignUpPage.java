@@ -182,26 +182,23 @@ public class SignUpPage extends JFrame{
 
 		gbc.gridx = 1;
 		panel.add(passwordPF, gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		panel.add(dobLB, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		panel.add(dobLB, gbc);
+
 
 		gbc.gridx = 1;
 		gbc.gridwidth = 1; // Reset gridwidth to 1 for individual components
 		panel.add(dayComboBox, gbc);
 
-		gbc.gridx = 2; // Adjust gridx for monthComboBox
+		gbc.gridx++; // Adjust gridx for monthComboBox
 		panel.add(monthComboBox, gbc);
 
-		gbc.gridx = 3; // Adjust gridx for yearComboBox
+		gbc.gridx++; // Adjust gridx for yearComboBox
 		panel.add(yearComboBox, gbc);
 
-// Reset gridwidth for subsequent components
+         // Reset gridwidth for subsequent components
 		gbc.gridwidth = 1;
 
 		gbc.gridx = 0;

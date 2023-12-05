@@ -63,45 +63,7 @@ public class CombinedChartsPanel extends ApplicationFrame {
 
     }
 
-    private void initializeLineChartData() {
-        // Initialize Line Chart Data
-        String start = datePanelStart.getSelectedDate();
-        System.out.println(start);
-        String end = datePanelEnd.getSelectedDate();
-        System.out.println(end);
 
-        if (start == null || end == null) {
-            // Set default values or handle as needed
-            start = "2023-11-15";
-            end = "2023-11-22";
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(start, formatter);
-        LocalDate localDate2 = LocalDate.parse(end, formatter);
-        Date startDate = Date.valueOf(localDate);
-        Date endDate = Date.valueOf(localDate2);
-
-        ArrayList<Exercise> exercises = ExerciseQueries.getExercisesByDate(user.getId(), startDate, endDate);
-        HashMap<String, HashMap<Double, String>> top5 = new HashMap<>();
-        HashMap<String, Double> dailyCalories =  MealQueries.getDailyKcalIntake(user.getId(), startDate, endDate);
-        for (Exercise e : exercises) {
-            if (!top5.containsKey(e.getName())) {
-                top5.put(e.getName(), new HashMap<>());
-            }
-            top5.get(e.getName()).put(e.getCaloriesBurnt(), e.getDate().toString());
-        }
-
-        for (String key : top5.keySet()) {
-            System.out.println(top5.get(key).keySet().iterator().next() + " " +  key  + " " +  top5.get(key).values().iterator().next());
-            dataset.addValue(top5.get(key).keySet().iterator().next(), key, top5.get(key).values().iterator().next());
-        }
-
-        for(String key : dailyCalories.keySet()) {
-            dataset.addValue(dailyCalories.get(key), dailyCalories.values().iterator().next(), key);
-        }
-
-    }
 
     public static void main(String[] args) {
         String start = "2023-11-15";
@@ -139,14 +101,9 @@ public class CombinedChartsPanel extends ApplicationFrame {
             top5.put(d.getNutrientName(), d.getTotalNutrientAmt());
         }
     }
-
-    private void initializePieChartData() throws ParseException {
-        // Initialize Pie Chart Data
-
-        String start = datePanelStart.getSelectedDate();
-        System.out.println(start);
-        String end = datePanelEnd.getSelectedDate();
-        System.out.println(end);
+    private Date[] getStartAndEndDate(String startDateString, String endDateString) {
+        String start = startDateString;
+        String end = endDateString;
 
         if (start == null || end == null) {
             // Set default values or handle as needed
@@ -159,6 +116,41 @@ public class CombinedChartsPanel extends ApplicationFrame {
         LocalDate localDate2 = LocalDate.parse(end, formatter);
         Date startDate = Date.valueOf(localDate);
         Date endDate = Date.valueOf(localDate2);
+
+        return new Date[]{startDate, endDate};
+    }
+
+    private void initializeLineChartData() throws ParseException {
+        Date[] dates = getStartAndEndDate(datePanelStart.getSelectedDate(), datePanelEnd.getSelectedDate());
+        Date startDate = dates[0];
+        Date endDate = dates[1];
+
+        ArrayList<Exercise> exercises = ExerciseQueries.getExercisesByDate(user.getId(), startDate, endDate);
+        HashMap<String, HashMap<Double, String>> top5 = new HashMap<>();
+        HashMap<String, Double> dailyCalories =  MealQueries.getDailyKcalIntake(user.getId(), startDate, endDate);
+        for (Exercise e : exercises) {
+            if (!top5.containsKey(e.getName())) {
+                top5.put(e.getName(), new HashMap<>());
+            }
+            top5.get(e.getName()).put(e.getCaloriesBurnt(), e.getDate().toString());
+        }
+
+        for (String key : top5.keySet()) {
+            System.out.println(top5.get(key).keySet().iterator().next() + " " +  key  + " " +  top5.get(key).values().iterator().next());
+            dataset.addValue(top5.get(key).keySet().iterator().next(), key, top5.get(key).values().iterator().next());
+        }
+
+        for(String key : dailyCalories.keySet()) {
+            dataset.addValue(dailyCalories.get(key), dailyCalories.values().iterator().next(), key);
+        }
+
+}
+
+    private void initializePieChartData() throws ParseException {
+        Date[] dates = getStartAndEndDate(datePanelStart.getSelectedDate(), datePanelEnd.getSelectedDate());
+        Date startDate = dates[0];
+        Date endDate = dates[1];
+
 
         List<DailyNutrientIntakeViz> daily = DailyNutrientIntakeViz.getNutrientValConsumed(MainApplication.getUser().getId(), startDate, endDate);
         System.out.println(daily);
@@ -186,8 +178,8 @@ public class CombinedChartsPanel extends ApplicationFrame {
         for (String key : top5.keySet()) {
             pieDataset.setValue(key, top5.get(key));
         }
-
     }
+
 
     private void initializeDietAlignData() {
         // Initialize Pie Chart Data

@@ -244,7 +244,7 @@ public class ExerciseQueries {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				Exercise exerciseLog = new Exercise();
-				exerciseLog.setID(resultSet.getInt("exercise_log_id"));
+				exerciseLog.setId(resultSet.getInt("exercise_log_id"));
 				exerciseLog.setName(resultSet.getString("exercise_type"));
 				exerciseLog.setDuration(resultSet.getInt("duration"));
 				exerciseLog.setIntensity(Intensity.valueOf(resultSet.getString("intensity")));

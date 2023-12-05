@@ -21,8 +21,6 @@ public class MainApplication {
 			public void run() {
 				// TODO Auto-generated method stub
 				LoginPage login = new LoginPage();
-
-
 			}
 		});
 	}

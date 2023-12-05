@@ -124,7 +124,7 @@ public class SignUpPage extends JFrame{
 						JOptionPane.showMessageDialog(SignUpPage.this, "Username already exists. Please choose another.", "Signup Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					User newUser = new User(username, String.valueOf(password), "", "", "", dob, weight, height, "metric");
+					User newUser = new User(username, String.valueOf(password), dob, weight, height, "metric");
 
 					// Move the createUser method call into the try block
 					if (UserQueries.createUser(newUser)) {

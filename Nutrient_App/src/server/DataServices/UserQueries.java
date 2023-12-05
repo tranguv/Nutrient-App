@@ -12,8 +12,6 @@ import java.time.LocalDate;
 import java.time.Period;
 
 public class UserQueries {
-
-
 	//for log in validation
 	public static boolean validateUser(String username, String password) {
 		try (Connection connection = DBConfig.getConnection()) {
@@ -40,8 +38,6 @@ public class UserQueries {
 	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
 		try (Connection connection = DBConfig.getConnection()) {
 			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			System.out.println("SQL Query: " + sql);  // Debugging statement
-			System.out.println("User sex: " + user.getSex());
 
 			try (PreparedStatement pState = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				pState.setString(1, user.getUsername());
@@ -79,25 +75,6 @@ public class UserQueries {
 		}
 	}
 
-	//GET CURRENT USER ID
-	public static int getUserID(){
-		int userID = 0;
-		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "SELECT LAST_INSERT_ID() AS current_user_id";
-			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-				try (ResultSet resultSet = pState.executeQuery()) {
-					while (resultSet.next()) {
-						userID = resultSet.getInt("current_user_id");
-					}
-				}
-				return userID;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error accessing the database", e);
-		}
-	}
-
 	//GET USER ID BY USERNAME
 	public static int getUserIDbyUsername(String username) throws SQLException {
 		int userID = 0;
@@ -110,10 +87,6 @@ public class UserQueries {
 			userID = resultSet.getInt("userID");
 		}
 		return userID;
-	}
-
-	public static void main(String[] args) {
-		System.out.println(getUserByID(2));
 	}
 
 	public static User getUserByID(int id){
@@ -135,7 +108,11 @@ public class UserQueries {
 						double height = Double.parseDouble(resultSet.getString("height"));
 						String unit = resultSet.getString("units");
 						int age = resultSet.getInt("age");
-						user = new User(user_username,user_userPassword,firstName,lastname,sex,dob,weight,height,unit);
+						user = new User(user_username,user_userPassword,dob,weight,height,unit);
+						user.setFirstName(firstName);
+						user.setLastName(lastname);
+						user.setSex(sex);
+
 						return user;
 					}
 				}
@@ -147,48 +124,6 @@ public class UserQueries {
 		return user;
 	}
 
-	public static String getUserFirstNamesById(int userId) {
-		String firstName = null;
-		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "SELECT fname FROM USER WHERE userID = ?";
-			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-				pState.setInt(1, userId);
-
-				try (ResultSet resultSet = pState.executeQuery()) {
-					if (resultSet.next()) {
-						firstName = resultSet.getString("fname");
-						return firstName;
-
-					}
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error accessing the database", e);
-		}
-		return firstName;
-	}
-	public static String getUserLastNamesById(int userId) {
-		String firstName = null;
-		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "SELECT lname FROM USER WHERE userID = ?";
-			try (PreparedStatement pState = connection.prepareStatement(sql)) {
-				pState.setInt(1, userId);
-
-				try (ResultSet resultSet = pState.executeQuery()) {
-					if (resultSet.next()) {
-						firstName = resultSet.getString("lname");
-						return firstName;
-
-					}
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error accessing the database", e);
-		}
-		return firstName;
-	}
 	public static boolean updateUserDetails(String username, String fname, String lname, String sex, String dob,double height, double weight) {
 		try (Connection connection = DBConfig.getConnection()) {
 			// Update SQL statement to include height and weight

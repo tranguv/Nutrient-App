@@ -102,7 +102,35 @@ public class DailyNutrientIntakeViz {
         return remainNutrient;
     }
 
-
-
-
+    // GET NUTRITION VALUES (PROTEINS, CARB, VITAMINS AND OTHERS) FOR A MEAL
+//    public static HashMap<String, Double> getNutritionValuesForMeal(int userID, int mealID) {
+//        HashMap<String, Double> nutritionValues = new HashMap<>();
+//        try (Connection connection = DBConfig.getConnection()) {
+//            String sql = String.format("select dl.userID, dl.date_log, na.FoodID, nn.NutrientName, na.NutrientNameID, na.NutrientValue, ROUND(((na.NutrientValue / 100) * i.quantity), 2) AS amt_consumed\n" +
+//                    "from DATE_LOG dl, NUTRIENT_NAME nn\n" +
+//                    "join NUTRIENT_AMOUNT na ON nn.NutrientNameID = na.NutrientNameID\n" +
+//                    "join INGREDIENTS i ON i.FoodID = na.FoodID\n" +
+//                    "where na.FoodID = 16\n" +
+//                    "    and dl.userID = %d\n" +
+//                    "    and (nn.NutrientName = 'PROTEIN'\n" +
+//                    "    or nn.NutrientName like 'CARB%'\n" +
+//                    "    or nn.NutrientName like 'VITAMIN%' \n" +
+//                    "    or nn.NutrientName = 'ENERGY (KILOCALORIES)')\n" +
+//                    "group by nn.NutrientName\n", userID);
+//            try (PreparedStatement pState = connection.prepareStatement(sql)) {
+//                try (ResultSet resultSet = pState.executeQuery()) {
+//                    while (resultSet.next()) {
+//                        String nutrientName = resultSet.getString("NutrientName");
+//                        double totalNutrientAmount = resultSet.getDouble("total_nutrient_amt");
+//                        nutritionValues.put(nutrientName, totalNutrientAmount);
+//                    }
+//                }
+//            }
+//
+//        }catch (SQLException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Error accessing the database", e);
+//        }
+//        return nutritionValues;
+//    }
 }

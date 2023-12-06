@@ -37,19 +37,17 @@ public class UserQueries {
 	//for sign up validation
 	public static boolean createUser(User user) throws SQLIntegrityConstraintViolationException {
 		try (Connection connection = DBConfig.getConnection()) {
-			String sql = "INSERT INTO USER (username, user_password, fname, lname, sex, dob, weight, height, units, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO USER (username, user_passwordsex, dob, weight, height, units, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 			try (PreparedStatement pState = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				pState.setString(1, user.getUsername());
 				pState.setString(2, user.getPassword());
-				pState.setString(3, user.getFirstName());
-				pState.setString(4, user.getLastName());
-				pState.setString(5, user.getSex());
-				pState.setString(6, user.getDateOfBirth());
-				pState.setDouble(7, user.getWeight());
-				pState.setDouble(8, user.getHeight());
-				pState.setString(9, user.getUnits());
-				pState.setInt(10, user.getAge());
+				pState.setString(3, user.getSex());
+				pState.setString(4, user.getDateOfBirth());
+				pState.setDouble(5, user.getWeight());
+				pState.setDouble(6, user.getHeight());
+				pState.setString(7, user.getUnits());
+				pState.setInt(8, user.getAge());
 
 				int rowsAffected = pState.executeUpdate();
 				if (rowsAffected > 0) {
@@ -60,13 +58,11 @@ public class UserQueries {
 							throw new SQLException("Failed to retrieve user ID.");
 						}
 					}
-					System.out.println("User signed up successfully!");
 					return true;
 				} else {
 					return false;
 				}
 			} catch (SQLIntegrityConstraintViolationException e) {
-				// Rethrow the exception if it's a unique constraint violation
 				throw e;
 			}
 		} catch (SQLException e) {
